@@ -1,0 +1,357 @@
+#region PRINT ASSESSMENT
+
+        [HttpGet]
+        public ActionResult GetPCMLetters(int id)
+        {
+            //get current username
+            string loginName = User.Identity.Name;
+            Session["LoginName"] = loginName;
+            Session["IntakeassId"] = id;
+            var currentUser = (User)Session["CurrentUser"];
+            var userProvince = -1;
+            var userId = 0;
+            string ClientRef = Convert.ToString(Session["ClientRef"]);
+            ViewBag.ModuleRef = ClientRef;
+
+            if (currentUser != null)
+            {
+                userId = currentUser.User_Id;
+                if (currentUser.Employees.Any())
+                {
+                    userProvince = currentUser.Employees.First().apl_Service_Office.apl_Local_Municipality.District.Province_Id;
+                }
+                if (currentUser.apl_Social_Worker.Any())
+                {
+                    userProvince = currentUser.apl_Social_Worker.First().apl_Service_Office.apl_Local_Municipality.District.Province_Id;
+                }
+            }
+
+            //initialise model
+
+            //initialise view model
+
+
+            PCMCaseModel model = new PCMCaseModel();
+            PCMCaseDetailsViewModel vm = new PCMCaseDetailsViewModel();
+            vm.Correspondencelist = new List<PCMCaseDetailsViewModel>();
+            vm.PCMCorrespondenceType_List = model.GetAllPCMCorrespondenceTypes();
+            List<PCMCaseDetailsViewModel> List = model.PrintedPCMLetterList(id).Select(x => new PCMCaseDetailsViewModel
+            {
+                pcm_Correspondence_Id = x.pcm_Correspondence_Id,
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                pcm_Correspondence_Date_Created = x.pcm_Correspondence_Date_Created,
+                pcm_Correspondence_Created_By = x.pcm_Correspondence_Created_By,
+                PersonCreated = x.PersonCreated,
+                pcm_CorrespondenceDescription = x.pcm_CorrespondenceDescription
+            }).ToList();
+            vm.Correspondencelist = List;
+            return PartialView(vm);
+        }
+
+
+
+        [HttpPost]
+        public ActionResult SavePCMassessmentLetter(PCMCaseDetailsViewModel vm, string serverPath, string docPathsview)
+        {
+            int intassid = Convert.ToInt32(Session["IntakeassId"]);
+            // get current username
+            //get current username
+            string loginName = User.Identity.Name;
+            Session["LoginName"] = loginName;
+
+            var currentUser = (User)Session["CurrentUser"];
+            var userProvince = -1;
+            var userId = 0;
+
+            if (currentUser != null)
+            {
+                userId = currentUser.User_Id;
+                if (currentUser.Employees.Any())
+                {
+                    userProvince = currentUser.Employees.First().apl_Service_Office.apl_Local_Municipality.District.Province_Id;
+                }
+                if (currentUser.apl_Social_Worker.Any())
+                {
+                    userProvince = currentUser.apl_Social_Worker.First().apl_Service_Office.apl_Local_Municipality.District.Province_Id;
+                }
+            }
+
+
+            string ClientRef = Convert.ToString(Session["ClientRef"]);
+
+
+            string  corId = "1";
+            int Cid = Convert.ToInt32(corId);
+
+            string docPaths = docPathsview;
+
+            var _db = new SDIIS_DatabaseEntities();
+            var currentHoursAndMinutes = DateTime.Now.Hour.ToString("0#") + DateTime.Now.Minute.ToString("0#") + DateTime.Now.Millisecond.ToString("0#");
+
+            PCMnPrintLetter Model = new PCMnPrintLetter();
+
+            PCMCaseModel Model1 = new PCMCaseModel();
+
+            int PcmCaseID = Model1.GetPCMChildCaseIdDetailsByssId(intassid);
+
+            var childPersonalInformation = Model.GetPersonalInformationChild(intassid);
+
+            var childCasedetails = Model1.GetPCMCaseDetailsByPCMCaseId(intassid);
+
+            List<PCMCaseDetailsViewModel> Listassessment = Model1.GetAssmentRegisterList(intassid).Select(x => new PCMCaseDetailsViewModel
+
+            {
+                Assesment_Register_Id = x.Assesment_Register_Id,
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                Assessment_Date = x.Assessment_Date,
+                Assessment_Time = x.Assessment_Time,
+                FormOfNotificationDescription = x.FormOfNotificationDescription
+            }).ToList();
+
+            List<PCMCaseDetailsViewModel> ListMedical = Model1.GetHealthstatusList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                Health_Details_Id = x.Health_Details_Id,
+                HealthStatusDescription = x.HealthStatusDescription,
+                AllergyDescription = x.AllergyDescription,
+                Injuries = x.Injuries,
+                Medical_Appointments = x.Medical_Appointments,
+                Medication = x.Medication,
+            }).ToList();
+
+            List<PCMCaseDetailsViewModel> ListEducation = Model1.GetEducationList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                School_Id = x.School_Id,
+                School_Name = x.School_Name,
+                Contact_Person = x.Contact_Person,
+                Telephone_Number = x.Telephone_Number,
+                Year_Completed = x.Year_Completed,
+                Date_Last_Attended = x.Date_Last_Attended,
+                Grade_Completed = x.Grade_Completed,
+                Person_Education_Id = x.Person_Education_Id
+            }).ToList();
+
+            int SocioEconomyid = Model1.GetPCMSocioEconomicDetailsByassId(intassid);
+
+            var Socioeconomics = Model1.GetSocioEconomicsList(SocioEconomyid);
+
+            int DevAssid = Model1.GetPCMDevelopmentAssessmentByassId(intassid);
+
+            var DevAssessment = Model1.GetDevelopmentAssessmentList(DevAssid);
+
+            int recAssid = Model1.GetPCMRecommendationByassId(intassid);
+
+            var recomation = Model1.GetRecomendationDetailsList(recAssid);
+
+            List<PCMCaseDetailsViewModel> ListFacilityrequest = Model1.GetFacilitybedSpaceList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Request_Id = x.Request_Id,
+                selectBedRequestStatus = x.selectBedRequestStatus,
+                selectAdmissionType = x.selectAdmissionType,
+                SelectFacility = x.SelectFacility,
+                Request_Comments = x.Request_Comments,
+                Date_Created = x.Date_Created
+            }).ToList();
+
+            int RecId = Model1.GetPCMRecomendationByassId(intassid);
+
+            List<PCMCaseDetailsViewModel> OurList = Model1.GetSelectedOrdersFromDB(RecId);
+
+            int FamilyinformationId = Model1.GetPCMFamillyBGDetailsByassId(intassid);
+            var FamilyBG = Model1.GetFamillyBGList(FamilyinformationId);
+
+            List<PCMCaseDetailsViewModel> ListFamilyMember = Model1.GetFamilyMemberList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                Family_Member_Id = x.Family_Member_Id,
+                SelectRelationshipType = x.SelectRelationshipType,
+                Family_Member_Name = x.Family_Member_Name,
+                Family_Member_Last_Name = x.Family_Member_Last_Name,
+                Family_Member_Age = x.Family_Member_Age,
+            }).ToList();
+
+            List<PCMCaseDetailsViewModel> ListOffence = Model1.GetOffenceList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                PCM_Offence_Id = x.PCM_Offence_Id,
+                selectOffenceCategory = x.selectOffenceCategory,
+                selectOffeceType = x.selectOffeceType,
+                Offence_Circumstance = x.Offence_Circumstance,
+                Value_Of_Goods = x.Value_Of_Goods,
+                Value_Recovered = x.Value_Recovered,
+                IsChild_Responsible = x.IsChild_Responsible,
+                Responsibility_Details = x.Responsibility_Details
+            }).ToList();
+
+            int Charges = Model1.GetPCMChargeByassId(intassid);
+
+            List<PCMCaseDetailsViewModel> OurListCharges = Model1.GetSelectedChargeFromDB(RecId);
+
+            List<PCMCaseDetailsViewModel> ListPrevious = Model1.GetPreviousEnvolvementList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                Involvement_Id = x.Involvement_Id,
+                Previous_Involved = x.Previous_Involved,
+                IsArrest = x.IsArrest,
+                selectOffenceCategory = x.selectOffenceCategory,
+                PreviousArrest_Date = x.PreviousArrest_Date,
+                IsConvicted = x.IsConvicted,
+                previousConviction_Date = x.previousConviction_Date,
+                IsEscape = x.IsEscape,
+                Escapes_Date = x.Escapes_Date
+            }).ToList();
+
+
+            List<PCMCaseDetailsViewModel> ListVictim = Model1.GetVictimList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                Victim_Id = x.Victim_Id,
+                Victim_First_Name = x.Victim_First_Name,
+                Victim_Last_Name = x.Victim_Last_Name,
+                Victim_Age = x.Victim_Age,
+                Victim_Phone_Number = x.Victim_Phone_Number
+            }).ToList();
+
+
+            List<PCMCaseDetailsViewModel> ListOgrVictim = Model1.GetVictimOrganisationList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                OrganisationVictim_Id = x.OrganisationVictim_Id,
+                OrganisationName = x.OrganisationName,
+                ContactPersonfirstname = x.ContactPersonfirstname,
+                ContactPersonlastname = x.ContactPersonlastname,
+                Victim_Occupation = x.Victim_Occupation,
+                OrganisationTell = x.OrganisationTell
+            }).ToList();
+
+
+            List<PCMCaseDetailsViewModel> Listcoaccused = Model1.GetCoAccusedList(intassid).Select(x => new PCMCaseDetailsViewModel
+            {
+                Intake_Assessment_Id = x.Intake_Assessment_Id,
+                Co_Accused_Id = x.Co_Accused_Id,
+                Co_Accused_First_Name = x.Co_Accused_First_Name,
+                Co_Accused_Last_Name = x.Co_Accused_Last_Name,
+                Cubacc = x.Cubacc,
+
+            }).ToList();
+
+            int childClientId = Model.GetchildClientIdChild(intassid);
+
+            var clientModel = new ClientModel();
+            var loadClient = clientModel.GetSpecificClient(int.Parse(Convert.ToString(childClientId)));
+            var personToEdit = loadClient.Person;
+            var physicalAddress = personToEdit.Addresses.Any(a => a.Address_Type_Id.Equals((int)AddressTypeEnum.PhysicalAddress)) ? personToEdit.Addresses.First(a => a.Address_Type_Id.Equals((int)AddressTypeEnum.PhysicalAddress)) : new Address();
+            var postalAddress = personToEdit.Addresses.Any(a => a.Address_Type_Id.Equals((int)AddressTypeEnum.PostalAddress)) ? personToEdit.Addresses.First(a => a.Address_Type_Id.Equals((int)AddressTypeEnum.PostalAddress)) : new Address();
+
+            string address1 = "";
+            if (postalAddress.Address_Line_1 != null)
+            {
+                address1 = postalAddress.Address_Line_1;
+            }
+            else
+            {
+                address1 = "Address not completed on Intake Module";
+            }
+            string address2 = "";
+            if (postalAddress.Address_Line_2 != null)
+            {
+                address2 = postalAddress.Address_Line_2;
+            }
+
+            string address3 = "";
+            if (postalAddress.Town != null && postalAddress.Town_Id != null)
+            {
+                address3 = _db.Towns.Find(postalAddress.Town_Id).Description;
+            }
+            else
+            {
+                address3 = "Town not completed on Intake Module";
+            }
+
+            string address4 = "";
+            if (postalAddress.Postal_Code != null)
+            {
+                address4 = postalAddress.Postal_Code;
+            }
+            else
+            {
+                address4 = "Postal Code not completed on Intake Module";
+            }
+            string UseThisLetter = "Assessmentreport";
+            string LetterName = docPaths + UseThisLetter;
+
+            Console.WriteLine(LetterName);
+            DocX Letter = DocX.Load(LetterName);
+
+            string outputFileName = (docPaths + intassid + "_" + Convert.ToInt32(corId) + ".docx");
+            string serverOutputFileUrl = serverPath + "/" + intassid + "_" + Convert.ToInt32(corId) + ".pdf";
+
+
+            //Letter.ReplaceText("%NAMEANDSURNAMEOFPARENT%", nameAndSurnameOfParent ?? " ");
+            Letter.ReplaceText("%REFERENCENUMBER%", ClientRef ?? " ");
+            Letter.ReplaceText("%DATE%", DateTime.Now.ToString("dd MMMM yyyy"));
+            //Address Details
+            Letter.ReplaceText("%ADDRESS1%", address1 ?? " ");
+            Letter.ReplaceText("%ADDRESS2%", address2 ?? " ");
+            Letter.ReplaceText("%ADDRESS3%", address3 ?? " ");
+            Letter.ReplaceText("%POSTALCODE%", address4 ?? " ");
+            Letter.ReplaceText("%DATEOFBIRTHCHILD%", Convert.ToDateTime(childPersonalInformation.Date_Of_Birth).ToString("dd MMMM yyyy") ?? " ");
+            Letter.ReplaceText("%IDNUMBEROFCHILD%", childPersonalInformation.Identification_Number ?? " ");
+            Letter.ReplaceText("%PLACEOFBIRTH%", "PLACEOFBIRTH");
+
+
+
+
+
+
+
+
+
+
+
+            //Check if letter exists in folder still needs to be done
+            Letter.SaveAs(outputFileName);
+
+            Document doc = new Document();
+            doc.LoadFromFile(outputFileName);
+            var pdfFileToSave = outputFileName.Replace(".docx", ".pdf");
+
+            doc.SaveToFile(pdfFileToSave, FileFormat.PDF);
+            outputFileName = (docPaths + childPersonalInformation.Person_Id + "_" + Convert.ToInt32(corId) + ".pdf");
+
+
+            int Pcm_Case_Id = (from r in _db.PCM_Case_Details
+                               where r.Intake_Assessment_Id == intassid
+                               select r.PCM_Case_Id).FirstOrDefault();
+
+            if (Pcm_Case_Id > 0)
+            {
+                var pcmCorTable = (from r in _db.PCM_Letters
+                                   where r.PCM_Case_Id == Pcm_Case_Id && r.pcm_Correspondence_FileName == (intassid + "_" + Cid + ".pdf")
+                                   select r).FirstOrDefault();
+                if (pcmCorTable != null)
+                {
+                    var loggedInUser = (User)Session["CurrentUser"];
+                    var userModel = new UserModel();
+                    //Model.UpdateRACAPCorrespondence(RACAPCaseId, commentCap, corId, outputFileName, userModel.GetSpecificUser(loggedInUser.User_Id).User_Id, id);
+
+                }
+                else
+                {
+                    var loggedInUser = (User)Session["CurrentUser"];
+                    var userModel = new UserModel();
+
+                    string filenameDB = Convert.ToString(intassid + "_" + Convert.ToInt32(corId) + ".pdf");
+                    Model1.AddPCMCorrespondence(Pcm_Case_Id, corId, filenameDB, userModel.GetSpecificUser(loggedInUser.User_Id).User_Id, intassid);
+
+                }
+            }
+
+            string DocumentURL = outputFileName;
+            return Json(new { documentUrl = serverOutputFileUrl }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        #endregion
