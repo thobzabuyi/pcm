@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Common_Objects.ViewModels.PCMSocialWorkerEndpointCasesVM>
+
+@{
+    var clientsGrid = new WebGrid(source: Model, canSort: false, rowsPerPage: 10, ajaxUpdateContainerId: "newAllocatedCaseslist");
+
+    @clientsGrid.GetHtml(
+        htmlAttributes: new { id = "EndpointCasesGrid", @class = "NestedMainGrid", width = "100%" },
+        columns: clientsGrid.Columns(
+            clientsGrid.Column("FirstNameE", "Child First Name"),
+            clientsGrid.Column("LastNameE", "Child Last Name"),
+            clientsGrid.Column("IDNumberE", "Child ID Number"),
+            clientsGrid.Column("EndpointRecordStatusDescription", "Record Status"),
+            clientsGrid.Column("PONmae_To", "Allocated To"),
+            clientsGrid.Column("Allocated_ByName", "Allocated By"),
+            clientsGrid.Column(header: "", style: "EditPersonWidth", format: (item) =>
+            {
+
+                var link = Html.ActionLink("Acknowledge Case", "AcceptPCMCase", "Home", new { id = item.End_Point_POD_Id }, new { @class = "btn btn-success" });
+                return link;
+            })
+            )
+        )
+}
+

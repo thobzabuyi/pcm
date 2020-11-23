@@ -1,0 +1,306 @@
+﻿
+@model  Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+    <div class="tab-pane" id="PDtab1">
+        <div class="panel panel-primary">
+            <div class="panel-heading" style="text-align: center">
+                Person Details
+            </div>
+        </div>
+        <p></p>
+        <fieldset id="SubmitFormPv">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_First_Name, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Victim_First_Name, new { @class = "form-control", @id = "Victim_First_Name" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Last_Name, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Victim_Last_Name, new { @class = "form-control", @id = "Victim_Last_Name" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Age, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.Victim_Age, new { @class = "form-control", @id = "Victim_Age" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Gender, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+                            @Html.DropDownListFor(x => x.Victim_Gender, new SelectList(Model.Gender_List, "Gender_Id", "Description"), "-Select Gender-", new { @id = "Gender_Id", @class = "form-control"})
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Phone_Number, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+
+                            @Html.TextBoxFor(model => model.Victim_Phone_Number, new { @class = "form-control", @id = "Victim_Phone_Number" })
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Province_Id, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+                            @Html.DropDownList("Province", ViewBag.Province_List as SelectList, "-- Please Select Province  --", new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="row">
+
+                
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.District_Id, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+
+                            @Html.DropDownList("District", new SelectList(string.Empty, "Value", "Text"), "-- Please select District --", new { @class = "form-control" })
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Town_Id, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+                            @Html.DropDownList("Town", new SelectList(string.Empty, "Value", "Text"), "-- Please select Town --", new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Address_Line_1, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+
+                            @Html.TextBoxFor(model => model.Victim_Address_Line_1, new { @class = "form-control", @id = "Victim_Address_Line_1" })
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Address_Line_2, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-8">
+
+
+                            @Html.TextBoxFor(model => model.Victim_Address_Line_2, new { @class = "form-control", @id = "Victim_Address_Line_2" })
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            @Html.LabelFor(x => x.Victim_Postal_Code, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-4">
+
+
+                            @Html.TextBoxFor(model => model.Victim_Postal_Code, new { @class = "form-control", @id = "Victim_Postal_Code" })
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+
+        </fieldset>
+        <div class="row">
+            <div class="col-md-3">
+               
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" id="SaveRecordPerson" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/jscript">
+
+
+    $("#SaveRecordPerson").click(function () {
+
+        $.ajax({
+            type: "Post",
+            url: "../../PCMCase/SavePersonDetails",
+            data: {
+
+
+                Victim_First_Name: $("#Victim_First_Name").val(),
+                Victim_Gender: $("#Gender_Id").val(),
+                Victim_Last_Name: $("#Victim_Last_Name").val(),
+                Victim_Age: $("#Victim_Age").val(),
+            },
+            success: function (result) {
+                alert("Success!..");
+                $.getJSON('../../PCMCase/ListVictim/', function (data) {
+
+                    var items = $("#SetVictim");
+                    $.each(data, function (i, p) {
+                        items += "<tr><td>" + p.Victim_Id +
+                            "</td><td>" + p.Victim_First_Name +
+                            "</td><td>" + p.Victim_Last_Name +
+                            "</td><td>" + p.Victim_Phone_Number +
+                            "</td><td>" + p.Victim_Age +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='DeleteVictim(" + p.Victim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetVictim').html(items);
+                });
+                $("#advancedSearchModal").modal("hide");
+            },
+            error: function (xhr, ajaxOptions, error) {
+                alert(xhr.status);
+                alert('Error: ' + xhr.responseText);
+            }
+        })
+    })
+
+
+
+
+    $("#District").change(function () {
+        $("#Town").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetTowns")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#District").val() },
+            // Get Selected Country ID. 
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#Town").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+
+
+
+    $("#Province").change(function () {
+        $("#District").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDistricts")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#Province").val() },
+            // Get Selected Country ID. 
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#District").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+</script>
+

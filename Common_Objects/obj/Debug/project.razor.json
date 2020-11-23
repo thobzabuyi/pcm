@@ -1,0 +1,19 @@
+{
+  "FilePath": "c:\\Users\\thobilez\\Desktop\\YANGA SOURCE CODE\\SDIIS_Staging_PCM_Test\\Common_Objects\\Common_Objects.csproj",
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  },
+  "ProjectWorkspaceState": {
+    "TagHelpers": [],
+    "CSharpLanguageVersion": 703
+  },
+  "RootNamespace": null,
+  "Documents": [],
+  "SerializationFormat": "0.2"
+}

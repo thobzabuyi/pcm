@@ -1,0 +1,203 @@
+﻿
+
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>jQuery UI Accordion - Collapse content</title>
+
+    <script>
+
+        $(function () {
+            $("#accordion").accordion({
+                collapsible: true,
+                //Set the active accodtion tab to none
+                active: 'none'
+            });
+        });
+
+
+        $(function () {
+            $("#accordion1").accordion({
+                collapsible: true,
+                //Set the active accodtion tab to none
+                active: 'none'
+            });
+        });
+    </script>
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        /* Style the tab */
+        .tab {
+            float: left;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            width: 20%;
+            height: 400px;
+        }
+
+            /* Style the buttons inside the tab */
+            .tab button {
+                display: block;
+                background-color: inherit;
+                color: black;
+                padding: 22px 16px;
+                width: 100%;
+                border: none;
+                outline: none;
+                text-align: left;
+                cursor: pointer;
+                transition: 0.3s;
+                font-size: 15px;
+            }
+
+                /* Change background color of buttons on hover */
+                .tab button:hover {
+                    background-color: #ddd;
+                }
+
+                /* Create an active/current "tab button" class */
+                .tab button.active {
+                    background-color: #ccc;
+                }
+
+        /* Style the tab content */
+        .tabcontent {
+            float: left;
+            padding: 0px 12px;
+            border: 1px solid #ccc;
+            width: 80%;
+            border-left: none;
+            height: 400px;
+        }
+
+        .notice-success {
+            background: #808080 url("tick.png") 20px 50% no-repeat;
+            border: 0px solid #467813;
+            border-radius: 1px;
+            color: #fff;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 15px 20px 15px 50px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <script>
+        $(function () { $("#tabs").tabs(); });
+    </script>
+
+
+
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">Diversion.</a></li>
+            <li><a href="#tabs-2">Session Outcome.</a></li>
+            <li><a href="#tabs-3">Diversion Outcome.</a></li>
+            <li><a href="#tabs-4">Programme Evaluation.</a></li>
+        </ul>
+
+        <div id="tabs-1" class="tab-pane fade in active">
+            @*<h2">diversion.</h2">*@
+
+            @*<h2>Vertical Tabs</h2>
+                <p>Click on the buttons inside the tabbed menu:</p>*@
+
+            <div class="tab">
+                <button class="tablinks" onclick="openCity(event, 'ServiceProvider')" id="defaultOpen">Service Provider</button>
+                <button class="tablinks" onclick="openCity(event, 'Programme')">Programme</button>
+                <button class="tablinks" onclick="openCity(event, 'Modules')">Modules</button>
+            </div>
+
+            <div id="ServiceProvider" class="tabcontent">
+
+                <div class="panel panel-success">
+                    <div class="panel-heading"><center><h4><b>Service Provider</b></h4></center></div>
+                    <div class="panel-body">@Html.Action("Index", "PCMDiversionSP");</div>
+                </div>
+
+            </div>
+
+            <div id="Programme" class="tabcontent">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><center><h4><b>Programme</b></h4></center></div>
+                    <div class="panel-body">@Html.Action("Programme", "PCMDiversionSP");</div>
+                </div>
+
+            </div>
+
+            <div id="Modules" class="tabcontent">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><center><h4><b>Modules</b></h4></center></div>
+                    <div class="panel-body">@Html.Action("Module", "PCMDiversionSP")</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tabs-2" class="tab-pane fade in active">
+            <div class="panel panel-success">
+                <div class="panel-heading"><center><h4><b>Session Outcome</b></h4></center></div>
+                <div class="panel-body">@Html.Action("Index", "PCMDSessionOutcome")</div>
+            </div>
+        </div>
+
+        <div id="tabs-3" class="tab-pane fade in active">
+
+            <div class="panel panel-success">
+                <div class="panel-heading"><center><h4><b>Diversion Outcome</b></h4></center></div>
+                <div class="panel-body">@Html.Action("Index", "PCMDDiversionOutcome")</div>
+            </div>
+        </div>
+
+        <div id="tabs-4" class="tab-pane fade in active">
+
+            <div class="panel panel-success">
+                <div class="panel-heading"><center><h4><b>Programme Evaluation Report</b></h4></center></div>
+                @*<div class="panel-body">@Html.Action("Index", "PCMDiversionPE")</div>*@
+            </div>
+        </div>
+
+    </div>
+</html>
+
+
+@*@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")*@
+@*@RenderSection("scripts", required: false)*@
+<script>
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+</script>

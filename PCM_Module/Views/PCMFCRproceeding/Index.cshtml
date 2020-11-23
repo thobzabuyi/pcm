@@ -1,0 +1,715 @@
+﻿
+@model Common_Objects.ViewModels.PCMFCRViewModel
+
+
+
+<style>
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+
+    /* Styles for your <ul> menu */
+    #headerFCR ul {
+        background: #F6F6F6;
+        margin: 0 auto;
+        padding: 28px 0 0;
+        text-align: center;
+        width: auto;
+    }
+
+        /* Styles for individual <li> elements */
+        #headerFCR ul li {
+            display: inline;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+            /* Hover style for your links */
+            #headerFCR ul li a:hover {
+                background: #3D515F !important;
+                border-radius: 5px;
+                color: black;
+            }
+
+            /* A more specific style for your "active" link */
+            #headerFCR ul li a.active {
+                headerFCR-color: #008CBA !important;
+                border-color: #000000;
+                border-bottom: 5px solid #9b0e0e;
+            }
+
+                /* Specific hover style for your active link */
+                #headerFCR ul li a.active:hover {
+                    color: yellow;
+                }
+
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:focus,
+    .nav-tabs > li.active > a:hover {
+        background-color: #008CBA !important;
+        color: #fff;
+    }
+
+
+    .jqueryui-marker-datepicker {
+        z-index: 1151 !important;
+    }
+</style>
+
+
+
+<div id="rootwizardFCR" style="height:auto;">
+
+    <div id="headerFCR">
+
+
+
+        <ul class="nav nav-tabs" data-tabs="tabs" id="myTab222FCR">
+
+            <li id="t2FCR">
+                <a data-toggle="tab" href="#FCR" aria-selected="true" data-id="FCR" data-tab="tab1" id="Two">Formal Court Proceedings</a>
+            </li>
+            <li id="t1FCR">
+                <a data-toggle="tab" href="#homeFCR" aria-selected="true" data-id="homeFCR" data-tab="tab1" id="one">Formal Court OutCome</a>
+            </li>
+
+
+        </ul>
+    </div>
+
+    <div class="tab-content" id="section">
+        <div class="tab-pane" id="homeFCR" role="tabpanel">
+            <h3>Formal Court OutCome </h3>
+
+
+            <div class="container" style="margin-top:3%">
+                <a href="#" class="btn btn-info" onclick="AddNewOut(0)">Add Formal Court Outcome </a> <br />@*<br />*@
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Appearance_Date</th>
+                            <th>Court_Name</th>
+                            <th>Remand</th>
+                            <th>Court Date</th>
+                            <th>Next Court Date</th>
+                            <th>Action(Edit)</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="SetOutList">
+                        <tr id="LoadingStatus" style="color:red"></tr>
+                    </tbody>
+                </table>
+
+                @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+                <div class="modal fade in center" id="MyModalOut" style="width:80%;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitlePre"></h4>
+                            </div>
+
+
+                            <div class="modal-body">
+                                <form id="form">
+                                    <fieldset id="SubmitOutForm">
+                                        @Html.HiddenFor(m => m.FormalCourtOutcome_Id, new { @id = "FormalCourtOutcome_Id1" })
+                                        @Html.HiddenFor(m => m.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id" })
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Court Date.
+                                            </div>
+                                            <div class="col-md-3 form-group">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.CourtDate, new { @id = "CourtDate1", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                    <label for="CourtDate1" class="input-group-addon btn">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Remand
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                @Html.HiddenFor(m => m.Remand, new { @id = "Remand", @class = "form-control" })
+                                                <input type="radio" name="Remand_options" id="rds_11" value="Yes" /> Yes
+                                                <input type="radio" name="Remand_options" id="rds_21" value="No" /> No
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Reason for remand
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                @Html.TextAreaFor(m => m.RemandReason, new { @id = "RemandReason1", @class = "form-control", @placeholder = "", rows = "2" })
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Next Court Date
+                                            </div>
+                                            <div class="col-md-3 form-group">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.NextCourtDate, new { @id = "NextCourtDate1", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                    <label for="NextCourtDate1" class="input-group-addon btn">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Court Outcome
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                @Html.TextAreaFor(m => m.CourtOutcome, new { @id = "CourtOutcome1", @class = "form-control", @placeholder = "", rows = "2" })
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <p> Recommendation Type</p>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+
+
+
+                                                @Html.DropDownList("PCM_Recommendation_Id1", ViewBag.Recommendation_Type_List as SelectList, "Select Recommendation", new { id = "PCM_Recommendation_Id1", @class = "form-control", @required = "required" })
+                                                @Html.ValidationMessageFor(x => x.PCM_Recommendation_Id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Placement Type
+                                            </div>
+                                            <div class="col-md-4 form-group">
+
+                                                @Html.DropDownList("Placement_Type_Id1", ViewBag.PlacementRecomendation_List as SelectList, "Select Placement", new { id = "Placement_Type_Id1", @class = "form-control", @required = "required" })
+                                                @Html.ValidationMessageFor(x => x.Placement_Type_Id, "", new { @class = "text-danger" })
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Formal Case Status
+                                            </div>
+                                            <div class="col-md-4 form-group">
+
+                                                @Html.DropDownList("FormalCaseStatus_Id1", ViewBag.FormalCaseStatus_List as SelectList, "Select Status", new { id = "FormalCaseStatus_Id1", @class = "form-control", @required = "required" })
+                                                @Html.ValidationMessageFor(x => x.FormalCaseStatus_Id, "", new { @class = "text-danger" })
+
+
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+
+                                            </div>
+                                            <div class="col-md-2 form-group">
+                                                <a href="#" class="btn btn-block btn-success" id="SaveOutRecord">Save</a>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*Create A PopUp Modal For DeleteConfirmation*@
+
+                <div class="modal fade" id="DeleteConfirmation">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4>Delete Student Record</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Are You Sure? You Want To Delete This Record.</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                                <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="tab-pane fade in active" id="FCR" role="tabpanel">
+            <h3>Formal Court Proceedin</h3>
+
+            <div class="container" style="margin-top:3%">
+                <a href="#" class="btn btn-info" onclick="AddNewProceeding(0)">Add Formal Court Proceeding </a> <br />@*<br />*@
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>FormalCourt_Id</th>
+                            @*<th>Intake Assessment Id</th>*@
+                            <th>Court Name</th>
+                            <th>Appearance Date</th>
+                            <th>Action(Edit)</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="SetListFCR">
+                        <tr id="LoadingStatus" style="color:red"></tr>
+                    </tbody>
+                </table>
+
+                @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+                <div class="modal fade in center" id="MyModalProceeding">
+
+
+                    <div class="modal-dialog  modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitlePre"></h4>
+                            </div>
+
+                            <form id="form">
+                                <fieldset id="SubmitProForm">
+                                    @Html.HiddenFor(m => m.FormalCourt_Id, new { @id = "FormalCourt_Id" })
+                                    @Html.HiddenFor(m => m.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id" })
+
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Court Name
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            @Html.DropDownListFor(x => x.Court_Id, new SelectList(Model.Courts_Type, "Court_Id", "Court_Name"), "-Select Court Type-", new { @id = "Court_Id", @class = "form-control" })
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            Appearance Date
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.Appearance_Date, new { @id = "Appearance_Date", @class = "form-control jqueryui-marker-datepicker", @placeholder = "Appearance_Date*" })
+                                                <label for="Appearance_Date" class="input-group-addon btn">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+
+                                        </div>
+                                        <div class="col-md-2 form-group">
+                                            <a href="#" class="btn btn-block btn-success" id="SaveRecordFCR">Save</a>
+                                        </div>
+                                    </div>
+
+
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Create A PopUp Modal For DeleteConfirmation*@
+
+            <div class="modal fade" id="DeleteConfirmation">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                            <h4>Delete Student Record</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Are You Sure? You Want To Delete This Record.</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                            <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    $("#LoadingStatus").html("Loading....");
+    $.get("../../PCMFCRproceeding/GetPCMFormalCourtList", null, DataBind);
+    function DataBind(ProList) {
+        var SetProData = $("#SetListFCR");
+        for (var i = 0; i < ProList.length; i++) {
+            var Data = "<tr class='row_" + ProList[i].FormalCourt_Id + "'>" +
+                "<td>" + ProList[i].FormalCourt_Id + "</td>" +
+                //"<td>" + ProList[i].Intake_Assessment_Id + "</td>" +
+                "<td>" + ProList[i].Court_Name + "</td>" +
+                "<td>" + ToJavaScriptDatett(ProList[i].Appearance_Date) + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditP(" + ProList[i].FormalCourt_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                "</tr>";
+            SetProData.append(Data);
+            $("#LoadingStatus").html(" ");
+
+        }
+    }
+
+    $("#SaveRecordFCR").click(function () {
+        var data = $("#SubmitProForm").serialize();
+        $.ajax({
+            type: "Post",
+            url: "../../PCMFCRproceeding/AddProceeding",
+            data: data,
+            success: function (result) {
+                alert("Success!..");
+
+                $.getJSON('../../PCMFCRproceeding/GetPCMFormalCourtList', function (data) {
+
+                    var items = $("#SetListFCR");
+                    $.each(data, function (i, p) {
+                        items +=
+                            "<tr><td>" + p.FormalCourt_Id +
+                            "</td><td>" + p.Court_Name +
+                            "</td><td>" + ToJavaScriptDatett(p.Appearance_Date) +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditP(" + p.FormalCourt_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetListFCR').html(items);
+                });
+
+
+
+                $("#MyModalProceeding").modal("hide");
+
+            }
+        })
+    })
+
+    function ToJavaScriptDate(value) { //To Parse Date from the Returned Parsed Date
+
+        if (value == null || value == '') {
+            return 0;
+        }
+        else {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+        }
+
+    }
+
+    //Show The Popup Modal For Add New Preliminary
+
+    function AddNewProceeding(PCM_Preliminary_Id) {
+        $("#form")[0].reset();
+
+        $("#ModalTitleProceeding").html("Add Formal Court Procceding Record");
+        $("#MyModalProceeding").modal();
+
+        //if("#PCM_Recommendation_Id" = 2)
+        //{
+
+        //}
+    }
+
+    //Show The Popup Modal For Edit Student Record
+
+    function EditP(FormalCourt_Id) {
+        var url = "../../PCMFCRproceeding/GetProceedingById?FormalCourt_Id=" + FormalCourt_Id;
+        $("#ModalTitleProceeding").html("Update Formal Court Procceding Record");
+        $("#MyModalProceeding").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#FormalCourt_Id").val(obj.FormalCourt_Id);
+                $("#Intake_Assessment_Id").val(obj.Intake_Assessment_Id);
+                $("#Court_Id").val(obj.Formal_Court_Id);
+                $("#Appearance_Date").val(obj.Appearance_Date);
+            }
+        })
+    }
+
+
+
+    //Show The Popup Modal For DeleteComfirmation
+    var DeleteStudentRecord = function (StudentId) {
+        $("#StuId").val(StudentId);
+        $("#DeleteConfirmation").modal("show");
+    }
+    var ConfirmDelete = function () {
+        var StuId = $("#StuId").val();
+        $.ajax({
+            type: "POST",
+            url: "../../Home/DeleteStudentRecord?StudentId=" + StuId,
+            success: function (result) {
+                $("#DeleteConfirmation").modal("hide");
+                $(".row_" + StuId).remove();
+            }
+        })
+    }
+
+
+
+    function ToJavaScriptDatett(value) {
+
+
+        if (value == null || value == '') {
+            return 0;
+        }
+
+        else {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+        }
+
+
+    }
+
+</script>
+
+
+
+
+
+
+<script>
+
+    $("#LoadingStatus").html("Loading....");
+    $.get("../../PCMFCRproceeding/GetPCMFCRoutcome", null, DataBind);
+    function DataBind(ProList) {
+        var SetProData = $("#SetOutList");
+        for (var i = 0; i < ProList.length; i++) {
+            var Data = "<tr class='row_" + ProList[i].FormalCourtOutcome_Id + "'>" +
+                "<td>" + ToJavaScriptDatett(ProList[i].Appearance_Date) + "</td>" +
+                "<td>" + ProList[i].Court_Name + "</td>" +
+                "<td>" + ProList[i].Remand + "</td>" +
+                "<td>" + ToJavaScriptDatett(ProList[i].CourtDate) + "</td>" +
+                "<td>" + ToJavaScriptDatett(ProList[i].NextCourtDate) + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditO(" + ProList[i].FormalCourtOutcome_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                //"<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteStudentRecord(" + StudentList[i].PCM_Preliminary_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "</tr>";
+            SetProData.append(Data);
+            $("#LoadingStatus").html(" ");
+
+        }
+    }
+
+    //Show The Popup Modal For Add New Preliminary
+
+    function AddNewOut(PCM_Preliminary_Id) {
+        $("#form")[0].reset();
+
+        $("#ModalTitleOut").html("Add Formal Court Outcome Record");
+        $("#MyModalOut").modal();
+    }
+
+    //Show The Popup Modal For Edit Student Record
+
+    function EditO(FormalCourtOutcome_Id) {
+        var url = "../../PCMFCRproceeding/GetOutcomeById?FormalCourtOutcome_Id=" + FormalCourtOutcome_Id;
+        $("#ModalTitleOut").html("Update Formal Court Outcome Record");
+        $("#MyModalOut").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#FormalCourtOutcome_Id1").val(obj.FormalCourtOutcome_Id);
+                $("#Intake_Assessment_Id").val(obj.Intake_Assessment_Id);
+                $("#CourtDate1").val(obj.CourtDate);
+
+                $("#Remand").val(obj.Remand);
+                var value = $("#Remand").val().trim();
+                if (value == "Yes") {
+
+                    $("#rds_11").attr('checked', true);
+                    $("#rds_21").prop("checked", false);
+
+                } else {
+                    $("#rds_21").prop("checked", true);
+                    $("#rds_11").prop("checked", false);
+                }
+
+                $("#RemandReason1").val(obj.RemandReason);
+                $("#NextCourtDate1").val(obj.NextCourtDate);
+                $("#CourtOutcome1").val(obj.CourtOutcome);
+
+                $("#FormalCaseStatus_Id1 option:selected").text(obj.descrStatusCourt);
+                $("#FormalCaseStatus_Id1 option:selected").val(obj.FormalCaseStatus_Id);
+
+                $("#PCM_Recommendation_Id1 option:selected").text(obj.descrRecommendation);
+                $("#PCM_Recommendation_Id1 option:selected").val(obj.PCM_Recommendation_Id);
+
+                $("#Placement_Type_Id1 option:selected").text(obj.descrPlacement);
+                $("#Placement_Type_Id1 option:selected").val(obj.Placement_Type_Id);
+
+
+            }
+        })
+    }
+
+    $("#SaveOutRecord").click(function () {
+        var data = $("#SubmitOutForm").serialize();
+        $.ajax({
+            type: "Post",
+            url: "../../PCMFCRproceeding/AddOutcome",
+            data: {
+                Remand: $('input:radio[name=Remand_options]:checked').val(),
+                CourtDate: $("#CourtDate1").val(),
+                RemandReason: $("#RemandReason1").val(),
+                NextCourtDate: $("#NextCourtDate1").val(),
+                CourtOutcome: $("#CourtOutcome1").val(),
+                PCM_Recommendation_Id: $("#PCM_Recommendation_Id1").val(),
+                Placement_Type_Id: $("#Placement_Type_Id1").val(),
+                FormalCaseStatus_Id: $("#FormalCaseStatus_Id1").val(),
+                FormalCourtOutcome_Id: $("#FormalCourtOutcome_Id1").val()
+
+
+            },
+            success: function (result) {
+                alert("Success!..");
+                $.getJSON('../../PCMFCRproceeding/GetPCMFCRoutcome', function (data) {
+
+                    var items = $("#SetListFCR");
+                    $.each(data, function (i, p) {
+                        items +=
+                            "<tr><td>" + p.FormalCourtOutcome_Id +
+                            "</td><td>" + ToJavaScriptDatett(p.Appearance_Date) +
+                            "</td><td>" + p.Court_Name +
+                            "</td><td>" + p.Remand +
+                            "</td><td>" + ToJavaScriptDatett(p.CourtDate) +
+
+                            "</td><td>" + ToJavaScriptDatett(p.NextCourtDate) +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditO(" + ProList[i].FormalCourtOutcome_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetListFCR').html(items);
+                });
+                // window.location.href = "/PCMTab/index";
+                $("#MyModalOut").modal("hide");
+
+            }
+        })
+    })
+
+    //Show The Popup Modal For DeleteComfirmation
+    var DeleteStudentRecord = function (StudentId) {
+        $("#StuId").val(StudentId);
+        $("#DeleteConfirmation").modal("show");
+    }
+    var ConfirmDelete = function () {
+        var StuId = $("#StuId").val();
+        $.ajax({
+            type: "POST",
+            url: "../../Home/DeleteStudentRecord?StudentId=" + StuId,
+            success: function (result) {
+                $("#DeleteConfirmation").modal("hide");
+                $(".row_" + StuId).remove();
+            }
+        })
+    }
+
+
+
+
+    function ToJavaScriptDatett(value) {
+
+
+        if (value == null || value == '') {
+            return 0;
+        }
+
+        else {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+        }
+
+
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Initialize items marked as datepickers
+        $(".jqueryui-marker-datepicker").datepicker({
+            dateFormat: "dd M yy",
+            changeYear: true
+        });
+
+    });
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+
+ 
+
+
+
+}
+
+
+
+
+
+

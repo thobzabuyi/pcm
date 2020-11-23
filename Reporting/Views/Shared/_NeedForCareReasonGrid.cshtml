@@ -1,0 +1,7 @@
+﻿@model IEnumerable<Common_Objects.Models.Need_for_Care_Reason_Item>
+@using GridMvc.Html
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(x => x.Description).Titled("A child is in need of care and protection if the child -").Sortable(false);
+})

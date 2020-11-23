@@ -1,0 +1,182 @@
+﻿
+@model  Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+<div class="tab-pane" id="PDtab1CoAccused">
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="text-align: center">
+            Person Details
+        </div>
+    </div>
+    <p></p>
+    <fieldset id="SubmitFormCoAccused">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(x => x.Co_Accused_First_Name)
+                    </div>
+                    <div class="col-md-8 form-group">
+                        @Html.TextBoxFor(m => m.Co_Accused_First_Name, new { @id = "Co_Accused_First_Name", @class = "form-control", @placeholder = "Accused First Name*" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(x => x.Co_Accused_Last_Name)
+                    </div>
+                    <div class="col-md-8 form-group">
+                        @Html.TextBoxFor(m => m.Co_Accused_Last_Name, new { @id = "Co_Accused_Last_Name", @class = "form-control", @placeholder = "Co Accused Last Name*" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(x => x.Cubacc)
+                    </div>
+                    <div class="col-md-8 form-group">
+                        @Html.TextBoxFor(m => m.Cubacc, new { @id = "Cubacc", rows = "2", @class = "form-control", @placeholder = "Cubacc*" })
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(x => x.Age)
+                    </div>
+                    <div class="col-md-8 form-group">
+                        @Html.TextBoxFor(m => m.Age, new { @id = "CoAccuseAge", rows = "2", @class = "form-control", @placeholder = "Cubacc*" })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+    </fieldset>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="submit" id="SaveRecordPersonCoAccused" value="Save" class="btn btn-success" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/jscript">
+
+
+    $("#SaveRecordPersonCoAccused").click(function () {
+
+        $.ajax({
+            type: "Post",
+            url: "../../PCMCase/SavePersonCoAccusedDetails",
+            data: {
+                Co_Accused_Last_Name: $("#Co_Accused_Last_Name").val(),
+                Co_Accused_First_Name: $("#Co_Accused_First_Name").val(),
+                //Victim_Age: $("#CoAccuseAge").val(),
+            },
+            success: function (result) {
+
+                alert("Success!..");
+
+                $.getJSON('../../PCMCase/ListCoAccused/', function (data) {
+
+                    var items = $("#SetListCoAccused");
+                    $.each(data, function (i, p) {
+                        items += "<tr><td>" + p.Co_Accused_Id +
+                            "</td><td>" + p.Co_Accused_First_Name +
+                            "</td><td>" + p.Co_Accused_Last_Name +
+                            "</td><td>" + p.Cubacc +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='DeleteCoAccused(" + p.Co_Accused_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetListCoAccused').html(items);
+                });
+                $("#myModalCoAccused").modal("hide");
+            },
+            error: function (xhr, ajaxOptions, error) {
+                alert(xhr.status);
+                alert('Error: ' + xhr.responseText);
+            }
+        })
+    })
+
+
+
+
+    $("#District").change(function () {
+        $("#Town").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetTowns")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#District").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#Town").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+
+
+
+    $("#Province").change(function () {
+        $("#District").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDistricts")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#Province").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#District").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+</script>
+
+

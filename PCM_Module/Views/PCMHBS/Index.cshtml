@@ -1,0 +1,305 @@
+﻿@model Common_Objects.ViewModels.PCMHBSViewModel
+
+
+
+<style>
+    .jqueryui-marker-datepicker {
+        z-index: 1151 !important;
+    }
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+    .modal {
+        top: 5%;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+
+    .modal-dialog {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+</style>
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Home Base Supervision: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+    </div>
+
+    <div class="container" style="margin-top:3%">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Court Type</th>
+                    <th>Placement Date</th>
+                    <th>Number of Visit</th>
+                    <th>Visitation Period</th>
+                    <th>HBS Supervisor Id</th>
+                    <th>Placement Confirmed</th>
+                    <th>Action(Edit)</th>
+                </tr>
+            </thead>
+            <tbody id="SetsHBS">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+
+        <div class="modal fade in center" id="MyModalHBS">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4 id="ModalTitle"></h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <form id="formHBS">
+                            <fieldset id="SubmitFormHBS">
+
+
+                                @Html.HiddenFor(m => m.HomeBasedSupervision_Id, new { @id = "HomeBasedSupervision_Id" })
+                                @Html.HiddenFor(m => m.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id" })
+
+                                <div class="row">
+
+
+
+                                    <div class="col-md-3">
+                                        Visitation period
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <div class="input-group">
+                                            @Html.EditorFor(model => model.Visitation_Period, new { htmlAttributes = new { @class = "form-control jqueryui-marker-datepicker", @id = "Visitation_Period" } })
+                                            <label for="Visitation_Period" class="input-group-addon btn">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.Visitation_Period, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                        <div class="col-md-3">
+                                            Number of visits
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            @Html.EditorFor(model => model.Number_of_Visit, new { htmlAttributes = new { @class = "form-control", @id = "Number_of_Visit" } })
+                                            @Html.ValidationMessageFor(model => model.Number_of_Visit, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                <div class="row">
+
+
+                                    <div class="col-md-3">
+                                        Placement date
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <div class="input-group">
+                                            @Html.EditorFor(model => model.Placement_Date, new { htmlAttributes = new { @class = "form-control jqueryui-marker-datepicker", @id = "Placement_Date" } })
+                                            <label for="Placement_Date" class="input-group-addon btn">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </label>
+                                            @Html.ValidationMessageFor(model => model.Placement_Date, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                        <div class="col-md-3">
+                                            HBS supervisor
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            @Html.DropDownListFor(x => x.HBS_Supervisor_Id, new SelectList(Model.HBSsupervisor_Type, "HBS_Supervisor_Id", "HBS_Supervisor"), "-Select Supervisor Type-", new { @id = "HBS_Supervisor_Id", @class = "form-control" })
+                                        </div>
+
+                                    </div>
+
+
+
+                                <div class="row">
+                        
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Placement confirmed
+                                    </div>
+                                    <div class="col-md-3 form-group">
+
+
+                                        @Html.HiddenFor(m => m.Placement_Confirmed, new { @id = "Placement_Confirmed", @class = "form-control" })
+                                        <input type="radio" name="Placement_Confirmed" id="rds_Pl11" value="Yes" /> Yes
+                                        <input type="radio" name="Placement_Confirmed" id="rds_Pl21" value="No" /> No
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="col-md-2 form-group">
+                                    <a href="#" class="btn btn-block btn-success" id="SaveHBSRecord">Save</a>
+                                </div>
+
+                            </fieldset>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+
+
+    $.getJSON('../../PCMHBS/GetHBSList', function (data) {
+
+        var items = $("#SetsHBS");
+        $.each(data, function (i, p) {
+            items +=
+                "<tr><td>" + p.Court_Type +
+            "</td><td>" + ToJavaScriptDatett(p.Placement_Date) +
+                "</td><td>" + p.Number_of_Visit +
+            "</td><td>" + (p.Visitation_Period) +
+                "</td><td>" + p.HBS_Supervisor_Id +
+                "</td><td>" + p.Placement_Confirmed +
+                "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditHBS(" + p.HomeBasedSupervision_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                "</td></tr>";
+        });
+        items += "</table>";
+
+        $('#SetsHBS').html(items);
+    });
+
+
+    function EditHBS(HomeBasedSupervision_Id) {
+        var url = "../../PCMHBS/GetHBSById?HomeBasedSupervision_Id=" + HomeBasedSupervision_Id;
+        $("#ModalTitle").html("Update Home Base Supervision");
+        $("#MyModalHBS").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#HomeBasedSupervision_Id").val(obj.HomeBasedSupervision_Id);
+                $("#Visitation_Period").val(obj.Visitation_Period);
+                $("#Number_of_Visit").val(obj.Number_of_Visit);
+                $("#Placement_Date").val(obj.Placement_Date);
+                $("#HBS_Supervisor_Id").val(obj.HBS_Supervisor_Id);
+                $("#Intake_Assessment_Id").val(obj.Intake_Assessment_Id);
+
+
+                $("#Placement_Confirmed").val(obj.Placement_Confirmed);
+                var value = $("#Placement_Confirmed").val().trim();
+                if (value == "Yes") {
+
+                    $("#rds_Pl11").attr('checked', true);
+                    $("#rds_Pl21").prop("checked", false);
+
+                } else {
+                    $("#rds_Pl21").prop("checked", true);
+                    $("#rds_Pl11").prop("checked", false);
+                }
+            }
+        })
+    }
+
+
+    $("#SaveHBSRecord").click(function () {
+        var data = $("#formHBS").serialize();
+        $.ajax({
+            type: "Post",
+            url: "../../PCMHBS/CreateHBS",
+            data: {
+
+                HomeBasedSupervision_Id: $("#HomeBasedSupervision_Id").val(),
+                Visitation_Period: $("#Visitation_Period").val(),
+                Remand: $("#Remand").val(),
+                Number_of_Visit: $("#Number_of_Visit").val(),
+                Placement_Date: $("#Placement_Date").val(),
+                HBS_Supervisor_Id: $("#HBS_Supervisor_Id").val(),
+                Placement_Confirmed: $('input:radio[name=Placement_Confirmed]:checked').val()
+
+            },
+            success: function (result) {
+                alert("Success!..");
+                $.getJSON('../../PCMHBS/GetHBSList', function (data) {
+
+                    var items = $("#SetsHBS");
+                    $.each(data, function (i, p) {
+                        items +=
+                            "<tr><td>" + p.Court_Type +
+                        "</td><td>" + ToJavaScriptDatett(p.Placement_Date) +
+                            "</td><td>" + p.Number_of_Visit +
+                        "</td><td>" + ToJavaScriptDatett(p.Visitation_Period) +
+                            "</td><td>" + p.HBS_Supervisor_Id +
+                            "</td><td>" + p.Placement_Confirmed +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditHBS(" + p.HomeBasedSupervision_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetsHBS').html(items);
+                });
+                $("#MyModalOutcome").modal("hide");
+
+
+            }
+        })
+    })
+
+
+
+
+
+    function ToJavaScriptDatett(value) {
+
+
+        if (value == null || value == '') {
+            return 0;
+        }
+
+        else {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+        }
+
+
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Initialize items marked as datepickers
+        $(".jqueryui-marker-datepicker").datepicker({
+            dateFormat: "dd M yy",
+            changeYear: true
+        });
+
+    });
+
+</script>
+
+
+
+
+

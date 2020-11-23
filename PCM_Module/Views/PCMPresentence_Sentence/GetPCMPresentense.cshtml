@@ -1,0 +1,475 @@
+﻿@model Common_Objects.ViewModels.PCMPresentenceDetailsViewModel
+<br />
+
+
+                <!-- Modal -->
+
+@using (Html.BeginForm("UpdatePresentence", "PCMPresentence_Sentence", new { id = Model.Intake_Assessment_Id }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="panel panel-primary">
+
+        <div class="panel-heading" style="text-align: center">
+           Presentence: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row">
+
+                @if (ViewBag.Court != null)
+                {
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Province_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+
+                       @Html.DropDownList("DropdownProvince", ViewData["province"] as List<SelectListItem>, new {  @class = "form-control", @required = "required" })  
+                        
+                        @*@Html.DropDownList("DropdownProvince", ViewData["district"] as List<SelectListItem>, "-- Select --", new { @id = "DropdownProvince", @class = "form-control", @required = "required" })*@
+                        @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+                    </div>
+
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.District_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+                        @Html.DropDownList("District_Id1", ViewData["district"] as List<SelectListItem>, new { @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(x => x.District_Id, "", new { @class = "text-danger" })
+                    </div>
+
+                }
+                else
+                {
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Province_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+                        @*@Html.DropDownList("Province", (SelectList)Model.AdoptionCaseViewModel.Province_List, "-- Select --", new { @class = "form-control" })*@
+                        @Html.DropDownListFor(x => x.Province_Id, new SelectList(Model.Province_List, "Province_Id", "Description"), "-Select Province-", new { @id = "DropdownProvince", @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.District_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+                        @*@Html.DropDownList("District_Id", (SelectList)ViewBag.District, "-- Select --", new { @class = "form-control", @required = "required" })*@
+                        @Html.DropDownListFor(x => x.District_Id, new SelectList(Model.District_List, "District_Id", "Description"), "-Select Court-", new { @id = "District_Id1", @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(x => x.District_Id, "", new { @class = "text-danger" })
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Court_id)
+                </div>
+                <div class="col-md-3 form-group">
+
+                    @Html.DropDownListFor(x => x.Court_id, new SelectList(Model.Court_List, "Court_id", "Description"), "-Select Court-", new { @id = "DropdownCourt", @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(x => x.Court_id, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Date_Request_Received)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Date_Request_Received, new { @id = "Date_Request_Received", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Date_Request_Received" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                        @Html.ValidationMessageFor(x => x.Date_Request_Received, "", new { @class = "text-danger" })
+                    </div>
+                   
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Court_Appearance_Date)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Court_Appearance_Date, new { @id = "Court_Appearance_Date", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Court_Appearance_Date" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                        @Html.ValidationMessageFor(x => x.Court_Appearance_Date, "", new { @class = "text-danger" })
+                    </div>
+                       
+                
+                </div>
+
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Date_Report_Submitted_To_Court)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Date_Report_Submitted_To_Court, new { @id = "Date_Report_Submitted_To_Court", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Date_Report_Submitted_To_Court" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                        @Html.ValidationMessageFor(x => x.Date_Report_Submitted_To_Court, "", new { @class = "text-danger" })
+                    </div>
+                       
+                    
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Reasons_For_Non_Submission)
+                </div>
+                <div class="col-md-3 form-group">
+
+                    @Html.TextAreaFor(x => x.Reasons_For_Non_Submission, new { @id = "Reasons_For_Non_Submission", @class = "form-control", rows = "2", @required = "required" })
+                </div>
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Sentencing_Options)
+                </div>
+                <div class="col-md-3 form-group">
+
+                    @Html.TextAreaFor(x => x.Sentencing_Options, new { @id = "Sentencing_Options", @class = "form-control", rows = "2", @required = "required" })
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Community_Based_Options_Id)
+                </div>
+                <div class="col-md-3 form-group">
+
+                    @Html.DropDownListFor(x => x.Community_Based_Options_Id, new SelectList(Model.CommunityBasedOptions_List, "Community_Based_Options_Id", "Description"), "-Select-", new { @id = "Community", @class = "form-control" })
+
+
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Restorective_Justice_Option_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Restorective_Justice_Option_Id, new SelectList(Model.RestorectiveJustice_List, "Restorective_Justice_Option_Id", "Description"), "-Select-", new { @id = "Restorective", @class = "form-control" })
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Programme_Type_Id)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Programme_Type_Id, new SelectList(Model.ProgrammeType_List, "Programme_Type_Id", "Description"), "-Select-", new { @id = "ProgrammeType", @class = "form-control" })
+                </div>
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Programme_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Programme_Id, new SelectList(Model.Programme_List, "Programme_Id", "Description"), "-Select-", new { @id = "ProgrammeName", @class = "form-control" })
+                </div>
+            </div>
+
+
+
+            @*More controls below.........................................................................*@
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Fine_or_Alternatives_To_Fine)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @if(Model.Fine_or_Alternatives_To_Fine == true)
+                    {
+
+                        @Html.CheckBoxFor(x => x.Fine_or_Alternatives_To_Fine, new { @checked = "checked" })
+                    }
+                    else
+                    {
+                        @Html.CheckBoxFor(x => x.Fine_or_Alternatives_To_Fine)
+                }
+                </div>
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Fine_Alternatives_Fine_Comments)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.Fine_Alternatives_Fine_Comments, new { @id = "Fine_Alternatives_Fine_Comments", @class = "form-control", @required = "required" })
+                </div>
+
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Commital_Treatment_Centre)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @if (Model.Commital_Treatment_Centre == true)
+                {
+                        @Html.CheckBoxFor(x => x.Commital_Treatment_Centre, new { @checked = "checked" })
+                }
+                else
+                {
+                        @Html.CheckBoxFor(x => x.Commital_Treatment_Centre)
+                }
+                </div>
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Center_Name)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.Center_Name, new { @id = "Center_Name", @class = "form-control", @required = "required" })
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Period_Commital_Treatment_Centre_From)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Period_Commital_Treatment_Centre_From, new { @id = "Period_Commital_Treatment_Centre_From", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Period_Commital_Treatment_Centre_From" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Period_Commital_Treatment_Centre_To)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Period_Commital_Treatment_Centre_To, new { @id = "Period_Commital_Treatment_Centre_To", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Period_Commital_Treatment_Centre_To" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Compulsory_esidence_CYCC)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @if (Model.Compulsory_esidence_CYCC == true)
+                {
+                        @Html.CheckBoxFor(x => x.Compulsory_esidence_CYCC, new { @checked = "checked" })
+                }
+                else
+                {
+                        @Html.CheckBoxFor(x => x.Compulsory_esidence_CYCC)
+                }
+                </div>
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.CYCCCenter_Name)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.CYCCCenter_Name, new { @id = "CYCCCenter_Name", @class = "form-control", @required = "required" })
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Compulsory_esidence_CYCC_From)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Compulsory_esidence_CYCC_From, new { @id = "Compulsory_esidence_CYCC_From", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Compulsory_esidence_CYCC_From" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Compulsory_esidence_CYCC_To)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Compulsory_esidence_CYCC_To, new { @id = "Compulsory_esidence_CYCC_To", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Compulsory_esidence_CYCC_To" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Imprisoment)
+                </div>
+                <div class="col-md-3 form-group">
+                    @if (Model.Imprisoment == true)
+                {
+                        @Html.CheckBoxFor(x => x.Imprisoment, new { @checked = "checked" })
+               }
+               else
+               {
+                        @Html.CheckBoxFor(x => x.Imprisoment)
+               }
+                </div>
+
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Imprisoment_Id)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Imprisoment_Id, new SelectList(Model.Imprisoment_List, "Imprisoment_Id", "Description"), "-Select-", new { @id = "Imprisoment_Id", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Imprisomen_From)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Imprisomen_From, new { @id = "Imprisomen_From", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Imprisomen_From" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                    @Html.LabelFor(x => x.Imprisomen_To)
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Imprisomen_To, new { @id = "Imprisomen_To", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                        <label for="Imprisomen_To" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Department_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Department_Id, new SelectList(Model.Department_List, "Department_Id", "Description"), "-Select-", new { @id = "DepartmentId", @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+
+        </div>
+        <div class="form-group">
+            <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+        </div>
+        
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#DropdownProvince").change(function () {
+            $("#District_Id1").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDistricts")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#DropdownProvince").val() },
+                // Get Selected Country ID.
+
+                success: function (districts) {
+
+                    $.each(districts, function (i, district) {
+                        $("#District_Id1").append('<option value="' + district.Value + '">' +
+                             district.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#District_Id1").change(function () {
+            $("#DropdownCourt").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetCourts")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#District_Id1").val() },
+                // Get Selected Country ID.
+
+                success: function (courts) {
+
+                    $.each(courts, function (i, court) {
+                        $("#DropdownCourt").append('<option value="' + court.Value + '">' +
+                             court.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+
+
+</script>

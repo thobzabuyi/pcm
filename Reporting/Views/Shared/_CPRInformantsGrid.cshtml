@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Common_Objects.Models.CPR_Informant>
+@using GridMvc.Html
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(x => x.Person.First_Name).Titled("First Name").Sortable(false);
+    columns.Add(x => x.Person.Last_Name).Titled("Last Name").Sortable(false);
+}).WithPaging(5)

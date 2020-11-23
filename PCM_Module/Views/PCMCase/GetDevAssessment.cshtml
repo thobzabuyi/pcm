@@ -1,0 +1,81 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<br />
+<style>
+    #btnSearch {
+        outline: none !important;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: none;
+    }
+
+    #tool-bar {
+        transition: width 0.1s;
+        -webkit-transition: width 0.1s;
+    }
+
+</style>
+
+@using (Html.BeginForm("UpdateDevAssessment", "PCMCase", new { id = Model.Development_Id }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="text-align: center">
+            Developmental Assessment: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Belonging)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Belonging, new { @id = "Belonging", rows = "4", @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(x => x.Belonging, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Mastery)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Mastery, new { @id = "Mastery", rows = "4", @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(x => x.Mastery, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Independence)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Independence, new { @id = "Independence", rows = "4", @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(x => x.Independence, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Generosity)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Generosity, new { @id = "Generosity", rows = "4", @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(x => x.Generosity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(x => x.Evaluation)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        @Html.TextAreaFor(x => x.Evaluation, new { @id = "Evaluation", rows = "4", @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(x => x.Evaluation, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+        </div>
+
+    </div>
+
+}
+

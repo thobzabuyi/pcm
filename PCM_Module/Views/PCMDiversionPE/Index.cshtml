@@ -1,0 +1,80 @@
+﻿
+@model Common_Objects.ViewModels.PCMDiversionViewModel
+
+@using (Html.BeginForm())
+{
+    
+
+    <div class="row">
+        <div class="col-md-3">
+            Service Provider
+        </div>
+        <div class="col-md-3 form-group">
+            @Html.DropDownList("sp", ViewBag.S_P_Id as SelectList, "Select a Service", new { id = "Services_Provider_Id", @class = "form-control" })<br />
+           @* @Html.DropDownList("Service_Provider_Category", new SelectList(string.Empty, "Value", "Text"), "-Select Provider-", new { @id = "Service_Provider_Category", @class = "form-control" })*@
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            Programme Name
+        </div>
+        <div class="col-md-3 form-group">
+            @*@Html.DropDownList("sp", ViewBag.S_P_Id as SelectList, "Select a Service", new { id = "Services_Provider_Id", @class = "form-control" })<br />*@
+            <select id="Programme_Id" name="Programme_Id"></select><br />
+        </div>
+    </div>
+
+   
+    <select id="city" name="City"></select><br />
+}
+
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+@*<script src="~/Scripts/jquery-3.1.0.min.js"></script>*@
+@*<script>
+    $(document).ready(function () {
+        $("#Services_Provider_Id").change(function () {
+            debugger;
+            $.get("/PCMDiversionPE/getProgrammeList", { id: $("#Services_Provider_Id").val() }, function (data) {
+                $("#Programme_Id").empty();
+                $.each(data, function (index, row) {
+                    $("#Programme_Id").append("<option value='" + row.Programme_Id + "'>" + row.Programme_name + "</option>")
+                });
+            });
+        })
+    });
+</script>*@
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")*@
+
+
+    <script type="text/javascript">
+         $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+             $("#Services_Provider_Id").change(function () {
+                 debugger;
+                 $("#Programme_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("getProgrammeList")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Services_Provider_Id").val() },
+                // Get Selected Country ID.
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $("#Programme_Id").append('<option value="' + state.Value + '">' +
+                             state.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+    </script>

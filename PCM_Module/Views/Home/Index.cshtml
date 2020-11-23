@@ -1,0 +1,169 @@
+﻿@model Common_Objects.ViewModels.PCMMainPageWorklistModelVM
+
+
+<head>
+
+
+    <style>
+        /* Styles for your <ul> menu */
+        #header ul {
+            background: #F4F6EB;
+            margin: 0 auto;
+            padding: 50px 0 0;
+            text-align: center;
+            width: auto;
+        }
+
+            /* Styles for individual <li> elements */
+            #header ul li {
+                display: inline;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+
+
+                /* Hover style for your links */
+                #header ul li a:hover {
+                    background: #3D515F !important;
+                    border-radius: 5px;
+                    color: black;
+                }
+
+                /* A more specific style for your "active" link */
+                #header ul li a.active {
+                    background-color: #008CBA !important;
+                    border-color: #000000;
+                    border-bottom: 5px solid #9b0e0e;
+                }
+
+                    /* Specific hover style for your active link */
+                    #header ul li a.active:hover {
+                        color: yellow;
+                    }
+
+        .nav-tabs > li.active > a,
+        .nav-tabs > li.active > a:focus,
+        .nav-tabs > li.active > a:hover {
+            background-color: #008CBA !important;
+            color: #fff;
+        }
+
+        #btnSearch {
+            outline: none !important;
+            border-radius: 8px 8px 0px 0px;
+            box-shadow: none;
+        }
+
+
+     
+    </style>
+
+</head>
+<body >
+    <div style="text-align: center; font-size: small;font-weight: bold; background-color:#F3ECD5; width:100%">
+        
+        <marquee behavior="alternate"><span class="marquee">Building a caring society. Together!</span></marquee>
+    </div>
+    <div id="header" >
+        <div style=" font-weight:bold; font-size:14px; width:100%">
+
+            <ul class="nav nav-tabs" style="display:table; margin:0 auto;" id="myTab1">
+                <li><a href="#tab333" data-toggle="tab">PO's End Point Allocated Cases</a></li>
+                <li><a href="#tab11" data-toggle="tab">PO's New Worklist</a></li>
+                <li><a href="#tab22" data-toggle="tab">PO's Existing Worklist</a></li>
+                <li><a href="#tab33" data-toggle="tab">Old PCM Cases</a></li>
+                <li><a href="#tab44" data-toggle="tab">Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+
+        <div class="tab-pane" id="tab333" role="tabpanel">
+
+            <h3>PO's End Point Allocated Cases</h3>
+            <div id="reportsDiv">
+                @Html.Partial("_EndPointCases", Model.PCMEndPointAllocatedCasez)
+            </div>
+
+
+        </div>
+
+        <div class="tab-pane fade in active" id="tab11" role="tabpanel">
+
+            <h3>PO's New Worklist</h3>
+            <div id="newCasesDiv">
+                @Html.Partial("_NewCases", Model.PCMNewCasez)
+            </div>
+
+
+        </div>
+        <div class="tab-pane" id="tab22" role="tabpanel">
+
+            <h3>PO's Existing Worklist</h3>
+            <div id="currentCasesDiv">
+                @Html.Partial("_CurrentCases", Model.PCMCurrentCases)
+            </div>
+
+        </div>
+        <div class="tab-pane" id="tab33" role="tabpanel">
+            <h3>Old Cases Work List</h3>
+            <div id="oldCasesCasesDiv">
+                @Html.Action("PCMSearch", "Home")
+            </div>
+
+        </div>
+        <div class="tab-pane" id="tab44" role="tabpanel">
+
+            <h3>Reports</h3>
+            <div id="reportsDiv">
+                @*@Html.Action("About", "Home")*@
+            </div>
+
+  
+        </div>
+
+    </div>
+   
+
+</body>
+
+
+
+   <script type="text/javascript">
+
+$(document).ready(function(){
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+        $('#myTab1 a[href="' + activeTab + '"]').tab('show');
+    }
+
+
+  
+});
+
+localStorage.setItem("Tab", "");
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

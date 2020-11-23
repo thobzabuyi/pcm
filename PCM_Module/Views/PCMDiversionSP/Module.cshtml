@@ -1,0 +1,310 @@
+﻿
+@model Common_Objects.ViewModels.PCMDiversionViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+
+
+<div class="container" style="margin-top:3%">
+    <a href="#" class="btn btn-info" onclick="AddNew1(0)">Add New Module</a> <br />@*<br />*@
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>M_Id</th>
+                <th>Module</th>
+                <th>Sessions</th>
+                <th>No_Sessions</th>
+                <th>Session_StartDate</th>
+                <th>Session_EndDate</th>
+                <th>Action(Edit)</th>
+            </tr>
+        </thead>
+        <tbody id="SetList">
+            <tr id="LoadingStatus" style="color:red"></tr>
+        </tbody>
+    </table>
+
+    @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+    <div class="modal fade in center" id="MyModalModule1">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+
+                @*<div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitleModule"></h4>
+                </div>*@
+
+                <div class="panel panel-success">
+                    <div class="panel-heading"><a href="#" class="close" data-dismiss="modal">&times;</a><h4 id="ModalTitleModule"></h4></div>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formModule">
+                        <fieldset id="SubmitFormModule">
+                            @Html.HiddenFor(m => m.M_Id, new { @id = "M_Id" })
+                      
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Programme
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.DropDownListFor(m => m.Programme_Id, ViewBag.ListOfDescription as SelectList, "-Select Programme-", new { @id = "Programme_Id", @class = "form-control" })
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Modules
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @*<select id="Modules_Id" name="Modules_Id"></select>*@
+                                    @Html.DropDownList("Modules_Id", new SelectList(string.Empty, "Value", "Text"), "-Select Module-", new { @id = "Modules_Id", @class = "form-control" @*style = "width:250px", @class = "dropdown1"*@ })
+                                    
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Number of Modules
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    @Html.TextBoxFor(m => m.No_Module, new { @id = "No_Module", @class = "form-control", @placeholder = "" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                    <div class="col-md-4">
+                                      Sessions
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        @Html.TextBoxFor(model => model.Sessions, new { @id = "Sessions", @class = "form-control", @placeholder = "" })
+                                    </div>
+                                </div>
+
+                            <div class="row">
+                                    <div class="col-md-4">
+                                        Number of Sessions
+                                    </div>
+                                    <div class="col-md-2 form-group">
+                                        @Html.TextBoxFor(m => m.No_Sessions, new { @id = "No_Sessions", @class = "form-control", @placeholder = "" })
+                                    </div>
+                                </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Session Start Date
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.Session_StartDate, new { @id = "Session_StartDate", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                        <label for="Session_StartDate" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Session End Date
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.Session_EndDate, new { @id = "Session_EndDate", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                        <label for="Session_EndDate" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                   
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <a href="#" class="btn btn-block btn-success" id="SaveRecord">Save</a>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                
+                            </div>
+
+
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Create A PopUp Modal For DeleteConfirmation*@
+
+    <div class="modal fade" id="DeleteConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete Student Record</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want To Delete This Record.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                    <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+
+
+
+        $("#LoadingStatus").html("Loading....");
+        $.get("/PCMDiversionSP/GetDiversion_M", null, DataBind);
+        function DataBind(List) {
+            var SetData = $("#SetList");
+            for (var i = 0; i < List.length; i++) {
+                var Data = "<tr class='row_" + List[i].M_Id + "'>" +
+                    "<td>" + List[i].M_Id + "</td>" +
+                    "<td>" + List[i].Module + "</td>" +
+                    "<td>" + List[i].Sessions + "</td>" +
+                    "<td>" + List[i].No_Sessions + "</td>" +
+                    "<td>" + ToJavaScriptDatett(List[i].Session_StartDate) + "</td>" +
+                    "<td>" + ToJavaScriptDatett(List[i].Session_EndDate) + "</td>" +
+                    //"<td>" + List[i].Victims_Sammary + "</td>" +
+                    "<td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + List[i].M_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                    "</tr>";
+                SetData.append(Data);
+                $("#LoadingStatus").html(" ");
+
+            }
+        }
+
+        //$(document).ready(function () {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/PCMDiversionSP/getProgramme",
+        //        data: "{}",
+        //        success: function (data) {
+        //            var s = '<option value="-1">Please Select a Programme</option>';
+        //            for (var i = 0; i < data.length; i++) {
+        //                s += '<option value="' + data[i].Programme_Id + '">' + data[i].Programme_Id + '</option>';
+        //            }
+        //            $("#Programme_Id").html(s);
+        //        }
+        //    });
+        //});
+
+
+         $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+             $("#Programme_Id").change(function () {
+             $("#Modules_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetModules")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme_Id").val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $("#Modules_Id").append('<option value="' + state.Value + '">' +
+                             state.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+
+        //Show The Popup Modal For Add New Student
+
+        function AddNew1(M_Id) {
+            $("#formModule")[0].reset();
+
+            $("#ModalTitleModule").html("Add New Programme module....");
+            $("#MyModalModule1").modal();
+        }
+
+
+        function Edit(M_Id) {
+            var url = "/PCMDiversionSP/GetDiversionMById?M_Id=" + M_Id;
+            $("#ModalTitleModule").html("Update Programme module....");
+            $("#MyModalModule1").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    $("#M_Id").val(obj.M_Id);
+
+                    //$("#M_Id").val(obj.M_Id);
+                    //$("#descriptionID option:selected").text(obj.tbl_description.description);
+                    //$("#descriptionID option:selected").val(obj.descriptionID);
+
+                    //$("#barcode").val(obj.barcode);
+                    //$("#serial").val(obj.serial);
+                    $("#Sessions").val(obj.Sessions);
+                    $("#No_Sessions").val(obj.No_Sessions);
+                    $("#Session_StartDate").val(obj.Session_StartDate);
+                    $("#Session_EndDate").val(obj.Session_EndDate);
+                }
+            })
+        }
+
+        $("#SaveRecord").click(function () {
+            var data = $("#SubmitFormModule").serialize();
+            $.ajax({
+                type: "Post",
+                url: "/PCMDiversionSP/AddUpdate",
+                data: data,
+                success: function (result) {
+                    alert("Success!..");
+                    window.location.href = "/PCMDiversionSP/Module";
+                    $("#MyModalModule1").modal("hide");
+                }
+            })
+        })
+
+
+        function ToJavaScriptDatett(value) {
+
+
+            if (value == null || value == '') {
+                return 0;
+            }
+
+            else {
+                var pattern = /Date\(([^)]+)\)/;
+                var results = pattern.exec(value);
+                var dt = new Date(parseFloat(results[1]));
+                return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+            }
+
+
+        }
+
+    </script>

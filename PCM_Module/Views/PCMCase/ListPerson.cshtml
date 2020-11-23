@@ -1,0 +1,102 @@
+﻿@model  Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<fieldset id="SubmitForm2">
+    <div class="row">
+
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.Vi_Last_Name)
+        </div>
+
+        <div class="col-md-8 form-group">
+         
+            @Html.TextBoxFor(m => m.Vi_Last_Name, new { @id = "Person", @class = "form-control", @placeholder = "Enter last Name*" })
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <input type="submit" id="ButtonFilter" value="Search" class="btn btn-success" />
+        </div>
+    </div>
+
+
+</fieldset>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Person Details
+    </div>
+</div>
+<p></p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Tel No</th>
+            <th>Age</th>
+            <th>(Add Victim)</th>
+
+        </tr>
+    </thead>
+    <tbody id="SetPersonList">
+        <tr id="LoadingStatus" style="color:red"></tr>
+    </tbody>
+</table>
+
+<script type="text/jscript">
+        $('#ButtonFilter').click(function () {
+            $.getJSON('../../PCMCase/getPersonByLastName/' + $('#Person').val(), function (data) {
+
+                var items = $("#SetPersonList");
+                $.each(data, function (i, p) {
+                    items += "<tr><td>" + p.Person_Id +
+                        "</td><td>" + p.First_Name +
+                        "</td><td>" + p.Last_Name +
+                        "</td><td>" + p.Phone_Number +
+                        "</td><td>" + p.Age +
+                        "</td><td>" + "<a href='#' class='btn btn-warning' onclick='AddVictim(" + p.Person_Id + ")' ><span class='glyphicon glyphicon-ok'></span></a>" +
+                        "</td></tr>";
+                });
+                items += "</table>";
+
+                $('#SetPersonList').html(items);
+            });
+        })
+
+
+
+        function AddVictim(Id) {
+
+            var url = "../../PCMCase/SaveVictimInDatabase?Id=" + Id;
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    alert("Success!..");
+                    $.getJSON('../../PCMCase/ListVictim/', function (data) {
+
+                        var items = $("#SetVictim");
+                        $.each(data, function (i, p) {
+                            items += "<tr><td>" + p.Victim_Id +
+                                "</td><td>" + p.Victim_First_Name +
+                                "</td><td>" + p.Victim_Last_Name +
+                                "</td><td>" + p.Victim_Phone_Number +
+                                "</td><td>" + p.Victim_Age +
+                                "</td><td>" + "<a href='#' class='btn btn-warning' onclick='DeleteVictim(" + p.Victim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                                "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetVictim').html(items);
+                    });
+
+                    $("#advancedSearchModal").modal("hide");
+
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+         }
+</script>

@@ -1,0 +1,387 @@
+﻿
+@model Common_Objects.ViewModels.PCMDiversionViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+</style>
+
+
+
+
+<div class="container" style="margin-top:3%">
+    <a href="#" class="btn btn-info" onclick="AddNew(0)">Add New Module</a> <br />@*<br />*@
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+
+                <th>
+                    Court date
+                </th>
+                <th>Court Type</th>
+                <th>
+                    Source of referral
+                </th>
+                <th>
+                    Programme
+                </th>
+                <th>
+                    Level
+                </th>
+                <th>Action(Edit)</th>
+            </tr>
+        </thead>
+        <tbody id="SetsDiversion">
+            <tr id="LoadingStatus" style="color:red"></tr>
+        </tbody>
+    </table>
+
+
+    @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+    <div class="modal fade in center" id="MyModalModule">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formModule">
+                        <fieldset id="SubmitFormModule">
+                            @Html.HiddenFor(m => m.Diversion_Id, new { @id = "Diversion_Id" })
+                            @Html.HiddenFor(m => m.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id" })
+                            @Html.HiddenFor(m => m.Court_Type_Id, new { @id = "Court_Type_Id" })
+                            @Html.HiddenFor(m => m.PCM_Preliminary_Id, new { @id = "PCM_Preliminary_Id" })
+                            @Html.HiddenFor(m => m.Formal_Courtcome_Id, new { @id = "Formal_Courtcome_Id" })
+                            @Html.HiddenFor(m => m.Childrens_Court_Outcome_Id, new { @id = "Childrens_Court_Outcome_Id" })
+
+
+
+                            <div class="column">
+                                <h4 style="text-decoration:underline">Programme Details</h4>
+                                @if (ViewBag.Programme_Name != null)
+        {
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Province_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+
+                                @Html.DropDownList("DropdownProvinceD", (IEnumerable<SelectListItem>)ViewBag.Province_List as SelectList, "--Select--", new { id = "DropdownProvinceD", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.District_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownList("District_IdD", (IEnumerable<SelectListItem>)ViewBag.District_List as SelectList, "--Select--", new { id = "District_IdD", @class = "form-control", @required = "required" })
+
+                                @Html.ValidationMessageFor(x => x.District_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Local_Municipality_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownList("LocalMunicipalityD", (IEnumerable<SelectListItem>)ViewBag.Local_Municipality_List as SelectList, "--Select--", new { id = "LocalMunicipalityD", @class = "form-control", @required = "required" })
+
+                                @Html.ValidationMessageFor(x => x.Local_Municipality_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Organization_Id_Type)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownList("Organization_Id_Type", (IEnumerable<SelectListItem>)ViewBag.OrganisationType_List as SelectList, "--Select--", new { id = "Organization_Id_Type", @class = "form-control", @required = "required" })
+
+                                @Html.ValidationMessageFor(x => x.Organization_Id_Type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Organization_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownList("Organization_Id", (IEnumerable<SelectListItem>)ViewBag.organisationD as SelectList, "--Select--", new { id = "Organization_Id", @class = "form-control", @required = "required" })
+
+                                @Html.ValidationMessageFor(x => x.Organization_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Organization_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownList("Organization_Id", (IEnumerable<SelectListItem>)ViewBag.organisationD as SelectList, "--Select--", new { id = "Organization_Id", @class = "form-control", @required = "required" })
+
+                                @Html.ValidationMessageFor(x => x.Organization_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+}
+
+else
+{
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Province_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownListFor(x => x.Province_Id, new SelectList(Model.Province_List, "Province_Id", "Description"), "-Select Province-", new { @id = "DropdownProvinceD", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.District_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+
+                                @Html.DropDownListFor(x => x.District_Id, new SelectList(Model.District_List, "District_Id", "Description"), "-Select District-", new { @id = "District_IdD", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.District_Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Local_Municipality_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownListFor(x => x.Local_Municipality_Id, new SelectList(Model.LocalMunicipality_List, "Local_Municipality_Id", "Description"), "-Select Local Municipality-", new { @id = "LocalMunicipalityD", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Local_Municipality_Id, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Organization_Id_Type)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                @Html.DropDownListFor(x => x.Organization_Id_Type, new SelectList(Model.OrganisationType_List, "IdType", "Description"), "-Select-", new { @id = "Organization_Id_Type", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Organization_Id_Type, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.LabelFor(x => x.Organization_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                @Html.DropDownListFor(x => x.Organization_Id, new SelectList(Model.PCMOrganisation_List, "Organization_Id", "Description"), "-Select-", new { @id = "Organization_Id", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Organization_Id, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+}
+
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        @Html.LabelFor(x => x.Programme_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        @Html.DropDownListFor(x => x.Programme_Id, new SelectList(Model.Programme_List, "Programme_Id", "Description"), "-Select Police Station-", new { @id = "Programme_Id", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Programme_Id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-2 form-group">
+                                    <a href="#" class="btn btn-block btn-success" id="SaveRecord">Save</a>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+
+                            </div>
+
+
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Create A PopUp Modal For DeleteConfirmation*@
+
+    <div class="modal fade" id="DeleteConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete Student Record</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want To Delete This Record.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                    <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    $("#LoadingStatus").html("Loading....");
+    $.get("/PCMDiversionSP/GetPCMDivesionDetails", null, DataBindDiv);
+    function DataBindDiv(DivList) {
+        var SetDivData = $("#SetsDiversion");
+        for (var i = 0; i < DivList.length; i++) {
+            var Data = "<tr class='row_" + DivList[i].Diversion_Id + "'>" +
+                "<td>" + ToJavaScriptDatett(DivList[i].CourtDate) + "</td>" +
+                "<td>" + DivList[i].DesrciptionCourttype + "</td>" +
+                "<td>" + DivList[i].RefSourcedesrciption + "</td>" +
+                "<td>" + DivList[i].DesrciptionDivesionPrograme + "</td>" +
+                "<td>" + DivList[i].Levels + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditDiversion(" + DivList[i].Diversion_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                //"<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteStudentRecord(" + StudentList[i].PCM_Preliminary_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "</tr>";
+            SetDivData.append(Data);
+            $("#LoadingStatus").html(" ");
+
+        }
+    }
+
+
+      
+
+
+         $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+             $("#Programme_Id").change(function () {
+             $("#Modules_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetModules")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme_Id").val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $("#Modules_Id").append('<option value="' + state.Value + '">' +
+                             state.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+
+        //Show The Popup Modal For Add New Student
+
+        function AddNew(M_Id) {
+            $("#formModule")[0].reset();
+
+            $("#ModalTitleModule").html("Add New Programme module....");
+            $("#MyModalModule").modal();
+        }
+
+
+    function EditDiversion(Diversion_Id) {
+        var url = "/PCMDiversionSP/GetDiversionProgrameById?Diversion_Id=" + Diversion_Id;
+            $("#ModalTitleModule").html("Update Programme module....");
+            $("#MyModalModule").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    $("#M_Id").val(obj.M_Id);
+
+                    //$("#M_Id").val(obj.M_Id);
+                    //$("#descriptionID option:selected").text(obj.tbl_description.description);
+                    //$("#descriptionID option:selected").val(obj.descriptionID);
+
+                    //$("#barcode").val(obj.barcode);
+                    //$("#serial").val(obj.serial);
+                    $("#Sessions").val(obj.Sessions);
+                    $("#No_Sessions").val(obj.No_Sessions);
+                    $("#Session_StartDate").val(obj.Session_StartDate);
+                    $("#Session_EndDate").val(obj.Session_EndDate);
+                }
+            })
+        }
+
+        $("#SaveRecord").click(function () {
+            var data = $("#SubmitFormModule").serialize();
+            $.ajax({
+                type: "Post",
+                url: "/PCMDiversionSP/AddUpdate",
+                data: data,
+                success: function (result) {
+                    alert("Success!..");
+                    window.location.href = "/PCMDiversionSP/Module";
+                    $("#MyModalModule").modal("hide");
+                }
+            })
+        })
+
+
+        function ToJavaScriptDatett(value) {
+
+
+            if (value == null || value == '') {
+                return 0;
+            }
+
+            else {
+                var pattern = /Date\(([^)]+)\)/;
+                var results = pattern.exec(value);
+                var dt = new Date(parseFloat(results[1]));
+                return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+            }
+
+
+        }
+
+</script>

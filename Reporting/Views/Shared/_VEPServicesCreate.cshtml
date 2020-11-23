@@ -1,0 +1,50 @@
+﻿@model Common_Objects.Models.VEP_Services
+
+@{
+    ViewBag.Title = "Create VEP Service";
+}
+
+@using (Html.BeginForm("Create", "VEPServices", FormMethod.Post, new { role = "form", id = "saveCreateVEPServices" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel-body">
+
+        <div class="row">
+
+            @Html.HiddenFor(x => x.CaseId)
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        @Html.Label("Service Provided")
+                    </div>
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(x => Model.ServiceTypeId, Model.Service_List, "- Please select -", new { @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        @Html.Label("Service Notes")
+                        <label style="color:red;font-style:oblique"> *</label>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextAreaFor(x => Model.ServiceNotes, new { @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+            </div>
+
+        </div>     
+    </div>
+
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="panel-footer">
+        <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+    </div>
+}
+

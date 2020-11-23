@@ -1,0 +1,19 @@
+﻿@using GridMvc.Html
+@model IEnumerable<VEP_Module.Models.VEPServicesViewModel>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Columns(columns =>
+   {
+   columns.Add(x => x.ServiceProvided).Titled("Service Name").Sortable(true);
+   columns.Add(x => x.ServiceNote).Titled("Service Notes").Sortable(true);
+   columns.Add(x => x.DateProvided).Titled("Service Date").Sortable(true);
+   columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(
+       d => @<b>
+        @Html.ActionLink("Edit", "Edit", new { id = d.ServiceID },
+                new { @class = "modal-link btn btn-success" })
+    </b>);
+   }).WithPaging(10)
+    </div>
+</div>
+

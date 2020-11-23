@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Common_Objects.ViewModels.PCMCaseDetailsViewModel>
+
+
+<div class="panel-heading" style="text-align: center; width:70%">
+    @Html.DisplayNameFor(model => model.DesrciptionDivesionPrograme)
+</div>
+<table class="table table-striped" style="width:70%">
+    @*<tr>
+
+            <th>
+                @@Html.DisplayNameFor(model => model.Description_Recomendation_Order)
+            </th>
+
+        </tr>*@
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+
+
+            @*@Html.DisplayFor(modelItem => item.VictimizationType)*@
+
+
+            <td>
+                @Html.HiddenFor(modelItem => item.PCM_Diversion_Recomm_Id)
+                @Html.DisplayFor(modelItem => item.DesrciptionDivesionPrograme)
+
+            </td>
+            <td style="width:70%; text-align:right">
+                @*@Html.EditorFor(modelItem => item.IsChecked)*@
+                @using (Html.BeginForm("DeleteRecProgrammeFromTable", "PCMCase", new { id = item.PCM_Diversion_Recomm_Id }, FormMethod.Post))
+                {
+                    <button class='btn btn-danger' ><span class='glyphicon glyphicon-trash'></span></button>}
+            </td>
+
+        </tr>
+    }
+
+</table>
+
+
+<script>
+    function SomeDeleteRowFunction(btndel) {
+        if (typeof (btndel) == "object") {
+            $(btndel).closest("tr").remove();
+          
+        } else {
+            return false;
+        }
+    }
+
+</script>
+
+
+

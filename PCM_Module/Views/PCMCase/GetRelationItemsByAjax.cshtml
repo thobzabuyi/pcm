@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Common_Objects.Models.IntakeRelationItem>
+<style>
+    #btnSearch {
+        outline: none !important;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: none;
+    }
+
+    #tool-bar {
+        transition: width 0.1s;
+        -webkit-transition: width 0.1s;
+    }
+
+
+</style>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        CareGiver Details: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+    </div>
+    <div class="container" style="margin-top:3%">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    @{
+                        var relationsGrid = new WebGrid(source: Model, canSort: false, canPage: false, ajaxUpdateContainerId: "relationsGrid");
+
+                        @relationsGrid.GetHtml(
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                selectedRowStyle: "webgrid-selected-row",
+                rowStyle: "webgrid-row-style",
+                htmlAttributes: new { id = "educationGrid", width = "100%" },
+                columns: relationsGrid.Columns(
+                    relationsGrid.Column("Relation_Type_Description", "Relation Type"),
+                    relationsGrid.Column("Relation_Person.First_Name", "First Name"),
+                    relationsGrid.Column("Relation_Person.Last_Name", "Last Name"))
+                    //relationsGrid.Column("Relation_Address", "Address"))
+                )
+            
+                    }
+
+                </tr>
+                <tr></tr>
+        </table>
+        <br />
+        <div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+

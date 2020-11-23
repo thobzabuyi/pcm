@@ -1,0 +1,142 @@
+﻿@model Common_Objects.ViewModels.ACMSearchViewModel
+<script>
+    $(".jqueryui-marker-datepicker").datepicker({
+        beforeShow: function () {
+            setTimeout(function () {
+                $('.ui-datepicker').css('z-index', 99999999999999);
+            }, 0);
+        },
+        dateFormat: "dd M yy",
+        changeYear: true
+    });
+
+    $(document).ready(function () {
+        $("#searchedPersonResultsGrid").hide();
+    });
+</script>
+
+@using (Ajax.BeginForm("SearchFirstReporterAjax", "Investigation", new AjaxOptions() { UpdateTargetId = "ActuarialRiskDetailsPanel" }, new { @id = "actuarialRiskDetailsPanel" }))
+{
+    <div class="modal-body" style="margin:0px !important; padding:0px !important;">
+        @Html.HiddenFor(model => model.CaseWorklist_Id)
+        @Html.HiddenFor(model => model.ProcessList_Id)
+
+        <div class="panel panel-primary" style="margin:0px !important; padding:0px !important;">
+            <div class="panel-heading" style="text-align: center">
+                <b>Interviewed Persons Search</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">First Name</div>
+                            <div class="col-md-6 form-group">@Html.TextBoxFor(model => model.Search_First_Name, new { @class = "form-control" })</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">Last Name</div>
+                            <div class="col-md-6 form-group">@Html.TextBoxFor(model => model.Search_Last_Name, new { @class = "form-control" })</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">Date of Birth</div>
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.Search_Date_Of_Birth, new { @id = "Search_Date_Of_Birth", @class = "form-control jqueryui-marker-datepicker" })
+                                    <label for="Search_Date_Of_Birth" class="input-group-addon btn">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">ID Number</div>
+                            <div class="col-md-6 form-group">@Html.TextBoxFor(model => model.Search_ID_Number, new { @class = "form-control" })</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">Relationship to Child</div>
+                            <div class="col-md-6 form-group">@Html.DropDownListFor(model => model.SelectedRelationship_Id, Model.Relationship_List, "- Please select -", new { @class = "form-control" })</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="button" id="ButtonSearchPersonFilter" value="Filter" class="btn btn-success btnSearchForPerson" />
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary searchedPersonResultsGrid" id="searchedPersonResultsGrid" style="margin:0px !important; padding:0px !important;">
+            <div class="panel-heading" style="text-align: center">
+                <b>Results</b>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.Partial("_ACMPersonSearchGrid")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    $(".searchedPersonResultsGrid").hide();
+
+    $(function () {
+        // Initialize items marked as datepickers
+        $(".jqueryui-marker-datepicker").datepicker({
+            beforeShow: function () {
+                setTimeout(function () {
+                    $('.ui-datepicker').css('z-index', 99999999999999);
+                }, 0);
+            },
+            dateFormat: "dd M yy",
+            changeYear: true
+        });
+
+        // Add Event Receiver for Filter Button
+        $(".btnSearchForPerson").click(function (e) {
+            var element = this;
+            e.preventDefault();
+            $.ajax({
+                url: $.url('/Investigation/SearchFirstReporterAjax'),
+                type: this.method,
+                data: $(element).closest("form").serialize(),
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    $(".searchedPersonResultsGrid").show();
+                    $(".searchedPersonResultsGrid").html(data);
+                },
+                //error: function (xhr) {
+                //    alert('error Informant Items');
+                //}
+            });
+        });
+    });
+</script>
+
+

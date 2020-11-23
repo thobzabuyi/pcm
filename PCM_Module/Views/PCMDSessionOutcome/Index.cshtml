@@ -1,0 +1,318 @@
+﻿@model Common_Objects.ViewModels.PCMDSessionOutcomeViewModel
+
+@{ 
+    ViewBag.Title = "Index";
+}
+
+
+@*<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+
+
+<div class="container" style="margin-top:3%">
+    <a href="#" class="btn btn-success" onclick="AddNewDSO(0)">Add New Session Outcome</a> <br />@*<br />*@
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>DSession_Id</th>
+                <th>Current_Module_Attended</th>
+                <th>Session_Attend</th>
+                <th>Session_Date</th>
+                <th>Next_Session_Date</th>
+                <th>Action(Edit)</th>
+                <th>Upload Files</th>
+
+            </tr>
+        </thead>
+        <tbody id="SetListDSO">
+            <tr id="LoadingStatusDSO" style="color:red"></tr>
+        </tbody>
+    </table>
+
+    @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+    <div class="modal fade" id="DSOModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="panel panel-success">
+                    <div class="panel-heading"><a href="#" class="close" data-dismiss="modal">&times;</a><h4 id="DSOModalTitle"></h4></div>
+                </div>
+
+
+                <div class="modal-body">
+                    <form id="formDSO">
+                        <fieldset id="SubmitFormDSO">
+                            @Html.HiddenFor(m => m.DSession_Id, new { @id = "DSession_Id" })
+                            @* @Html.HiddenFor(m => m.PCM_Recommendation_Id, new { @id = "PCM_Recommendation_Id" })*@
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Session  Attended 
+                                </div>
+                                <div class="col-md-8 form-group">
+                                   @* @Html.DropDownListFor(m => m.descriptionID, ViewBag.ListOfDescription as SelectList, "--Select Description--", new { @id = "descriptionID", @class = "form-control" })*@
+                                    @Html.TextBoxFor(m => m.Session_Attend, new { @id = "Session_Attend", @class = "form-control", @placeholder = "" })
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Session_Date
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.Session_Date, new { @id = "Session_Date", @class = "form-control jqueryui-marker-datepicker" })
+                                        <label for="Session_Date" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Name_of_the_Facilitator
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.TextBoxFor(m => m.Name_of_the_Facilitator, new { @id = "Name_of_the_Facilitator", @class = "form-control", @placeholder = "" })
+                             
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Name_of_Co_Facilitator
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.TextBoxFor(m => m.Name_of_Co_Facilitator, new { @id = "Name_of_Co_Facilitator", @class = "form-control", @placeholder = "" })
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Process_Notes
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    @Html.TextAreaFor(m => m.Process_Notes, new { @id = "Process_Notes", @class = "form-control", @placeholder = "", rows="5" })
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Next_Session_Date
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.Next_Session_Date, new { @id = "Next_Session_Date", @class = "form-control jqueryui-marker-datepicker" })
+                                        <label for="Next_Session_Date" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Compliance
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    @Html.TextAreaFor(m => m.Compliance, new { @id = "Compliance", @class = "form-control", @placeholder = "", rows = "5" })
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    <a href="#" class="btn btn-block btn-success" id="SaveR">Save</a>
+                                </div>
+                            </div>
+
+
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="MyModalDSOFiles">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="panel panel-success">
+                    <div class="panel-heading"><a href="#" class="close" data-dismiss="modal">&times;</a><h4 id="ModalTitleDSOFiles"></h4></div>
+                </div>
+
+                <div class="modal-body">
+                    <form id="formDSOFiles">
+                        <fieldset id="SubmitDSOForm">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    Intake_Assessment_Id
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    @Html.TextBoxFor(m => m.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id1", @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#home">Upload Documents</a></li>
+                                <li><a data-toggle="tab" href="#menu1">Existing Documents</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    
+                                    @Html.Action("Index", "PCMDSessionOutcomeFile");
+                                    <br />
+                                </div>
+                                <div id="menu1" class="tab-pane fade">
+                                    2
+                                   @* @Html.Action("DownloadFile", "PCMChildrensCourt");*@
+
+                                </div>
+
+                            </div>
+
+
+
+                            <br />
+
+                          
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<script>
+
+    $(function () {
+
+        // Initialize items marked as datepickers
+        $(".jqueryui-marker-datepicker").datepicker({
+            dateFormat: "dd M yy",
+            changeYear: true
+
+        });
+
+    });
+
+
+    $("#LoadingStatusDSO").html("Loading....");
+    $.get("/PCMDSessionOutcome/GetPCMDOSList", null, DataBind);
+    function DataBind(List) {
+        var SetData = $("#SetListDSO");
+        for (var i = 0; i < List.length; i++) {
+            var Data = "<tr class='row_" + List[i].DSession_Id + "'>" +
+                "<td>" + List[i].DSession_Id + "</td>" +
+                "<td>" + List[i].Current_Module_Attended + "</td>" +
+                "<td>" + List[i].Session_Attend + "</td>" +
+                "<td>" + List[i].Session_Date + "</td>" +
+                "<td>" + List[i].Next_Session_Date + "</td>" +
+                //"<td>" + List[i].Name_of_Co_Facilitator + "</td>" +
+                //"<td>" + List[i].datereceived + "</td>" +
+                //"<td>" + List[i].datereturned + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditDSO(" + List[i].DSession_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-danger' onclick='UploadDSO(" + List[i].DSession_Id + ")'><span class='glyphicon glyphicon-download-alt'></span></a>" + "</td>" +
+                "</tr>";
+            SetData.append(Data);
+            $("#LoadingStatusDSO").html(" ");
+
+        }
+    }
+
+    function AddNewDSO(DSession_Id)
+    {
+        $("#formDSO")[0].reset();
+        $("#DSOModalTitle").html("Add new Session Outcome");
+        $("#DSOModal").modal();
+    }
+
+
+    function EditDSO(DSession_Id) {
+        var url = "/PCMDSessionOutcome/GetPCMDSOById?DSession_Id=" + DSession_Id;
+        $("#DSOModalTitle").html("Update Asset");
+        $("#DSOModal").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#DSession_Id").val(obj.DSession_Id);
+
+                //$("#descriptionID").val(obj.descriptionID);
+                //$("#descriptionID option:selected").text(obj.tbl_description.description);
+                //$("#descriptionID option:selected").val(obj.descriptionID);
+
+                $("#Current_Module_Attended").val(obj.Current_Module_Attended);
+                $("#Session_Attend").val(obj.Session_Attend);
+                $("#Session_Date").val(obj.Session_Date);
+                $("#Name_of_the_Facilitator").val(obj.Name_of_the_Facilitator);
+                $("#Name_of_Co_Facilitator").val(obj.Name_of_Co_Facilitator);
+                $("#Process_Notes").val(obj.Process_Notes);
+                $("#Next_Session_Date").val(obj.Next_Session_Date);
+                $("#Compliance").val(obj.Compliance);
+            }
+        })
+    }
+
+
+
+
+    $("#SaveR").click(function () {
+        var data = $("#SubmitFormDSO").serialize();
+        $.ajax({
+            type: "Post",
+            url: "/PCMDSessionOutcome/CreatePCMDSO",
+            data: data,
+            success: function (result) {
+                alert("Success!..");
+                //window.location.href = "/PCMPretrail/Index";
+                //window.location.href = "/PCMTab/Index";
+                $("#DSOModal").modal("hide");
+            }
+        })
+    })
+
+
+    function UploadDSO(DSession_Id) {
+        var url = "/PCMDSessionOutcome/GetPCMDSOById?DSession_Id=" + DSession_Id;
+        $("#ModalTitleDSOFiles").html("Upload documents file");
+        $("#MyModalDSOFiles").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#DSession_Id").val(obj.DSession_Id);
+                $("#Intake_Assessment_Id1").val(obj.Intake_Assessment_Id);
+            }
+        })
+    }
+
+</script>

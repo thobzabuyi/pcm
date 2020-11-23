@@ -1,0 +1,285 @@
+﻿@model Common_Objects.ViewModels.PCMCaseListViewModel
+@*@using GridMvc.Html*@
+
+
+
+@{
+    ViewBag.Title = "PCM Case page";
+}
+
+<h3>@ViewBag.Message</h3>
+
+
+<head>
+   
+    <style type="text/css">
+        /* WebGrid Styling */
+
+        .Grid {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+            .Grid th {
+                background-color: #463F3F;
+                color: #FFFFFF;
+                font-weight: bold;
+            }
+
+            .Grid th, .Grid td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .Grid img {
+                cursor: pointer;
+            }
+
+        .ChildGrid {
+            width: 100%;
+        }
+
+            .ChildGrid th {
+                background-color: #6C6C6C;
+                color: #fff;
+                font-weight: bold;
+            }
+    </style>
+
+</head>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel panel-primary form-horizontal" style=" width:100% !important">
+
+        <div class="panel-heading" style="text-align: center; vertical-align: middle !important;">
+            <div class="row">
+                <div class="col-md-12">
+                    @Html.Label("Probation Case Management: Cases")
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body" style="overflow:hidden">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Filter Results
+                    </h4>
+                </div>
+                <div id="basicSearchCollapse" class="panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                First Name
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(model => model.Search_First_Name, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                Last Name
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(model => model.Search_Last_Name, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                ID Number
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(model => model.Search_ID_Number, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                Date of Birth
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.Search_Date_Of_Birth, new { @id = "Search_Date_Of_Birth", @class = "form-control jqueryui-marker-datepicker" })
+                                    <label for="Search_Date_Of_Birth" class="input-group-addon btn">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="panel-group" id="advancedSearchAccordion">
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#advancedSearchAccordion" href="#advancedSearchCollapse">
+                                                    Advanced Filtering (click to expand)
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="advancedSearchCollapse" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Intake Ref No
+                                                    </div>
+                                                    <div class="col-md-3 form-group">
+                                                        @Html.TextBoxFor(model => model.Search_Intake_Ref_No, new { @class = "form-control" })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        PCM Ref No
+                                                    </div>
+                                                    <div class="col-md-3 form-group">
+                                                        @Html.TextBoxFor(model => model.Search_PCM_Ref_No, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="submit" id="ButtonFilter" value="Filter" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @{
+                var clientsGrid = new WebGrid(source: Model.PCMClients_Case_List, canSort: false, rowsPerPage: 5, ajaxUpdateContainerId: "clientsListGrid");
+            }
+
+         @clientsGrid.GetHtml(
+        htmlAttributes: new { @id = "WebGrid", @class = "Grid", width = "100%" },
+        columns: clientsGrid.Columns(
+                 clientsGrid.Column(null, null, format: @<text><img src="~/Images/plus.png" /><div style="display:none"></div></text>),
+                       clientsGrid.Column("FirstName", "First Name"),
+                        clientsGrid.Column("LastName", "Last Name"),
+                        clientsGrid.Column("IDNumber", "ID Number"),
+                         clientsGrid.Column(format: (item) =>
+                         {
+                             WebGrid subGrid = new WebGrid(source: item.PCMNestedItems, canSort: false, canPage: false);
+                             return subGrid.GetHtml(
+                             htmlAttributes: new { @class = "ChildGrid" },
+
+                                    columns: subGrid.Columns(
+                                    subGrid.Column("AssessmentDate", "Assessment Date"),
+                                    //subGrid.Column("RecordStatusDescription", "Record Status"),
+                                    subGrid.Column("POName", "Assessed By"),
+
+                                    subGrid.Column(header: "", style: "Edit", format: (subItem) =>
+                                    {
+                                        if (subItem.AssessmentId == null)
+                                        {
+                                            // var link = Html.ActionLink("Create Case", "UpdatePCMCase", "PCMCase", new { id = subItem.IntakeAssessmentId }, new { @class = "btn btn-success" });
+                                            var link = Html.ActionLink("Create Case", "Index", "Assessment", new { id = subItem.AssessmentId }, new { @class = "btn btn-success" });
+
+                                            return link;
+                                        }
+                                        else
+                                        {
+                                            var link = Html.ActionLink("View/Edit Case", "Index", "Assessment", new { id = subItem.AssessmentId }, new { @class = "btn btn-success" });
+
+                                            // var link = Html.ActionLink("Create Case", "UpdatePCMCase", "PCMCase", new { id = subItem.IntakeAssessmentId }, new { @class = "btn btn-success" });
+                                            return link;
+                                        }
+                                    })
+                                    ,
+
+                                      subGrid.Column(header: "", style: "Edit", format: (subItem) =>
+                                      {
+                                          if (subItem.AssessmentId == null)
+                                          {
+                                              // var link = Html.ActionLink("Create Case", "UpdatePCMCase", "PCMCase", new { id = subItem.IntakeAssessmentId }, new { @class = "btn btn-success" });
+                                              var link = Html.ActionLink("Create Case", "Index", "Assessment", new { id = subItem.AssessmentId }, new { @class = "btn btn-success" });
+
+                                              return link;
+                                          }
+                                          else
+                                          {
+                                              var link = Html.ActionLink("Print Assessment", "PrintAssessment", "Home", new { id = subItem.AssessmentId }, new { @class="btn btn-info", target = "_blank" });
+
+                                              // var link = Html.ActionLink("Create Case", "UpdatePCMCase", "PCMCase", new { id = subItem.IntakeAssessmentId }, new { @class = "btn btn-success" });
+                                              return link;
+                                          }
+                                      })
+                                )
+
+
+                             );
+                         })
+                ))
+
+        </div>
+    </div>
+                }
+
+
+
+
+    <script type="text/javascript">
+        $(function () {
+
+            // Initialize items marked as datepickers
+            $(".jqueryui-marker-datepicker").datepicker({
+                dateFormat: "dd M yy",
+                changeYear: true
+            });
+
+        });
+
+    </script>
+
+
+<script type="text/javascript">
+
+        $(function () {
+            //Loop through all Child Grids.
+            $("#WebGrid .ChildGrid").each(function () {
+                //Copy the Child Grid to DIV.
+                var childGrid = $(this).clone();
+                $(this).closest("TR").find("TD").eq(0).find("DIV").append(childGrid);
+
+                //Remove the Last Column from the Row.
+                $(this).parent().remove();
+            });
+
+            //Remove Last Column from Header Row.
+            $("#WebGrid TH:last-child").eq(0).remove();
+        });
+        //Assign Click event to Plus Image.
+        $("body").on("click", "img[src*='plus.png']", function () {
+            $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>");
+            $(this).attr("src", "../images/minus.png");
+        });
+        //Assign Click event to Minus Image.
+        $("body").on("click", "img[src*='minus.png']", function () {
+            $(this).attr("src", "../images/plus.png");
+            $(this).closest("tr").next().remove();
+        });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

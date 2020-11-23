@@ -1,0 +1,307 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+<style>
+     .jqueryui-marker-datepicker{z-index:1151 !important;}
+    #btnSearch {
+        outline: none !important;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: none;
+    }
+
+    #tool-bar {
+        transition: width 0.1s;
+        -webkit-transition: width 0.1s;
+    }
+
+
+
+      .modal-backdrop
+{
+    opacity:0.5 !important;
+}
+      .fade.in{
+
+background-color: transparent;
+}
+
+      .modal {
+    
+    top: 5%;
+    max-width: 100%;
+}
+.modal-dialog {
+    display: inline-block;
+    width: 100%;
+}
+</style>
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Medical Details: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+    </div>
+    <div class="container" style="margin-top:1%">
+
+        <a href="#" class="btn btn-info" onclick="AddNew(0)">Add New Medical Details</a> <br /><br />
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Health Details Id</th>
+                    <th>Intake Assessment Id</th>
+                    <th>Health Status</th>
+                    <th>Injuries</th>
+                    <th>Allergy</th>
+                    <th>Medication</th>
+                    <th>Medical Appointments</th>
+                    <th>Action(Edit)</th>
+                    <th>Action(Delete)</th>
+
+                </tr>
+            </thead>
+            <tbody id="SetMedicalHealthList">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+        @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+        <!-- Modal -->
+        <div class="modal fade in center" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="width:70%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel" style="font-weight:bold;">Add/Edit Medical Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form" >
+                            <fieldset id="SubmitForm">
+                                <div class="row">
+                                    @Html.HiddenFor(m => m.Health_Details_Id, new { @id = "Aid" })
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Health_Status_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.DropDownList("ddlHealth", ViewBag.Health as SelectList, "Select Health Status", new { id = "ddlHealth", @class = "form-control", })
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Injuries)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.TextAreaFor(m => m.Injuries, new { @id = "injury", @class = "form-control", rows = "4", @placeholder = "All injuries*" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.AllergyDescription)
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.TextAreaFor(m => m.AllergyDescription, new { @id = "Allegy", @class = "form-control", rows = "4", @placeholder = "All allegy descriptions*" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Medication)
+                                    </div>
+
+                                    <div class="col-md-8 form-group">
+                                        @Html.TextAreaFor(m => m.Medication, new { @id = "Medication", rows = "4", @class = "form-control", @placeholder = "Medication*" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Medical_Appointments)
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Medical_Appointments, new { @id = "Medicalapp", @class = "form-control jqueryui-marker-datepicker", @placeholder = " Medical Appointment*" })
+                                            <label for="Medicalapp" class="input-group-addon btn">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <div class="form-group">
+                                        <a href="#" class="btn btn-success" id="SaveRecord">Save</a>
+                                    </div>
+
+</fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade in center" id="DeleteConfirmationME" style="width:50%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete1ME">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @*Create A PopUp Modal For DeleteConfirmation*@
+
+    
+
+</div>
+
+
+
+
+<script>
+
+
+
+    $("#LoadingStatus").html("Loading....");
+    $.get("../../PCMCase/ListMedication", null, DataBind);
+    function DataBind(List) {
+        var SetData = $("#SetMedicalHealthList");
+        for (var i = 0; i < List.length; i++) {
+            var Data = "<tr class='row_" + List[i].Health_Details_Id + "'>" +
+                "<td>" + List[i].Health_Details_Id + "</td>" +
+                 "<td>" + List[i].Intake_Assessment_Id + "</td>" +
+                "<td>" + List[i].HealthStatusDescription + "</td>" +
+                "<td>" + List[i].Injuries + "</td>" +
+                "<td>" + List[i].AllergyDescription + "</td>" +
+                "<td>" + List[i].Medication + "</td>" +
+                "<td>" + ToJavaScriptDatett(List[i].Medical_Appointments) + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditMedRecord(" + List[i].Health_Details_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                 "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteRecFromTableME(" + List[i].Health_Details_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "</tr>";
+            SetData.append(Data);
+            $("#LoadingStatus").html(" ");
+
+        }
+    }
+
+    //Show The Popup Modal For Add New Student
+
+    function AddNew(StudentId) {
+        $("#form")[0].reset();
+        $("#Aid").val(0);
+        $("#Drop option:selected").text("--Select Health Status--");
+        $("#ModalTitle").html("Add New Medical Details");
+        $("#myModal").modal();
+
+    }
+
+    function EditMedRecord(Id) {
+        var url = "../../PCMCase/GetMedicalById?Id=" + Id;
+        var Products = $("#ddlHealth").val();
+        $("#ModalTitle").html("Update Medical Details");
+        $("#myModal").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#Aid").val(obj.Health_Details_Id);
+                $("#ddlHealth option:selected").val(obj.Health_Status_Id);
+                $("#ddlHealth option:selected").text(obj.HealthStatusDescription);
+                $("#injury").val(obj.Injuries);
+                $("#Allegy").val(obj.AllergyDescription);
+                $("#Medication").val(obj.Medication);
+                $("#Medicalapp").val(obj.Medical_Appointments);
+
+            }, error: function () { alert('something bad happened'); }
+
+        })
+    }
+
+    function ToJavaScriptDatett(value) {
+
+
+        if (value == null || value == '') {
+            return 0;
+        }
+
+        else {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+        }
+
+
+    }
+
+
+    $("#SaveRecord").click(function () {
+       
+        $.ajax({
+            type: "Post",
+            url: "../../PCMCase/SaveMedicalInDatabase",
+            data: {
+                
+                           Health_Details_Id: $("#Aid").val(),
+                           Health_Status_Id: $("#ddlHealth").val(),
+                           Injuries: $("#injury").val(),
+                           AllergyDescription: $("#Allegy").val(),
+                           Medication: $("#Medication").val(),
+                           Medical_Appointments: $("#Medicalapp").val()
+            },
+            success: function (result) {
+                alert("Success!..");
+
+
+                location.reload(true);
+               
+                $("#MyModal").modal("hide");
+
+            },
+            error: function (xhr, ajaxOptions, error) {
+            alert(xhr.status);
+            alert('Error: ' + xhr.responseText);
+        }
+        })
+    })
+
+
+    
+
+    function DeleteRecFromTableME(Id) {
+
+        $("#DeleteConfirmationME").modal("show");
+
+        $('#Delete1ME').click(function () {
+
+            var url = "../../PCMCase/DeleteRecFromTableME?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $("#DeleteConfirmationME").modal("hide");
+                    location.reload(true);
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+
+
+        });
+
+
+
+
+    }
+
+</script>
+
+

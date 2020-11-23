@@ -1,0 +1,65 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<br />
+@using (Html.BeginForm("UpdatePCMRecomendationDetails", "PCMCase", new { id = Model.Recommendation_Id }))
+{
+<div class="tab-pane" id="tab3">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default form-horizontal">
+                <div class="panel-heading">
+                    Recomendation Type
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            @Html.LabelFor(x => x.Recommendation_Type_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                        </div>
+                        <div class="col-md-4 form-group">
+
+                            @Html.DropDownListFor(x => x.Recommendation_Type_Id, new SelectList(Model.RecommendationTyp_List, "Recommendation_Type_Id", "Description"), "-Select Recomendation-", new { @id = "DropdownReco", @class = "form-control", @required = "required" })
+                            @Html.ValidationMessageFor(x => x.Recommendation_Type_Id, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            @Html.LabelFor(x => x.Comments_For_Recommendation)
+                        </div>
+                        <div class="col-md-4 form-group">
+
+                            @Html.TextAreaFor(x => x.Comments_For_Recommendation, new { @id = "RecomComents", rows = "2", @class = "form-control", @required = "required" })
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div id="Plcement">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Placement_Type_Id)
+                            </div>
+                            <div class="col-md-4 form-group">
+
+                                @Html.DropDownListFor(x => x.Placement_Type_Id, new SelectList(Model.PlacementType_List, "Placement_Type_Id", "Description"), "-Select Placement-", new { @id = "DropdownPlacement", @class = "form-control" })
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+        
+

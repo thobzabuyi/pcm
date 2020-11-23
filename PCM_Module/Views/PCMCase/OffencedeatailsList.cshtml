@@ -1,0 +1,409 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+
+<style>
+
+          .fade.in{
+
+background-color: transparent;
+}
+
+      .modal {
+    
+    top: 5%;
+    max-width: 100%;
+    margin: 0 auto;
+    height:97%;
+}
+.modal-dialog {
+    display: inline-block;
+    width: 100%;
+}
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+    #btnSearch {
+        outline: none !important;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: none;
+    }
+
+    #tool-bar {
+        transition: width 0.1s;
+        -webkit-transition: width 0.1s;
+    }
+
+   
+</style>
+@*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+<div class="panel panel-primary">
+
+    <div class="container" style="margin-top:1%; width:95%">
+
+        <a href="#" class="btn btn-info" onclick="AddNew2(0)">Add Offence Details</a> <br /><br />
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Offence Id</th>
+                    <th>Offence Category</th>
+                    <th>Offece Type</th>
+                    <th>Offence Circumstance</th>
+                    <th>Value Of Goods</th>
+                    <th>Value Recovered</th>
+                    <th>Responsibility Details</th>
+                    <th>Action(Edit)</th>
+                    <th>Action(Delete)</th>
+
+                </tr>
+            </thead>
+            <tbody id="SetOffenceList">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+        @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+        <!-- Modal -->
+        <div class="modal fade in center" id="myModal2Off" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel2" style="font-weight:bold;">Add/Edit Offence Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form2">
+                            <fieldset id="SubmitForm2">
+                                @Html.HiddenFor(m => m.PCM_Offence_Id, new { @id = "Aid" })
+                                @if (ViewBag.OffenceCategory != null)
+                                {
+                                    <div class="row">
+
+
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(x => x.Offence_Category_Id)
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownList("Offence_Category", (IEnumerable<SelectListItem>)ViewBag.OffenceCategory as SelectList, "Select Offence Category", new { id = "Offence_Category", @class = "form-control", })
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(x => x.Offence_Schedule_Id)
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownList("ddlOffenceSchedule", (IEnumerable<SelectListItem>)ViewBag.OffenceSchedule as SelectList, "Select Offence Schedule", new { id = "ddlOffenceSchedule", @class = "form-control" })
+
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(x => x.Offence_Type_Id)
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownList("ddlOffence", (IEnumerable<SelectListItem>)ViewBag.OffenceType as SelectList, "Select Offence", new { id = "ddlOffence", @class = "form-control", })
+
+
+
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(x => x.Offence_Category_Id)
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownListFor(x => x.Offence_Category_Id, new SelectList(Model.Offence_List, "Offence_Category_Id", "Description"), "-Select Offence Category-", new { @id = "Offence_Category", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Offence_Category_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(x => x.Offence_Schedule_Id)
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownListFor(x => x.Offence_Schedule_Id, new SelectList(Model.OffenseSchedules_List, "Offence_Schedule_Id", "Description"), "-Select Offence Schedule-", new { @id = "ddlOffenceSchedule", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Offence_Schedule_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(x => x.Offence_Type_Id)
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            @Html.DropDownList("ddlOffence", new SelectList(string.Empty, "Value", "Text"), "--Select Offence--", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+
+
+
+                                }
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Offence_Circumstance)
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.TextAreaFor(m => m.Offence_Circumstance, new { @id = "Offence_Circumstance", @class = "form-control", @placeholder = "Offence Circumstance*" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Value_Of_Goods)
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        @Html.TextBoxFor(m => m.Value_Of_Goods, new { @id = "Value_Of_Goods", @class = "form-control", @placeholder = "Value Of Goods*" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Value_Recovered)
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        @Html.TextBoxFor(m => m.Value_Recovered, new { @id = "Value_Recovered", @class = "form-control", @placeholder = "Value Recovered*" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.IsChild_Responsible)
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        @Html.Hidden("IsRespo")
+                                        @Html.HiddenFor(m => m.IsChild_Responsible, new { @id = "IsChild_Responsible", @class = "form-control", @placeholder = " Is Child Responsible*" })
+
+                                        <input type="radio" name="user_options" id="rds_1" value="Yes" /> Yes
+                                        <input type="radio" name="user_options" id="rds_2" value="No" /> No
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Responsibility_Details)
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.TextAreaFor(m => m.Responsibility_Details, new { @id = "Responsibility_Details", rows = "2", @class = "form-control", @placeholder = "Responsibility Details*" })
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <a href="#" class="btn btn-success" id="SaveRecord2">Save</a>
+                                </div>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @*Create A PopUp Modal For DeleteConfirmation*@
+
+    <div class="modal fade in center" id="DeleteConfirmationO" style="width:50%; vertical-align:middle; margin: 0 auto;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete Record</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want To Delete This Record.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                    <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete1">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+    $("#LoadingStatus").html("Loading....");
+    $.get("../../PCMCase/ListOffence", null, DataBind1);
+    function DataBind1(List1) {
+        var SetData = $("#SetOffenceList");
+        for (var i = 0; i < List1.length; i++) {
+            var Data = "<tr class='row_" + List1[i].PCM_Offence_Id + "'>" +
+                "<td>" + List1[i].PCM_Offence_Id + "</td>" +
+                "<td>" + List1[i].selectOffenceCategory + "</td>" +
+                "<td>" + List1[i].selectOffeceType + "</td>" +
+                "<td>" + List1[i].Offence_Circumstance + "</td>" +
+                "<td>" + List1[i].Value_Of_Goods + "</td>" +
+                "<td>" + List1[i].Value_Recovered + "</td>" +
+                "<td>" + List1[i].Responsibility_Details + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditOffenceRecord(" + List1[i].PCM_Offence_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                 "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteRecFromTableOff(" + List1[i].PCM_Offence_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "</tr>";
+            SetData.append(Data);
+            $("#LoadingStatus").html(" ");
+
+        }
+    }
+
+    //Show The Popup Modal For Add New Student
+
+    function AddNew2(StudentId) {
+        $("#form2")[0].reset();
+        $("#Aid2").val(0);
+        $("#Drop option:selected").text("--Select Health Status--");
+        $("#ModalTitle2").html("Add New Offence Details");
+        $("#myModal2Off").modal();
+
+    }
+
+    function EditOffenceRecord(Id) {
+        var url = "../../PCMCase/GetOffenceById?Id=" + Id;
+        var Products = $("#ddlHealth").val();
+        $("#ModalTitle2").html("Update Offence Details");
+        $("#myModal2Off").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#Aid").val(obj.PCM_Offence_Id);
+                $("#Offence_Category option:selected").val(obj.Offence_Category_Id);
+                $("#Offence_Category option:selected").text(obj.selectOffenceCategory);
+                $("#ddlOffenceSchedule option:selected").val(obj.Offence_Schedule_Id);
+                $("#ddlOffenceSchedule option:selected").text(obj.selectOffenceSchedule);
+                $("#ddlOffence option:selected").val(obj.Offence_Type_Id);
+                $("#ddlOffence option:selected").text(obj.selectOffeceType);
+                $("#Offence_Circumstance").val(obj.Offence_Circumstance);
+                $("#Value_Of_Goods").val(obj.Value_Of_Goods);
+                $("#Value_Recovered").val(obj.Value_Recovered);
+                $("#IsChild_Responsible").val(obj.IsChild_Responsible);
+                var value = $("#IsChild_Responsible").val();
+                if (value == "Yes") {
+                    $("#rds_1").prop("checked", true);
+                    $("#rds_2").prop("checked", false);
+                } else {
+                    $("#rds_2").prop("checked", true);
+                    $("#rds_1").prop("checked", false);
+
+                }
+
+                $("#Responsibility_Details").val(obj.Responsibility_Details);
+
+            }, error: function () { alert('something bad happened'); }
+
+        })
+    }
+
+    function ToJavaScriptDate(value) { //To Parse Date from the Returned Parsed Date
+        var pattern = /Date\(([^)]+)\)/;
+        var results = pattern.exec(value);
+        var dt = new Date(parseFloat(results[1]));
+        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+    }
+
+
+    $("#SaveRecord2").click(function () {
+
+        $.ajax({
+            type: "Post",
+            url: "../../PCMCase/SaveOffenceInDatabase",
+            data: {
+
+                PCM_Offence_Id: $("#Aid").val(),
+                Offence_Category_Id: $("#Offence_Category").val(),
+                Offence_Schedule_Id: $("#ddlOffenceSchedule").val(),
+                Offence_Type_Id: $("#ddlOffence").val(),
+                Offence_Circumstance: $("#Offence_Circumstance").val(),
+                Value_Of_Goods: $("#Value_Of_Goods").val(),
+                Value_Recovered: $("#Value_Recovered").val(),
+                IsChild_Responsible: $('input:radio[name=user_options]:checked').val(),
+                Responsibility_Details: $("#Responsibility_Details").val()
+            },
+            success: function (result) {
+                alert("Success!..");
+                
+
+               
+
+
+           
+
+                location.reload(true);
+
+                $("#myModal2Off").modal("hide");
+
+            },
+            error: function (xhr, ajaxOptions, error) {
+                alert(xhr.status);
+                alert('Error: ' + xhr.responseText);
+            }
+        })
+    })
+
+    
+    $("#ddlOffenceSchedule").change(function () {
+        $("#ddlOffence").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetOffenceTypes")', // Calling json method
+            dataType: 'json',
+            data: { Catid: $("#ddlOffenceSchedule").val(), scid: $("#ddlOffenceSchedule").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#ddlOffence").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+
+
+
+    function DeleteRecFromTableOff(Id) {
+
+     
+
+
+
+        $("#DeleteConfirmationO").modal("show");
+
+        $('#Delete1').click(function () {
+
+            var url = "../../PCMCase/DeleteRecFromTableOff?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $("#DeleteConfirmationO").modal("hide");
+                    location.reload(true);
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+
+
+        });
+
+    }
+</script>

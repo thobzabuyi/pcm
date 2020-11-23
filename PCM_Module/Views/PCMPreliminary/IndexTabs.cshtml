@@ -1,0 +1,58 @@
+﻿@model Common_Objects.ViewModels.PCMPreliminaryViewModel
+
+<html lang="en">
+<head>
+
+
+</head>
+<body>
+
+   
+
+    <div id="tabs-2" class="tab-pane fade in active">
+
+        <div>
+
+            @{
+                var data = ViewBag.Message;
+
+                var PCM_Recommendation_Id = data;
+            }
+            @if (PCM_Recommendation_Id == 2)
+            {
+
+                @Html.Action("Index", "PCMChildrensCourt", new { @idrec = PCM_Recommendation_Id });
+            }
+            else if (PCM_Recommendation_Id == 3)
+            {
+               
+                @Html.Action("Index", "PCMFCRproceeding", new { @idrec = PCM_Recommendation_Id });
+            }
+            else if (PCM_Recommendation_Id == 4)
+            {
+
+                // @Html.Action("Index", "PCMTabHBS");
+            }
+            else if (PCM_Recommendation_Id == 5)
+            {
+                // <p> CYCC.</p>
+            }
+            else
+            {
+                <header>Please Note </header>
+
+
+                <p>Court Proceedures Contet Is Displayed Based Preliminary Inquiry Information .</p>
+            }
+
+        </div>
+    </div>
+
+
+
+</body>
+</html>
+
+<div id="tabs-3" class="tab-pane fade in active">
+    @*@Html.Action("Index", "PCMPretrail");*@
+</div>

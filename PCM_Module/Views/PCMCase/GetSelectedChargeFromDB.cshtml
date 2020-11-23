@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Common_Objects.ViewModels.PCMCaseDetailsViewModel>
+
+
+
+<table class="table table-striped" style="width:70%">
+
+    <thead>
+        <tr>
+            <th>Charge Description</th>
+            <th>Charge Code</th>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @Html.HiddenFor(modelItem => item.Charge_Detail_Id)
+                @Html.DisplayFor(modelItem => item.ChargeDescription)
+            </td>
+            <td>
+                @Html.HiddenFor(modelItem => item.Charge_Detail_Id)
+                @Html.DisplayFor(modelItem => item.Charge_Code)
+            </td>
+            <td>
+
+
+                @using (Html.BeginForm("DeleteRecChargeFromTable", "PCMCase", new { id = item.Charge_Detail_Id }, FormMethod.Post))
+                {
+                    <button class='btn btn-danger'><span class='glyphicon glyphicon-trash'></span></button>}
+            </td>
+
+        </tr>
+    }
+
+</table>
+
+
+
+<script>
+    function SomeDeleteRowFunction(btndel) {
+        if (typeof (btndel) == "object") {
+            $(btndel).closest("tr").remove();
+            //document.getElementById("VEP_VictimizationTypeDetails").deleteRow(1);
+        } else {
+            return false;
+        }
+    }
+
+</script>
+
+
+

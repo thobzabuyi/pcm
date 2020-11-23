@@ -1,0 +1,111 @@
+﻿
+@model Common_Objects.ViewModels.PCMDiversionViewModel
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="panel panel-primary">
+    
+
+    @using (Html.BeginForm("addPreliminary", "PCMPreliminary", FormMethod.Post))
+    {
+
+        <div class="row">
+            <div class="col-md-3">
+                Intake Assessment Id
+            </div>
+            <div class="col-md-3 form-group">
+                @Html.TextBoxFor(model => model.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id", @class = "form-control jqueryui-marker-datepicker" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                Source_Referral
+            </div>
+            <div class="col-md-3 form-group">
+                @*@Html.TextBoxFor(model => model.Source_Referral, new { @id = "Source_Referral", @class = "form-control jqueryui-marker-datepicker" })*@
+                @Html.DropDownListFor(model => model.Source_Referral,
+                                new List<SelectListItem> {
+                       new SelectListItem { Value = "0" , Text = "-Select-" },
+                       new SelectListItem { Value = "1" , Text = "Presecutor" },
+                       new SelectListItem { Value = "2" , Text = "Probation Officer" }
+                                  }, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                Province
+            </div>
+            <div class="col-md-3 form-group">
+                @Html.DropDownListFor(x => x.Province_Id, new SelectList(Model.Description_Type, "Province_Id", "Description"), "-Select Province-", new { @id = "Province_Id", @class = "form-control" })
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3">
+                Service Provider
+            </div>
+            <div class="col-md-3 form-group">
+                @Html.DropDownList("Service_Provider_Category", new SelectList(string.Empty, "Value", "Text"), "-Select Provider-", new { @id = "Service_Provider_Category", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                Service Provider Status
+            </div>
+            <div class="col-md-3 form-group">
+                @Html.TextBoxFor(model => model.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id", @class = "form-control jqueryui-marker-datepicker" })
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3">
+
+            </div>
+            <div class="col-md-3 form-group">
+                <a href="#" class="btn btn-block btn-success" id="SaveRecord">Save</a>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                <a href="#" class="btn btn-block btn-danger" id="SaveStudentRecord">Save</a>
+            </div>*@
+    }
+</div>
+
+
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>
+        <script src="~/Scripts/jquery-1.7.1.min.js"></script>*@
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#Province_Id").change(function () {
+            $("#Service_Provider_Category").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetServicesP")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Province_Id").val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $("#Service_Provider_Category").append('<option value="' + state.Value + '">' + state.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+    </script>

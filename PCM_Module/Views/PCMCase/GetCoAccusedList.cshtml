@@ -1,0 +1,219 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+
+
+<style>
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+    .modal {
+        top: 5%;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+
+    .modal-dialog {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+
+
+</style>
+
+    <div class="panel panel-primary">
+
+        <div class="container" style="margin-top:1%; width:95%">
+
+            <a href="#" class="btn btn-info" onclick="AddNewCoAccused(0)">Add Co Accused Details</a> <br /><br />
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Co Accused Id</th>
+                        <th>Co Accused First Name</th>
+                        <th>Co Accused Last Name</th>
+                        <th>Cubacc</th>
+                        <th>Delete</th>
+
+                    </tr>
+                </thead>
+                <tbody id="SetListCoAccused">
+                    <tr id="LoadingStatusCoAccused" style="color:red"></tr>
+                </tbody>
+            </table>
+            @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+            <!-- Modal -->
+            <div class="modal fade in center" id="myModalCoAccused"  style="width:70%; vertical-align:middle; margin: 0 auto;">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabelCoAccused" style="font-weight:bold;">Add/Edit Co Accused Details</h4>
+                        </div>
+                        <div class="modal-body">
+                  
+                                    <div class="container" style="margin-top:1%; width:95%">
+
+                                        <ul class="nav nav-tabs" id="tabContentCoAccused">
+                                            <li class="active"><a href="#SearchCoAccused" data-toggle="tab">Search Person</a></li>
+                                            <li><a href="#AddPersonCoAccused" data-toggle="tab">Add New Person</a></li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="SearchCoAccused">
+
+                                                @Html.Action("ListPersonCoAccused", "PCMCase")
+                                            </div>
+
+                                            <div class="tab-pane" id="AddPersonCoAccused">
+
+                                                @Html.Action("PersondeatailsCoAccused", "PCMCase")
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @*Create A PopUp Modal For DeleteConfirmation*@
+
+        <div class="modal fade in center" id="DeleteConfirmationC" style="width:50%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete11">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+   
+    <script>
+        $("#LoadingStatusCoAccused").html("Loading....");
+        $.getJSON('../../PCMCase/ListCoAccused/', function (data) {
+            var items = $("#SetListCoAccused");
+            $.each(data, function (i, p) {
+                items += "<tr><td>" + p.Co_Accused_Id +
+                            "</td><td>" + p.Co_Accused_First_Name +
+                            "</td><td>" + p.Co_Accused_Last_Name +
+                            "</td><td>" + p.Cubacc +
+                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteCoAccused(" + p.Co_Accused_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                            "</td></tr>";
+            });
+            items += "</table>";
+
+            $('#SetListCoAccused').html(items);
+        });
+
+        //Show The Popup Modal For Add New Student
+
+        function AddNewCoAccused(Id) {
+ 
+     
+            $("#myModalCoAccused").modal();
+
+        }
+
+      
+    
+
+        $("#SaveRecordCoAccused").click(function () {
+
+            $.ajax({
+                type: "Post",
+                url: "../../PCMCase/SaveCoAccusedInDatabase",
+                data: {
+
+                    Co_Accused_Id: $("#Aid").val(),
+                    Co_Accused_First_Name: $("#Co_Accused_First_Name").val(),
+                    Co_Accused_Last_Name: $("#Co_Accused_Last_Name").val(),
+                    Cubacc: $("#Cubacc").val(),
+                    HasAccussed: $('input:radio[name=user_options]:checked').val()
+                },
+                success: function (result) {
+                    alert("Success!..");
+                    //window.location.href = "/PCMCase/AssessmentList";
+                    $("#myModalCoAccused").modal("hide");
+
+
+                },
+                error: function (xhr, ajaxOptions, error) {
+                    alert(xhr.status);
+                    alert('Error: ' + xhr.responseText);
+                }
+            })
+        })
+
+        function DeleteCoAccused(Id) {
+
+       
+
+            $("#DeleteConfirmationC").modal("show");
+
+            $('#Delete11').click(function () {
+
+                var url = "../../PCMCase/DeleteRecFromTableAsessmentreg?Id=" + Id;
+               
+
+                var url = "../../PCMCase/DeleteRecFromTableCoAccused?Id=" + Id;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        $.getJSON('../../PCMCase/ListCoAccused/', function (data) {
+
+                            var items = $("#SetListCoAccused");
+                            $.each(data, function (i, p) {
+                                items += "<tr><td>" + p.Co_Accused_Id +
+                                    "</td><td>" + p.Co_Accused_First_Name +
+                                    "</td><td>" + p.Co_Accused_Last_Name +
+                                    "</td><td>" + p.Cubacc +
+                                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteCoAccused(" + p.Co_Accused_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                                    "</td></tr>";
+                            });
+                            items += "</table>";
+
+                            $('#SetListCoAccused').html(items);
+                            
+                        });
+                        $("#DeleteConfirmationC").modal("hide");
+                    }, error: function () { alert('something bad happened'); }
+
+                })
+
+
+
+            });
+
+
+        }
+
+
+
+
+    </script>

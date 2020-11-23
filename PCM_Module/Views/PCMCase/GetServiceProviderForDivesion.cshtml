@@ -1,0 +1,219 @@
+﻿
+@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<br />
+
+<style>
+
+</style>
+<div class="tab-pane" id="tab3">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default form-horizontal">
+                <div class="panel-heading">
+                    Service Provider And Programs Details
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("CreateDivesion", "PCMCase", new { id = Model.Recommendation_Id }))
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Province_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                               @Html.DropDownList("Provincer", ViewBag.Province_List as SelectList, "-- Please Select Province  --", new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                      
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.District_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                @Html.DropDownList("Districtr", new SelectList(string.Empty, "Value", "Text"), "-- Please select District --", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Local_Municipality_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                @Html.DropDownList("LocalMunicipality", new SelectList(string.Empty, "Value", "Text"), "-- Please select Local Municipality --", new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Organization_Id_Type)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                @Html.DropDownListFor(x => x.Organization_Id_Type, new SelectList(Model.OrganisationType_List, "Organization_Type_Id", "Description"), "-Select Organisation Type-", new { @id = "DropdownOrganizationType", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Organization_Id_Type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Organization_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                @Html.DropDownList("DropdownOrganization", new SelectList(string.Empty, "Value", "Text"), "-- Please select Organisation --", new { @class = "form-control", @required = "required" })
+                                @*@Html.DropDownListFor(x => x.Organization_Id, new SelectList(Model.PCMOrganisation_List, "Organization_Id", "Description"), "-Select Parent Organisation-", new { @id = "DropdownOrganization", @class = "form-control", @required = "required" })*@
+                                @*@Html.ValidationMessageFor(x => x.Organization_Id, "", new { @class = "text-danger" })*@
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Div_Program_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+
+                            <div class="col-md-6 form-group">
+
+                               
+                                @Html.ListBoxFor(x => x.Div_Program_Id, new SelectList(new SelectList(string.Empty, "Value", "Text"), "Div_Program_Id", "Programme_Name"), new { @multiple = "multiple", @id = "SelCountry22", @class = "listbox",
+                               @style = "width:450px;height:100px;border-radius:10px;outline: 0;-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);" })
+                            </div>
+
+                        </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+                                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+                                </div>
+                            </div>
+                    }
+                </div>
+                <p>@Html.Action("GetSelectedProgrammesFromDB", "PCMCase", new { @id = Convert.ToInt32(Session["CaseID"]) })</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    var k = jQuery.noConflict();
+    k(function () {
+        k('#SelCountry2').multiselect({
+            includeSelectAllOption: true
+        });
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#DropdownOrganizationType").change(function () {
+            $("#DropdownOrganization").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetOrganisations")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#DropdownOrganizationType").val(), LocMunId: $("#LocalMunicipality").val() },
+                // Get Selected Country ID.
+
+                success: function (organisations) {
+
+                    $.each(organisations, function (i, organi) {
+                        $("#DropdownOrganization").append('<option value="' + organi.Value + '">' +
+                             organi.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Organisation.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+
+        $("#DropdownOrganization").change('sortupdate', function () {
+            $("#SelCountry22").empty();
+            //$('#DropdownOrganization').trigger("chosen:updated");
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDivesions")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#DropdownOrganization").val() },
+                // Get Selected Country ID.
+
+                success: function (organisations) {
+
+                    $.each(organisations, function (i, organi) {
+                        $("#SelCountry22").append('<option value="' + organi.Value + '">' +
+                             organi.Text + '</option>');
+                    });
+
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Organisation.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+    $("#Provincer").change(function () {
+        $("#Districtr").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDistricts")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#Provincer").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#Districtr").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+
+
+    $("#Districtr").change(function () {
+        $("#LocalMunicipality").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetLocalMunicipalities")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#Districtr").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#LocalMunicipality").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+</script>
+
+
+

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Common_Objects.Models.PCM_Referrals>
+@*@using GridMvc.Html*@
+@*@model Common_Objects.ViewModels.PCMReferralsViewModel*@
+@{
+    //WebGrid webGrid = new WebGrid(canPage: true, rowsPerPage: 10);
+
+    WebGrid webGrid = new WebGrid(source: Model);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .Grid {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+        }
+
+            .Grid th {
+                background-color: #F7F7F7;
+                font-weight: bold;
+            }
+
+            .Grid th, .Grid td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .Grid, .Grid table td {
+                border: 0px solid #ccc;
+            }
+
+                .Grid th a, .Grid th a:visited {
+                    color: #333;
+                }
+    </style>
+</head>
+<body>
+    @webGrid.GetHtml(
+        htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+        columns: webGrid.Columns(
+                 webGrid.Column("Referrals_Id", "Referrals_Id Id"),
+                 webGrid.Column("Type_Referral_Id", "Type_Referral_Id Name"),
+                 webGrid.Column("theClerk", "theClerk"),
+                 webGrid.Column("theParticular", "theParticular")))
+</body>
+</html>

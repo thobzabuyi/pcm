@@ -1,0 +1,275 @@
+﻿
+@model Common_Objects.ViewModels.PCMHBSViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+    .modal {
+        top: 5%;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+
+    .modal-dialog {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+</style>
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Visitation OutCome: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+    </div>
+
+    <div class="container" style="margin-top:3%">
+
+       <a href="#" class="btn btn-info" onclick="AddVO(0)">Add Visitation Outcome</a> <br />@*<br />*@
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Placement_Date</th>
+                    @*<th>Intake_Assessment_Id</th>*@
+                    <th>Contact_Number</th>
+                    <th>Visitaion_Register</th>
+                    <th>Action(Edit)</th>
+
+                </tr>
+            </thead>
+            <tbody id="SetVOList">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+
+        @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+        <div class="modal fade in center" id="MyModalVO">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4 id="ModalTitle"></h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="formVO">
+                            <fieldset id="SubmitFormVO">
+                                @Html.HiddenFor(m => m.HB_Visitaion_Outcome_Id, new { @id = "HB_Visitaion_Outcome_Id" })
+                                @Html.HiddenFor(m => m.Intake_Assessment_Id, new { @id = "Intake_Assessment_Id" })
+
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Contact Number
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        @Html.EditorFor(model => model.Conatact_Number, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Conatact_Number, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Process Notes
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.TextAreaFor(m => m.Process_Notes, new { @id = "Process_Notes", @class = "form-control", rows = 6, columns = 70, @placeholder = "" })
+                                        @Html.ValidationMessageFor(model => model.Process_Notes, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Visitaion Register
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        @Html.EditorFor(model => model.Visitaion_Register, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Visitaion_Register, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Compliance
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        @Html.DropDownList("Compliance_Id11", ViewBag.Compliance_List as SelectList, "Select Status", new { id = "Compliance_Id11", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Compliance_Id, "", new { @class = "text-danger" })
+
+
+
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+                                    <a href="#" class="btn btn-block btn-danger" id="SaveVORecord">Save</a>
+                                </div>*@
+
+
+                                <div class="row">
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-2 form-group">
+                                        <a href="#" class="btn btn-block btn-success" id="SaveOutRecordHBSVO">Save</a>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Create A PopUp Modal For DeleteConfirmation*@
+
+        <div class="modal fade" id="DeleteVOConfirmation">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Student Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+
+        $("#LoadingStatus").html("Loading....");
+        $.get("../../PCMHBS/GetVOList", null, DataBind);
+        function DataBind(List) {
+            var SetDataHBS = $("#SetVOList");
+            for (var i = 0; i < List.length; i++) {
+                var Data = "<tr class='row_" + List[i].HB_Visitaion_Outcome_Id + "'>" +
+                    "<td>" + ToJavaScriptDatett(List[i].Placement_Date) + "</td>" +
+                    //"<td>" + List[i].Intake_Assessment_Id + "</td>" +
+                    "<td>" + List[i].Conatact_Number + "</td>" +
+                    "<td>" + List[i].Visitaion_Register + "</td>" +
+                    "<td>" + "<a href='#' class='btn btn-warning' onclick='EditVORecord(" + List[i].HB_Visitaion_Outcome_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                    //"<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteStudentRecord(" + List[i].Children_Court_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                    "</tr>";
+                SetDataHBS.append(Data);
+                $("#LoadingStatus").html(" ");
+
+            }
+        }
+
+        //Show The Popup Modal For Add New Student
+
+        function AddVO(HB_Visitaion_Outcome_Id) {
+            $("#formVO")[0].reset();
+            //$("#Court_Expiry_Date").val(0);
+            //$("#Prelim_Enquiry_Date").val(0);
+            //$("#DropDwn option:selected").text("--Select Dept--");
+            $("#ModalVOTitle").html("Add Visitation Outcome");
+            $("#MyModalVO").modal();
+
+        }
+
+        function EditVORecord(HB_Visitaion_Outcome_Id) {
+            var url = "../../PCMHBS/GetVOById?HB_Visitaion_Outcome_Id=" + HB_Visitaion_Outcome_Id;
+            $("#ModalVOTitle").html("Update Visitation Outcome");
+            $("#MyModalVO").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    $("#HB_Visitaion_Outcome_Id").val(obj.HB_Visitaion_Outcome_Id);
+                    $("Intake_Assessment_Id").val(obj.Intake_Assessment_Id);
+
+                    $("#Conatact_Number").val(obj.Conatact_Number);
+                    $("#Process_Notes").val(obj.Process_Notes);
+                    $("#Visitaion_Register").val(obj.Visitaion_Register);
+
+
+                    $("#Compliance_Id11 option:selected").text(obj.Compliance);
+                    $("#Compliance_Id11 option:selected").val(obj.Compliance_Id);
+
+                }
+            })
+        }
+
+        $("#SaveOutRecordHBSVO").click(function () {
+            var data = $("#formVO").serialize();
+            $.ajax({
+                type: "Post",
+                url: "../../PCMHBS/CreateVO",
+                data: {
+
+
+                    HB_Visitaion_Outcome_Id: $("#HB_Visitaion_Outcome_Id").val(),
+                    Intake_Assessment_Id: $("#Intake_Assessment_Id").val(),
+                    Conatact_Number: $("#Conatact_Number").val(),
+                    Process_Notes: $("#Process_Notes").val(),
+                    Visitaion_Register: $("#Visitaion_Register").val(),
+                    Compliance_Id: $("#Compliance_Id11").val(),
+
+
+
+                },
+                success: function (result) {
+                    alert("Success!..");
+                    $.getJSON('../../PCMHBS/GetVOList', function (data) {
+
+                        var items = $("#SetVOList");
+                        $.each(data, function (i, p) {
+                            items +=
+                                
+                                "</td><td>" + ToJavaScriptDatett(p.Placement_Date) +
+                            "</td><td>" + p.Conatact_Number +
+                            "</td><td>" + p.Visitaion_Register +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditCourt(" + p.HB_Visitaion_Outcome_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetVOList').html(items);
+                    });
+                    $("#MyModalVO").modal("hide");
+                }
+            })
+        })
+
+
+        function ToJavaScriptDatett(value) {
+
+
+            if (value == null || value == '') {
+                return 0;
+            }
+
+            else {
+                var pattern = /Date\(([^)]+)\)/;
+                var results = pattern.exec(value);
+                var dt = new Date(parseFloat(results[1]));
+                return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+            }
+
+
+        }
+
+    </script>
+
+
+

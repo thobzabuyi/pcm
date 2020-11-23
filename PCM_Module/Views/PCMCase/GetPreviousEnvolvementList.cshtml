@@ -1,0 +1,650 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+
+
+<style> .jqueryui-marker-datepicker{z-index:1151 !important;}
+    
+            .fade.in{
+
+background-color: transparent;
+}
+
+      .modal {
+    
+    top: 5%;
+    max-width: 80%;
+    margin: 0 auto;
+}
+.modal-dialog {
+    display: inline-block;
+    width: 80%;
+}
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+    
+    </style>
+
+<div class="panel panel-primary">
+   
+    <div class="container" style="margin-top:1%; width:95%">
+
+        <a href="#" class="btn btn-info" onclick="AddNewPreviousInvolved(0)">Add Previous Involvemnet</a> <br /><br />
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Involvement Id</th>
+                    <th>Previous Involved</th>
+                    <th>IsArrest</th>
+                    <th>Offence Category</th>
+                    <th>Arrest Date</th>
+                    <th>IsConvicted</th>
+                    <th>Conviction Date</th>
+                    <th>IsEscape</th>
+                    <th>Escapes Date</th>
+                    <th>Action(Edit)</th>
+                    <th>Action(Delete)</th>
+                    
+                </tr>
+            </thead>
+            <tbody id="SetPList">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+        @*Create A Popup Modal With Registration Form For Add Or Edit  Record*@
+
+        <div class="modal fade in" id="myModalPreviousInvolvement1" tabindex="-1" role="dialog" aria-labelledby="myModalLabelPreviousInvolvement" style="width:70%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabePreviousInvolvement" style="font-weight:bold;">Add/Edit Previous Involvement</h4>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset id="SubmitFormPreviousInvolvement">
+                            @Html.HiddenFor(m => m.Involvement_Id, new { @id = "Aid" })
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.Previous_Involved)
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    @Html.Hidden("PreviousInvolved")
+                                    @Html.HiddenFor(m => m.Previous_Involved, new { @id = "Previous_Involved", @class = "form-control", @placeholder = "Previous Involved?*" })
+
+                                    <input type="radio" name="user_options" id="rdsPP_yes" value="Yes" /> Yes
+                                    <input type="radio" name="user_options" id="rdsPP_no" value="No" /> No
+
+                                </div>
+
+                                <div class="col-md-1">
+                                    @Html.LabelFor(x => x.IsArrest)
+                                </div>
+                                <div class="col-md-2 form-group">
+                                    @Html.Hidden("IsArrest")
+                                    @Html.HiddenFor(m => m.IsArrest, new { @id = "IsArrest", @class = "form-control", @placeholder = "IsArrest?*" })
+
+                                    <input type="radio" name="user_optionsA" id="rdsA_yes" value="Yes" /> Yes
+                                    <input type="radio" name="user_optionsA" id="rdsA_no" value="No" /> No
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.PreviousArrest_Date)
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.PreviousArrest_Date, new { @id = "PreviousArrest_Date", @class = "form-control jqueryui-marker-datepicker", @placeholder = "Previous Arrest Date*" })
+                                        <label for="PreviousArrest_Date" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @if (ViewBag.OffenceCategory != null)
+                                {
+
+
+
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(x => x.Offence_Category_Id)
+                                    </div>
+                                            <div class="col-md-4 form-group">
+                                                @Html.DropDownList("Offence_CategoryPP", (IEnumerable<SelectListItem>)ViewBag.OffenceCategory as SelectList, "Select Offence Category", new { id = "Offence_CategoryPP", @class = "form-control", })
+
+                                            </div>
+
+                                }
+                                else
+                                {
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(x => x.Offence_Category_Id)
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            @Html.DropDownListFor(x => x.Offence_Category_Id, new SelectList(Model.Offence_List, "Offence_Category_Id", "Description"), "-Select Offence Category-", new { @id = "Offence_CategoryPP", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Offence_Category_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                }
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.IsConvicted)
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    @Html.Hidden("IsConvicted")
+                                    @Html.HiddenFor(m => m.IsConvicted, new { @id = "IsConvicted", @class = "form-control", @placeholder = "IsConvicted?*" })
+
+                                    <input type="radio" name="user_optionsC" id="rdsC_yes" value="Yes" /> Yes
+                                    <input type="radio" name="user_optionsC" id="rdsC_no" value="No" /> No
+                                </div>
+
+                                <div class="col-md-1">
+                                    @Html.LabelFor(x => x.previousConviction_Date)
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.previousConviction_Date, new { @id = "previousConviction_Date", @class = "form-control jqueryui-marker-datepicker", @placeholder = "Conviction Date*" })
+                                        <label for="previousConviction_Date" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.PreviousSentence_Outcomes)
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    @Html.TextBoxFor(m => m.PreviousSentence_Outcomes, new { @id = "Sentence_Outcomes", @class = "form-control", @placeholder = "Sentence Outcomes*" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.IsEscape)
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    @Html.Hidden("IsEscape")
+                                    @Html.HiddenFor(m => m.IsEscape, new { @id = "IsEscape", @class = "form-control", @placeholder = "IsEscape?*" })
+
+                                    <input type="radio" name="user_optionsE" id="rdsE_yes" value="Yes" /> Yes
+                                    <input type="radio" name="user_optionsE" id="rdsE_no" value="No" /> No
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.Escapes_Date)
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.Escapes_Date, new { @id = "Escapes_Date", @class = "form-control jqueryui-marker-datepicker" })
+                                        <label for="Escapes_Date" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-1">
+                                    @Html.LabelFor(x => x.Escape_Time)
+                                </div>
+
+                                <div class="col-md-5 form-group">
+
+                                    <div class="col-md-2 input-group">
+                                        @Html.TextBoxFor(m => m.Escape_Time, new { @id = "Escape_Time", @class = "form-control required warnIfInvalid", @placeholder = "Assessment Time*", type = "time", @Value = "" })
+                                        <label for="Escape_Time" class="input-group-addon btn">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </label>
+                                        @Html.TextBoxFor(m => m.Escape_Time, new { @id = "Escape_Time1", @class = "form-control", @placeholder = "Assessment Time*", style = "width: 100px", @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div id="btntime1" class="button" style="font-size:smaller"><a href="#">Set Time</a></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                @if (ViewBag.WhenEscaped != null)
+                                {
+
+
+
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(x => x.When_Escaped_Id)
+                                    </div>
+                                            <div class="col-md-4 form-group">
+                                                @Html.DropDownList("When_Escaped", (IEnumerable<SelectListItem>)ViewBag.WhenEscaped as SelectList, "Select When Escaped", new { id = "When_Escaped", @class = "form-control", })
+
+                                            </div>
+
+                                }
+                                else
+                                {
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(x => x.When_Escaped_Id)
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            @Html.DropDownListFor(x => x.When_Escaped_Id, new SelectList(Model.WhenEscaped_List, "When_Escaped_Id", "Description"), "-Select When Escaped-", new { @id = "When_Escaped", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.When_Escaped_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                }
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(x => x.Place_Of_Escape)
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    @Html.TextBoxFor(m => m.Place_Of_Escape, new { @id = "Place_Of_Escape", @class = "form-control", @placeholder = "Place Of Escape*" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <a href="#" class="btn btn-success" id="SavePreviousInvolvement">Save</a>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+
+        <div class="modal fade in center" id="DeleteConfirmationPR" style="width:50%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete1PR">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+
+    $("#LoadingStatus").html("Loading....");
+
+    $.get("../../PCMCase/ListPreviousEnvolvement", null, DataBindpr);
+
+    function DataBindpr(List3) {
+        var SetData = $("#SetPList");
+        for (var i = 0; i < List3.length; i++) {
+            var Data = "<tr class='row_" + List3[i].Involvement_Id + "'>" +
+                "<td>" + List3[i].Involvement_Id + "</td>" +
+                "<td>" + List3[i].Previous_Involved + "</td>" +
+                "<td>" + List3[i].IsArrest + "</td>" +
+                "<td>" + List3[i].selectOffenceCategory + "</td>" +
+                "<td>" + ToJavaScriptDatett(List3[i].PreviousArrest_Date) + "</td>" +
+                "<td>" + List3[i].IsConvicted + "</td>" +
+                "<td>" + ToJavaScriptDatett(List3[i].previousConviction_Date) + "</td>" +
+                "<td>" + List3[i].IsEscape + "</td>" +
+                "<td>" + ToJavaScriptDatett(List3[i].Escapes_Date) + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditPreviousInvolvement(" + List3[i].Involvement_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                 "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteRecFromTablePR(" + List3[i].Involvement_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "</tr>";
+            SetData.append(Data);
+            $("#LoadingStatus").html(" ");
+
+        }
+    }
+
+    //Show The Popup Modal For Add New 
+
+    function AddNewPreviousInvolved(Id) {
+        //$("#formPreviousInvolvement")[0].reset();
+        $("#Aid").val(0);
+        $("#rdsA_yes").prop("disabled", true);
+        $("#rdsA_no").prop("disabled", true);
+        $("#PreviousArrest_Date").prop("disabled", true);
+        $("#IsArrest").prop("disabled", true);
+        $("#PreviousArrest_Date").prop("disabled", true);
+        $("#Offence_CategoryPP").prop("disabled", true);
+        $("#rdsC_yes").prop("disabled", true);
+        $("#rdsC_no").prop("disabled", true);
+        $("#previousConviction_Date").prop("disabled", true);
+        $("#Sentence_Outcomes").prop("disabled", true);
+        $("#rdsE_yes").prop("disabled", true);
+        $("#rdsE_no").prop("disabled", true);
+        $("#Escapes_Date").prop("disabled", true);
+        $("#Escape_Time").prop("disabled", true);
+        $("#When_Escaped_Id").prop("disabled", true);
+        $("#Place_Of_Escape").prop("disabled", true);
+ 
+    
+        $("#btntime1").hide();
+
+        $("#Escape_Time1").hide();
+        $("#Escape_Time").show();
+        $("#myModalPreviousInvolvement1").modal();
+
+    }
+
+    function EditPreviousInvolvement(Id) {
+
+        $("#Escape_Time1").show();
+        $("#Escape_Time").hide();
+        $("#btntime1").show();
+        var url = "../../PCMCase/GetPreviousEnvolvementById?Id=" + Id;
+        $("#ModalTitlePreviousInvolvement").html("Update Previous Involvement Details");
+        $("#myModalPreviousInvolvement1").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#Aid").val(obj.Involvement_Id);
+                $("#PreviousArrest_Date").val(obj.PreviousArrest_Date);
+                $("#previousConviction_Date").val(obj.previousConviction_Date);
+                $("#Sentence_Outcomes").val(obj.PreviousSentence_Outcomes);
+                $("#Escapes_Date").val(obj.Escapes_Date);
+                $("#Escape_Time1").val(obj.Escape_Time);
+                $("#Place_Of_Escape").val(obj.Place_Of_Escape);
+
+                
+
+                $("#Offence_CategoryPP option:selected").val(obj.Offence_Category_Id);
+                $("#Offence_CategoryPP option:selected").text(obj.selectOffenceCategory);
+
+                $("#When_Escaped option:selected").val(obj.When_Escaped_Id);
+                $("#When_Escaped option:selected").text(obj.When_Escaped);
+
+                $("#Previous_Involved").val(obj.Previous_Involved);
+                $("#IsArrest").val(obj.IsArrest);
+                $("#IsConvicted").val(obj.IsConvicted);
+                $("#IsEscape").val(obj.IsEscape);
+
+                var value1 = $("#Previous_Involved").val();
+                var value2 = $("#IsArrest").val();
+                var value3 = $("#IsConvicted").val();
+                var value4 = $("#IsEscape").val();
+
+                //is PreviousInvolved..............................
+                if (value1 == "Yes") {
+                    $("#rdsPP_yes").attr('checked', true);
+
+                    $("#rdsPP_no").prop("checked", false);
+
+                   
+
+                } else if (value1 == "No") {
+                    $("#rdsPP_yes").attr('checked', false);
+                    $("#rdsPP_no").prop("checked", true);
+
+                }
+                else
+                {
+                    $("#rdsPP_yes").attr('checked', false);
+                    $("#rdsPP_no").prop("checked", false);
+
+                }
+
+                //is Arested..............................
+
+                if (value2 == "Yes") {
+                    $("#rdsA_yes").attr('checked', true);
+
+                    $("#rdsA_no").prop("checked", false);
+
+                    
+
+                } else if (value2 == "No") {
+                    $("#rdsA_yes").attr('checked', false);
+
+                    $("#rdsA_no").prop("checked", true);
+
+                }
+                else {
+                    $("#rdsA_yes").attr('checked', false);
+                    $("#rdsA_no").prop("checked", false);
+
+                }
+
+                //is Convicted..............................
+                if (value3 == "Yes") {
+                    $("#rdsC_yes").attr('checked', true);
+
+                    $("#rdsC_no").prop("checked", false);
+
+
+
+                } else if (value3 == "No") {
+                    $("#rdsC_yes").attr('checked', false);
+
+                    $("#rdsC_no").prop("checked", true);
+
+                }
+                else {
+                    $("#rdsC_yes").attr('checked', false);
+                    $("#rdsC_no").prop("checked", false);
+
+                }
+
+                //is Escape..............................
+                if (value4 == "Yes") {
+                    $("#rdsE_yes").attr('checked', true);
+
+                    $("#rdsE_no").prop("checked", false);
+
+
+
+                } else if (value4 == "No") {
+                    $("#rdsE_yes").attr('checked', false);
+
+                    $("#rdsE_no").prop("checked", true);
+
+                }
+                else {
+                    $("#rdsE_yes").attr('checked', false);
+                    $("#rdsE_no").prop("checked", false);
+
+                }
+                //End.............................................
+
+            }, error: function () { alert('something bad happened'); }
+
+        })
+    }
+
+    $("#SavePreviousInvolvement").click(function () {
+
+        var t = $("#Escape_Time").val();
+
+        if (t != "" || t != null) {
+
+            t = $("#Escape_Time").val();
+        }
+        else if ($("#Escape_Time1").val() != "" || $("#Escape_Time1").val() != null) {
+            t = $("#Escape_Time1").val();;
+
+        }
+        else {
+
+            t = new Date(Date.now());
+
+        }
+        $.ajax({
+            type: "Post",
+            url: "../../PCMCase/SavePreviousEnvolvementInDatabase",
+            data: {
+
+                Involvement_Id: $("#Aid").val(),
+                PreviousArrest_Date: $("#PreviousArrest_Date").val(),
+                PreviousSentence_Outcomes: $("#Sentence_Outcomes").val(),
+                previousConviction_Date: $("#previousConviction_Date").val(),
+                Escapes_Date: $("#Escapes_Date").val(),
+                Escape_Time: $("#Escape_Time").val(),
+                Place_Of_Escape: $("#Place_Of_Escape").val(),
+
+                Offence_Category_Id: $("#Offence_CategoryPP").val(),
+                When_Escaped_Id: $("#When_Escaped").val(),
+
+                Previous_Involved: $('input:radio[name=user_options]:checked').val(),
+                IsArrest: $('input:radio[name=user_optionsA]:checked').val(),
+                IsConvicted: $('input:radio[name=user_optionsC]:checked').val(),
+                IsEscape: $('input:radio[name=user_optionsE]:checked').val()
+            },
+            success: function (result) {
+                alert("Success!..");
+                location.reload(true);
+                $("#myModalPreviousInvolvement1").modal("hide");
+
+            },
+            error: function (xhr, ajaxOptions, error) {
+                alert(xhr.status);
+                alert('Error: ' + xhr.responseText);
+            }
+        })
+    })
+
+
+    function ToJavaScriptDatett(value) {
+
+        
+        if (value == null || value == '') {
+            return 0;
+        }
+
+        else 
+
+        {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+                var dt = new Date(parseFloat(results[1]));
+                return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+        }
+
+
+    }
+
+    $("#rdsPP_yes").click(function () {
+        $("#rdsA_yes").prop("disabled", false);
+        $("#rdsA_no").prop("disabled", false);
+        $("#PreviousArrest_Date").prop("disabled", false);
+        $("#IsArrest").prop("disabled", false);
+        $("#PreviousArrest_Date").prop("disabled", false);
+        $("#Offence_CategoryPP").prop("disabled", false);
+        $("#rdsC_yes").prop("disabled", false);
+        $("#rdsC_no").prop("disabled", false);
+        $("#previousConviction_Date").prop("disabled", false);
+        $("#Sentence_Outcomes").prop("disabled", false);
+        $("#rdsE_yes").prop("disabled", false);
+        $("#rdsE_no").prop("disabled", false);
+        $("#Escapes_Date").prop("disabled", false);
+        $("#Escape_Time").prop("disabled", false);
+        $("#When_Escaped_Id").prop("disabled", false);
+        $("#Place_Of_Escape").prop("disabled", false);
+    });
+
+    $("#rdsPP_no").click(function () {
+        $("#rdsA_yes").prop("disabled", true);
+        $("#rdsA_no").prop("disabled", true);
+        $("#PreviousArrest_Date").prop("disabled", true);
+        $("#IsArrest").prop("disabled", true);
+        $("#PreviousArrest_Date").prop("disabled", true);
+        $("#Offence_CategoryPP").prop("disabled", true);
+        $("#rdsC_yes").prop("disabled", true);
+        $("#rdsC_no").prop("disabled", true);
+        $("#previousConviction_Date").prop("disabled", true);
+        $("#Sentence_Outcomes").prop("disabled", true);
+        $("#rdsE_yes").prop("disabled", true);
+        $("#rdsE_no").prop("disabled", true);
+        $("#Escapes_Date").prop("disabled", true);
+        $("#Escape_Time").prop("disabled", true);
+        $("#When_Escaped_Id").prop("disabled", true);
+        $("#Place_Of_Escape").prop("disabled", true);
+    });
+
+
+    function DeleteRecFromTablePR(Id) {
+
+        $("#DeleteConfirmationPR").modal("show");
+
+        $('#Delete1PR').click(function () {
+
+            var url = "../../PCMCase/DeleteRecFromTablePR?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $("#DeleteConfirmationPR").modal("hide");
+                    location.reload(true);
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+
+
+        });
+
+
+
+
+    }
+
+
+    $("#btntime1").click(function () {
+        $("#Escape_Time1").hide();
+        $("#Escape_Time").show();
+        $("#btntime1").hide();
+        //$('#AssTime1').val("");
+
+    });
+
+    $(new function () {
+        $('.required').on('blur', function () {
+            if (!validateTime($(this).val())) {
+                alert('Enter valid time HH:MM AM/PM !');
+                $(this).val('');
+                $(this).keyup();
+            }
+        });
+        $('.warnIfInvalid').on('keyup', function () {
+            $(this).css('color', 'black');
+            if (!validateTime($(this).val())) {
+                $(this).css('color', 'red');
+            }
+        });
+    });
+
+    function validateTime(time) {
+        if (!time) {
+            return false;
+        }
+        var military = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
+        var standard = /^\s*(0?\d|1[0-2]):[0-5]\d(\s+(AM|PM))?\s*$/i;
+        return time.match(military) || time.match(standard);
+    }
+</script>
+
+
+
+

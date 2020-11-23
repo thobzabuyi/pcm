@@ -1,0 +1,28 @@
+﻿@model Common_Objects.ViewModels.PCMPreliminaryViewModel
+<br />
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("PCMCreatePreliminary", "PCMPreliminary"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="panel panel-primary">
+            <div class="panel-heading" style="text-align: center">
+                Case Details
+            </div>
+            <div class="panel-body">
+
+
+
+
+            </div>
+            <div class="form-group">
+                <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+            </div>
+
+        </div>
+
+    }

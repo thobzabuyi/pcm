@@ -1,0 +1,7 @@
+﻿@model IEnumerable<Common_Objects.Models.Court_Outcome_Item>
+@using GridMvc.Html
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(x => x.Description).Titled("If a children's court finds that a child is in need of care and protection the court may make any order which is in the best interests of the child, which may be or include an order -").Sortable(false);
+})

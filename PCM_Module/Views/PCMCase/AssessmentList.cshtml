@@ -1,0 +1,416 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+@{
+    Layout = null;
+}
+
+<style>
+    .jqueryui-marker-datepicker {
+        z-index: 1151 !important;
+    }
+
+    #btnSearch {
+        outline: none !important;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: none;
+    }
+
+    #tool-bar {
+        transition: width 0.1s;
+        -webkit-transition: width 0.1s;
+    }
+
+
+
+   .modal-backdrop
+{
+    opacity:0.5 !important;
+}
+      .fade.in{
+
+background-color: transparent;
+}
+
+      .modal {
+    
+    top: 5%;
+    max-width: 100%;
+}
+.modal-dialog {
+    display: inline-block;
+    width: 100%;
+}
+</style>
+
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Assessment Details: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+    </div>
+    <div class="container" style="margin-top:1%">
+        <a href="#" class="btn btn-info" onclick="AddNewAssessment(0)">Add New Assessment</a> <br /><br />
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Assesment Register Id</th>
+                    <th>Intake Assessment Id</th>
+                    <th>Assessment Date</th>
+                    <th>Assessment Time</th>
+                    <th>Form Of Notification Id</th>
+                    <th>Action(Edit)</th>
+                    <th>Action(Delete)</th>
+
+                </tr>
+            </thead>
+            <tbody id="SetAssessmentList">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+
+        @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+        <div class="modal fade in center" id="MyModalas" style="width:50%;  margin: 0 auto; height:70%" >
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4 id="ModalTitle" style="font-weight:bold;"></h4>
+                    </div>
+                    <div class="modal-body form-group">
+                        <form id="formAssess">
+                            <fieldset id="SubmitForm">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Assessment Date <span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    @Html.HiddenFor(m => m.Assesment_Register_Id, new { @id = "AssId", })
+                                    <div class="col-md-6 form-group">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.Assessment_Date, new { @id = "AssDate", @class = "form-control jqueryui-marker-datepicker", @placeholder = "Assessment Date*" , @required = "required" })
+                                            <label for="AssDate" class="input-group-addon btn">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </label>
+                                            @Html.ValidationMessageFor(x => x.Assessment_Date, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Assessment Time<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <div class="input-group">
+                                            
+                                            @Html.TextBoxFor(m => m.Assessment_Time, new { @id = "AssTime", @class = "form-control required warnIfInvalid", @placeholder = "Assessment Time*", type = "time", @Value = "" , @required = "required" })
+                                            <label for="AssTime" class="input-group-addon btn">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </label>
+                                            @Html.TextBoxFor(m => m.Assessment_Time, new { @id = "AssTime1", @class = "form-control", @placeholder = "Assessment Time*", style = "width: 300px", @readonly = "readonly", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Assessment_Time, "", new { @class = "text-danger" })
+                                        </div>
+                                            <div class="col-md-4">
+                                                <div id="btntime" class="button" style="font-size:smaller"><a href="#">Set Time</a></div>
+                                            </div>
+                                        </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        Form Of Notification<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        @Html.DropDownList("Drop", ViewBag.FormOfNotification as SelectList, "Select Form Of Notification", new { id = "Drop", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Form_Of_Notification_Id, "", new { @class = "text-danger" })
+
+
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+
+
+                                    <a href="#" class="btn btn-success" id="SaveStudentRecordAssess">Save</a>
+                                </div>
+
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Create A PopUp Modal For DeleteConfirmation*@
+
+    <div class="modal fade in center" id="DeleteConfirmationAss" style="width:50%; vertical-align:middle; margin: 0 auto;" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4>Delete Record</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want To Delete This Record.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                    <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+        $("#LoadingStatus").html("Loading....");
+    $.get("../../PCMCase/List", null, DataBind);
+        function DataBind(List) {
+            var SetData = $("#SetAssessmentList");
+            for (var i = 0; i < List.length; i++) {
+                var Data = "<tr class='row_" + List[i].Assesment_Register_Id + "'>" +
+                    "<td>" + List[i].Assesment_Register_Id + "</td>" +
+                    "<td>" + List[i].Intake_Assessment_Id + "</td>" +
+                    "<td>" + ToJavaScriptDatett(List[i].Assessment_Date) + "</td>" +
+                    "<td>" + ToJavaScriptDatett(List[i].Assessment_Time) + "</td>" +
+                    "<td>" + List[i].FormOfNotificationDescription + "</td>" +
+                    "<td>" + "<a href='#' class='btn btn-warning' onclick='EditAssessmentRecord(" + List[i].Assesment_Register_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                    "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteRecFromTableAsessmentreg(" + List[i].Assesment_Register_Id + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                    "</tr>";
+                SetData.append(Data);
+                $("#LoadingStatus").html(" ");
+
+            }
+        }
+
+
+     
+
+        function AddNewAssessment(StudentId) {
+            $("#formAssess")[0].reset();
+            $("#AssId").val(0);
+            $("#AssTime1").hide();
+            $("#AssTime").show();
+            $("#btntime").hide();
+
+            $("#Drop option:selected").text("--Select Notification--");
+            $("#ModalTitle").html("Add New Assessment");
+            $("#MyModalas").modal();
+
+        }
+
+        //Show The Popup Modal For Edit Student Record
+
+        function EditAssessmentRecord(AssesmentRegisterId) {
+            $("#AssTime1").show();
+            $("#AssTime").hide();
+            $("#btntime").show();
+
+
+            var url = "../../PCMCase/GetAssessmentById?AssesmentRegisterId=" + AssesmentRegisterId;
+            var Products = $("#Products").val();
+            $("#ModalTitle").html("Update Assessment Details");
+            $("#MyModalas").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    $("#AssId").val(obj.Assesment_Register_Id);
+                    $("#AssDate").val(obj.Assessment_Date.substring(0, 10));
+
+                    $("#Drop option:selected").val(obj.Form_Of_Notification_Id);
+                    $("#Drop option:selected").text(obj.FormOfNotificationDescription);
+                    $("#AssTime1").val(obj.Assessment_Time.substring(12, 30));
+
+
+
+                }, error: function () { alert('something bad happened'); }
+
+            })
+        }
+
+        function GetAssessmentRecordId(AssesmentRegisterId) {
+            var url = "../../PCMCase/GetAssessmentOnSelectById?AssesmentRegisterId=" + AssesmentRegisterId;
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+
+
+                }
+
+            })
+
+
+            var url = "../../PCMCase/GetAssessmentOnSelectById?GetSocioEconomics=" + AssesmentRegisterId;
+            $.ajax({
+                url: url,
+                data: "id=" + Id ,
+            type: "GET",
+            success: function(data){
+                // code here
+            },
+            error: function(passParams){
+                // code here
+            }
+        });
+
+        }
+
+
+        $("#SaveStudentRecordAssess").click(function () {
+            ////var data = $("#formAssess").serialize();
+
+             var t = $("#AssTime").val();
+
+            if (t != "" || t!=null)
+            {
+
+                t = $("#AssTime").val();
+            }
+            else if($("#AssTime1").val()!="" || $("#AssTime1").val()!=null)
+            {
+                t = $("#AssTime1").val();;
+
+            }
+            else {
+
+                t = new Date(Date.now());
+
+            }
+
+            $.ajax({
+                type: "Post",
+                url: "../../PCMCase/SaveDataInDatabase",
+                data:  {
+                    Assesment_Register_Id: $("#AssId").val(),
+                    Assessment_Date: $("#AssDate").val(),
+                    Assessment_Time: t,
+                    Form_Of_Notification_Id: $("#Drop").val()
+                },
+                success: function (result) {
+                    alert("Success!..");
+
+
+                    location.reload(true);
+
+                    $("#MyModalas").modal("hide");
+
+                }
+            })
+        })
+
+        //Show The Popup Modal For DeleteComfirmation
+        var DeleteStudentRecord = function (StudentId) {
+            $("#StuId").val(StudentId);
+            $("#DeleteConfirmationAss").modal();
+        }
+
+
+        var ConfirmDelete = function () {
+            var StuId = $("#StuId").val();
+            $.ajax({
+                type: "POST",
+                url: "../../Home/DeleteStudentRecord?StudentId=" + StuId,
+                success: function (result) {
+                    $("#DeleteConfirmationAss").modal("hide");
+                    $(".row_" + StuId).remove();
+                }
+            })
+        }
+
+        function ToJavaScriptDatett(value) {
+
+
+            if (value == null || value == '') {
+                return 0;
+            }
+
+            else {
+                var pattern = /Date\(([^)]+)\)/;
+                var results = pattern.exec(value);
+                var dt = new Date(parseFloat(results[1]));
+                return (dt.getDate() + "/" + dt.getMonth() + 1) + "/" + dt.getFullYear();
+            }
+
+
+        }
+
+
+
+
+        $("#btntime").click(function () {
+            $("#AssTime1").hide();
+            $("#AssTime").show();
+            $("#btntime").hide();
+            //$('#AssTime1').val("");
+
+        });
+
+        $(new function () {
+            $('.required').on('blur', function () {
+                if (!validateTime($(this).val())) {
+                    alert('Enter valid time HH:MM AM/PM !');
+                    $(this).val('');
+                    $(this).keyup();
+                }
+            });
+            $('.warnIfInvalid').on('keyup', function () {
+                $(this).css('color', 'black');
+                if (!validateTime($(this).val())) {
+                    $(this).css('color', 'red');
+                }
+            });
+        });
+
+        function validateTime(time) {
+            if (!time) {
+                return false;
+            }
+            var military = /^\s*([01]?\d|2[0-3]):[0-5]\d\s*$/i;
+            var standard = /^\s*(0?\d|1[0-2]):[0-5]\d(\s+(AM|PM))?\s*$/i;
+            return time.match(military) || time.match(standard);
+        }
+
+
+        function DeleteRecFromTableAsessmentreg(Id) {
+
+            //$("#DeleteConfirmationAss").modal("show");
+
+            $("#DeleteConfirmationAss").modal();
+
+            $('#Delete').click(function () {
+          
+                var url = "../../PCMCase/DeleteRecFromTableAsessmentreg?Id=" + Id;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        $("#DeleteConfirmationAss").modal("hide");
+                        location.reload(true);
+                    }, error: function () { alert('something bad happened'); }
+
+                })
+
+
+
+            });
+
+
+       
+
+        }
+
+
+
+
+</script>
+

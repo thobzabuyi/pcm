@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Common_Objects.ViewModels.PCMPreliminaryViewModel>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "General Details";
+}
+
+@*<h2>PCM_Offence_Details</h2>*@
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Columns(columns =>
+   {
+   columns.Add(x => x.PCM_Offence_Id).Titled("PCM_Offence_Id");
+   columns.Add(x => x.PCM_Case_Id).Titled("PCM_Case_Id");
+   columns.Add(x => x.Intake_Assessment_Id).Titled("Intake_Assessment_Id");
+   //columns.Add(x => x.Intake_Assessment_Id).Titled("Intake Assessment Id");
+   //columns.Add(x => x.Recomendation_Order_Id).Titled("Recomendation Order Id").Sortable(true);
+   //columns.Add(x => x.Person_Id).Titled("Person Id").Sortable(true);
+   //columns.Add(x => x.Type_Of_Center_Id).Titled("Type Of Center Id").Sortable(true);
+
+   columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(d => @<b> @Html.ActionLink("Offense", "addpreliminary", "PCMPreliminary", new { id = d.Intake_Assessment_Id }, new { @class = "btn btn-info pull-right" }) </b>);
+    @* columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(d => @<b> @Html.ActionLink("Delete", "DeleteST", new { id = d.studID }, new { @class = "btn btn-info pull-right" }) </b>);
+        columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(d => @<b> @Html.ActionLink("Add Subject", "Index", "Stud", new { id = d.studID }, new { @class = "btn btn-info pull-right" }) </b>);*@
+
+   }).WithPaging(5)
+    </div>
+</div>

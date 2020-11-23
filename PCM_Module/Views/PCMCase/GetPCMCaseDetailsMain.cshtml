@@ -1,0 +1,166 @@
+﻿
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                   aria-controls="collapseOne">SAPS CASE DETAILS</a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <div class="panel-body">
+                    <div class="row">
+                        <div style="width: 80%; margin: 0px auto;">
+                      oihoih
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                   aria-expanded="false" aria-controls="collapseTwo">OFFENCE DETAILS</a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+           ohouo
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
+                   aria-expanded="false" aria-controls="collapseThree">CO-ACCUSED</a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+             iuhoiuio
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    @*<asp:Button ID="Button1" Text="Submit" runat="server" CssClass="btn btn-primary" />
+        <asp:HiddenField ID="PaneName" runat="server" />*@
+</div>
+
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#DropdownProvince").change(function () {
+            $("#District_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDistricts")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#DropdownProvince").val() },
+                // Get Selected Country ID.
+
+                success: function (districts) {
+
+                    $.each(districts, function (i, district) {
+                        $("#District_Id").append('<option value="' + district.Value + '">' +
+                             district.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#District_Id").change(function () {
+            $("#DropdownCourt").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetCourts")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#District_Id").val() },
+                // Get Selected Country ID.
+
+                success: function (courts) {
+
+                    $.each(courts, function (i, court) {
+                        $("#DropdownCourt").append('<option value="' + court.Value + '">' +
+                             court.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#District_Id").change(function () {
+            $("#DropdownSAPS").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSAPSStations")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#District_Id").val() },
+                // Get Selected Country ID.
+
+                success: function (saps) {
+
+                    $.each(saps, function (i, sap) {
+                        $("#DropdownSAPS").append('<option value="' + sap.Value + '">' +
+                             sap.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var paneName = $("[id*=PaneName]").val() != "" ? $("[id*=PaneName]").val() : "collapseOne";
+
+        //Remove the previous selected Pane.
+        $("#accordion .in").removeClass("in");
+
+        //Set the selected Pane.
+        $("#" + paneName).collapse("show");
+
+        //When Pane is clicked, save the ID to the Hidden Field.
+        $(".panel-heading a").click(function () {
+            $("[id*=PaneName]").val($(this).attr("href").replace("#", ""));
+        });
+    });
+</script>
+
+
+
+

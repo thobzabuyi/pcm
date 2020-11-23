@@ -1,0 +1,129 @@
+﻿
+@model Common_Objects.ViewModels.PCMDiversionViewModel
+
+@{
+    ViewBag.Title = "Index";
+    //WebGrid webGrid = new WebGrid(source: Model, canPage: false, canSort: false);
+}
+
+
+@*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
+@*<script src="~/Scripts/bootstrap.min.js"></script>*@
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    @using (Html.BeginForm("Programme", "PCMDiversion", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                Service Provider
+            </div>
+            <div class="col-md-3 form-group">
+               @Html.DropDownList("ServicesProviderId", ViewBag.Country as SelectList, "-Select Services Provider-", new { style = "width:250px" }) 
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3">
+                Programmes
+            </div>
+            <div class="col-md-3 form-group">
+              
+             @*@Html.DropDownList("ProgrammeId", new SelectList(string.Empty, "Value", "Text"), "-Select Programme-", new { style = "width:250px", multiple = "multiple", @class = "listbox" })*@
+               
+                <select id="myP" multiple="multiple" required name="ProgrammeId">
+                    @if(ViewBag.myP != null)
+                    {
+                        foreach(var item in ViewBag.myP)
+                        {
+                            if(item.Text != null)
+                            {
+                                <option value="@item.Value"> @item.Text</option>
+                            }
+                        }
+                    }
+                </select>  
+
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+
+            </div>
+            <div class="col-md-3 form-group">
+                <a href="#" class="btn btn-block btn-success" id="SaveRecord">Save</a>
+                @*<input type="submit" value="Submit" />*@
+            </div>
+        </div>
+    }
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+        </script>
+    }
+</body>
+</html>
+
+@*<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>*@
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#ServicesProviderId").change(function () {
+            $("#Programme_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetProgrammes")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#ServicesProviderId").val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $("#ProgrammeId").append('<option value="' + state.Value + '">' + state.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+
+    //$(function () {
+    //    $('#ProgrammeId').multiselect({
+    //        includeSelectAllOption: true
+    //    });
+
+    //    $('#btnSelected').click(function () {
+    //        var selected = $("#ProgrammeId option:selected");
+    //        var message = "";
+    //        selected.each(function () {
+    //            message += $(this).text() + " " + $(this).val() + "\n";
+    //        });
+    //        alert(message);
+    //    });
+    //});
+
+    
+
+</script>
+

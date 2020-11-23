@@ -1,0 +1,319 @@
+﻿
+<div class="accordion" id="accordion2">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                <span class="glyphicon glyphicon-minus"></span>
+
+                Pre Sentence Details
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse in">
+            <div class="accordion-inner">
+
+                @Html.HiddenFor(m => m.Sentence_Id, new { @id = "Sentence_Id" })
+
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Court_Date)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(x => x.Court_Date, new { @id = "Court_Date1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Court_Date1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                            @Html.ValidationMessageFor(x => x.Court_Date, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.NextCourtDate)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.NextCourtDate, new { @id = "NextCourtDate1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="NextCourtDate1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                            @Html.ValidationMessageFor(x => x.NextCourtDate, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Court_Outcome)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.TextAreaFor(x => x.Court_Outcome, new { @id = "Court_Outcome1", @class = "form-control", @required = "required" })
+
+
+                    </div>
+
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Reason_for_Remand)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.TextAreaFor(x => x.Reason_for_Remand, new { @id = "Reason_for_Remand1", @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(x => x.Reason_for_Remand, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Community_Based_Options_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+                        @Html.DropDownListFor(x => x.Community_Based_Options_Id, new SelectList(Model.CommunityBasedOptions_List, "Community_Based_Options_Id", "Description"), "-Select-", new { @id = "Community1", @class = "form-control" })
+
+
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Restorective_Justice_Option_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.DropDownListFor(x => x.Restorective_Justice_Option_Id, new SelectList(Model.RestorectiveJustice_List, "Restorective_Justice_Option_Id", "Description"), "-Select-", new { @id = "Restorective1", @class = "form-control" })
+
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Programme_Type_Id)
+                    </div>
+
+                    <div class="col-md-3 form-group">
+                        @Html.DropDownListFor(x => x.Programme_Type_Id, new SelectList(Model.ProgrammeType_List, "Programme_Type_Id", "Description"), "-Select-", new { @id = "ProgrammeType1", @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Programme_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+                        @Html.DropDownListFor(x => x.Programme_Id, new SelectList(Model.Programme_List, "Programme_Id", "Description"), "-Select-", new { @id = "ProgrammeName11", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                <span class="glyphicon glyphicon-plus"></span>
+
+                Recommnendation Details
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Fine_or_Alternatives_To_Fine)
+                    </div>
+
+                    <div class="col-md-3 form-group">
+                        <input type="checkbox" name="type4" id="Fine_or_Alternatives_To_Fine1" value="True">
+                        @Html.HiddenFor(m => m.Fine_or_Alternatives_To_Fine, new { @id = "Fine_or_Alternatives_To_Fine11" })
+                    </div>
+
+                    <div class="col-md-3 form-group">
+
+                        @Html.LabelFor(x => x.Fine_Alternatives_Fine_Comments)
+                    </div>
+                    <div class="col-md-3 form-group ">
+                        @Html.TextBoxFor(x => x.Fine_Alternatives_Fine_Comments, new { @id = "Fine_Alternatives_Fine_Comments1", @class = "form-control", @required = "required" })
+                    </div>
+
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Commital_Treatment_Centre)
+                    </div>
+
+                    <div class="col-md-3 form-group">
+                        <input type="checkbox" name="type1" id="Commital_Treatment_Centre1" value="True">
+                        @Html.HiddenFor(m => m.Commital_Treatment_Centre, new { @id = "Commital_Treatment_Centre11" })
+                    </div>
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Center_Name)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.TextBoxFor(x => x.Center_Name, new { @id = "Center_Name1", @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Period_Commital_Treatment_Centre_From)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Period_Commital_Treatment_Centre_From, new { @id = "Period_Commital_Treatment_Centre_From1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Period_Commital_Treatment_Centre_From1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Period_Commital_Treatment_Centre_To)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Period_Commital_Treatment_Centre_To, new { @id = "Period_Commital_Treatment_Centre_To1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Period_Commital_Treatment_Centre_To1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Compulsory_esidence_CYCC)
+                    </div>
+
+                    <div class="col-md-3 form-group">
+
+                        <input type="checkbox" name="type2" id="Compulsory_esidence_CYCC1" value="True">
+                        @Html.HiddenFor(m => m.Compulsory_esidence_CYCC, new { @id = "Compulsory_esidence_CYCC11" })
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.CYCCCenter_Name)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.TextBoxFor(x => x.CYCCCenter_Name, new { @id = "CYCCCenter_Name1", @class = "form-control", @required = "required" })
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Compulsory_esidence_CYCC_From)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Compulsory_esidence_CYCC_From, new { @id = "Compulsory_esidence_CYCC_From1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Compulsory_esidence_CYCC_From1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Compulsory_esidence_CYCC_To)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Compulsory_esidence_CYCC_To, new { @id = "Compulsory_esidence_CYCC_To1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Compulsory_esidence_CYCC_To1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Imprisoment)
+                    </div>
+                    <div class="col-md-3 form-group">
+
+                        <input type="checkbox" name="type3" id="Imprisoment1" value="True">
+                        @Html.HiddenFor(m => m.Imprisoment, new { @id = "Imprisoment11" })
+
+                    </div>
+
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Imprisoment_Id)
+                    </div>
+
+                    <div class="col-md-3 form-group">
+                        @Html.DropDownListFor(x => x.Imprisoment_Id, new SelectList(Model.Imprisoment_List, "Imprisoment_Id", "Description"), "-Select-", new { @id = "Imprisoment_Id1", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Imprisomen_From)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Imprisomen_From, new { @id = "Imprisomen_From1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Imprisomen_From1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+
+                        @Html.LabelFor(x => x.Imprisomen_To)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Imprisomen_To, new { @id = "Imprisomen_To1", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                            <label for="Imprisomen_To1" class="input-group-addon btn">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.Department_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.DropDownListFor(x => x.Department_Id, new SelectList(Model.Department_List, "Department_Id", "Description"), "-Select-", new { @id = "DepartmentId1", @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(x => x.PCM_Case_Status_Id)
+                    </div>
+                    <div class="col-md-3 form-group">
+                        @Html.DropDownListFor(x => x.PCM_Case_Status_Id, new SelectList(Model.CaseStatus_List, "PCM_Case_Status_Id", "Description"), "-Select-", new { @id = "PCM_Case_Status_Id1", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <input type="submit" id="SaveRecordSentence" value="Save" class="btn btn-success" />
+</div>

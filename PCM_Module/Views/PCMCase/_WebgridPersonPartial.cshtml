@@ -1,0 +1,35 @@
+﻿
+@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<div id="gridposition" style="overflow: scroll; width: 100%; height: auto; overflow-x: hidden;">
+@{
+    var clientsGrid = new WebGrid(source: Model.Person_search_List, canSort: false, rowsPerPage: 5, ajaxUpdateContainerId: "clientsListGrid");
+
+
+    @clientsGrid.GetHtml(
+        htmlAttributes: new { id = "CurrentCasesGrid", @class = "NestedMainGrid", width = "100%" },
+        columns: clientsGrid.Columns(
+        clientsGrid.Column("FirstName", "First Name"),
+            clientsGrid.Column("LastName", "Last Name"),
+            clientsGrid.Column("IDNumber", "ID Number"),
+            clientsGrid.Column("Phone_Number", "Phone Number"),
+            clientsGrid.Column("Age", "Age"),
+            clientsGrid.Column("Person_Id", "Person_Id Id"),
+
+            clientsGrid.Column(header: "", style: "EditPersonWidth", format: (item) =>
+            {
+                if (item.Person_Id != null)
+                {
+                    var link = Html.ActionLink("Create Case", "Index", "Adoption", new { id = item.Person_Id }, new { @class = "btn btn-success" });
+                    return link;
+                }
+                else
+                {
+                    var link = Html.ActionLink("Edit Case Details", "", "Adoption", new { id = item.Person_Id }, new { @class = "btn btn-success" });
+                    return link;
+                }
+            }
+            )
+            )
+        )
+}
+</div>

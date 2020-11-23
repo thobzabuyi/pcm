@@ -1,0 +1,470 @@
+﻿
+@model  Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<style>
+          .fade.in{
+
+background-color: transparent;
+}
+
+      .modal {
+    
+    top: 5%;
+    max-width: 80%;
+    margin: 0 auto;
+}
+.modal-dialog {
+    display: inline-block;
+    width: 100%;
+}
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+
+</style>
+<div class="tab-pane" id="PDOtab1">
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="text-align: center">
+            Organisation Details
+        </div>
+    </div>
+    <p></p>
+    <fieldset id="SubmitFormPv">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        
+                        @Html.HiddenFor(m => m.OrganisationVictim_Id, new { @id = "OrganisationVictim_Id" })
+                        @Html.LabelFor(x => x.OrganisationName, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.OrganisationName, new { @class = "form-control", @id = "OrganisationName" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.ContactPersonfirstname, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.ContactPersonfirstname, new { @class = "form-control", @id = "ContactPersonfirstname" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.ContactPersonlastname, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.ContactPersonlastname, new { @class = "form-control", @id = "ContactPersonlastname" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Victim_Occupation, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+                        @Html.TextBoxFor(model => model.Victim_Occupation, new { @class = "form-control", @id = "Victim_Occupation" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.OrganisationTell, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+
+                        @Html.TextBoxFor(model => model.OrganisationTell, new { @class = "form-control", @id = "OrganisationTell" })
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Interventionservice_referrals, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+
+                        @Html.TextAreaFor(model => model.Interventionservice_referrals, new { @class = "form-control", row=2, @id = "Interventionservice_referrals" })
+
+
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
+
+        @if (ViewBag.Town_List != null)
+        {
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Province_Id, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+                        @Html.DropDownListFor(m => m.Province_Id, (IEnumerable<SelectListItem>)ViewBag.Province_List, "-- Select --", new { @id = "Province1", @class = "form-control", @required = "required" })
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.District_Id, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+
+                       @Html.DropDownListFor(m => m.District_Id, (IEnumerable<SelectListItem>)ViewBag.District_List, "-- Select --", new { @id = "District1", @class = "form-control", @required = "required" })
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        }
+
+        else
+        {
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            @Html.LabelFor(x => x.Province_Id, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-6">
+
+                            @Html.DropDownList("Province1", ViewBag.Province_List as SelectList, "-- Select Province --", new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            @Html.LabelFor(x => x.District_Id, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-6">
+
+
+                            @Html.DropDownList("District1", new SelectList(string.Empty, "Value", "Text"), "-- Select District --", new { @class = "form-control" })
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        }
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Town_Id, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+                        @Html.DropDownList("Town1", new SelectList(string.Empty, "Value", "Text"), "-- Select Town --", new { @class = "form-control" })
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Victim_Address_Line_1, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+
+                        @Html.TextBoxFor(model => model.Victim_Address_Line_1, new { @class = "form-control", @id = "Victim_Address1" })
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Victim_Address_Line_2, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+
+
+                        @Html.TextBoxFor(model => model.Victim_Address_Line_2, new { @class = "form-control", @id = "Victim_Address2" })
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        @Html.LabelFor(x => x.Victim_Postal_Code, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-3">
+
+
+                        @Html.TextBoxFor(model => model.Victim_Postal_Code, new { @class = "form-control", @id = "Victim_Postal2" })
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </fieldset>
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="submit" id="SaveRecordOrg" value="Save" class="btn btn-success" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/jscript">
+
+    $("#SaveRecordOrg").click(function () {
+
+        $.ajax({
+            type: "Post",
+            url: "../../PCMCase/SaveOrganisationVictimDatabase",
+            data: {
+                OrganisationVictim_Id: $("#OrganisationVictim_Id").val(),
+                OrganisationName: $("#OrganisationName").val(),
+                ContactPersonfirstname: $("#ContactPersonfirstname").val(),
+                ContactPersonlastname: $("#ContactPersonlastname").val(),
+                Victim_Occupation: $("#Victim_Occupation").val(),
+                OrganisationTell: $("#OrganisationTell").val(),
+                Town_Id: $("#Town1").val(),
+                Interventionservice_referrals: $("#Interventionservice_referrals").val(),
+                Victim_Postal_Code: $("#Victim_Postal2").val(),
+                Victim_Address_Line_1: $("#Victim_Address1").val(),
+                Victim_Address_Line_2: $("#Victim_Address2").val(),
+            },
+            success: function (result) {
+
+                alert("Success!..");
+
+                $.getJSON('../../PCMCase/OrganisationVictimList/', function (data) {
+
+                    var items = $("#SetVictimOrg");
+                    $.each(data, function (i, p) {
+                        items += "<tr><td>" + p.OrganisationVictim_Id +
+                            "</td><td>" + p.OrganisationName +
+                            "</td><td>" + p.ContactPersonfirstname +
+                            "</td><td>" + p.ContactPersonlastname +
+                            "</td><td>" + p.Victim_Occupation +
+                            "</td><td>" + p.OrganisationTell +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditVictimOrganisationRecord(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                            "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictimOrg(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetVictimOrg').html(items);
+                });
+                $("#advancedSearchModalO").modal("hide");
+                location.reload(true);
+
+                $("#DeleteConfirmationVO").modal("hide");
+
+            },
+            error: function (xhr, ajaxOptions, error) {
+                alert(xhr.status);
+                alert('Error: ' + xhr.responseText);
+            }
+        })
+    })
+
+
+    $("#District1").change(function () {
+        $("#Town1").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetTowns")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#District1").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#Town1").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+
+
+
+    $("#Province1").change(function () {
+        $("#District1").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDistricts")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#Province1").val() },
+            // Get Selected Country ID.
+
+            success: function (states) {
+                $.each(states, function (i, state) {
+                    $("#District1").append('<option value="' + state.Value + '">' +
+                         state.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve states.' + ex);
+            }
+        });
+        return false;
+    })
+
+    function EditVictimOrganisationRecord(Id) {
+        var url = "../../PCMCase/GetOrganisationVictimById?Id=" + Id;
+       
+        $("#ModalTitle2").html("Update Victim Organisation Details");
+        $("#advancedSearchModalO").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#OrganisationVictim_Id").val(obj.OrganisationVictim_Id);
+                $("#OrganisationName").val(obj.OrganisationName);
+                $("#ContactPersonfirstname").val(obj.ContactPersonfirstname);
+                $("#ContactPersonlastname").val(obj.ContactPersonlastname);
+                $("#Victim_Occupation").val(obj.Victim_Occupation);
+                $("#OrganisationTell").val(obj.OrganisationTell);
+                $("#Victim_Postal2").val(obj.Victim_Postal_Code);
+                $("#Victim_Address1").val(obj.Victim_Address_Line_1);
+                $("#Victim_Address2").val(obj.Victim_Address_Line_2);
+                $("#Interventionservice_referrals").val(obj.Interventionservice_referrals);
+
+                $("#Town1 option:selected").val(obj.Town_Id);
+                $("#Town1 option:selected").text(obj.Towndesc);
+
+
+                $("#District1 option:selected").val(obj.District_Id);
+                $("#District1 option:selected").text(obj.Ditrictdesc);
+
+                $("#Province1 option:selected").val(obj.Province_Id);
+                $("#Province1 option:selected").text(obj.Provincedesc);
+
+            }, error: function () { alert('something bad happened'); }
+
+        })
+    }
+
+
+    function DeleteVictimOrg(Id) {
+
+
+        $("#DeleteConfirmationVO").modal("show");
+
+        $('#Delete1FA').click(function () {
+
+            var url = "../../PCMCase/DeleteRecFromTableVictimOrg?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $.getJSON('../../PCMCase/OrganisationVictimList/', function (data) {
+
+                        var items = $("#SetVictimOrg");
+                        $.each(data, function (i, p) {
+                            items += "<tr><td>" + p.OrganisationVictim_Id +
+                                "</td><td>" + p.OrganisationName +
+                                "</td><td>" + p.ContactPersonfirstname +
+                                "</td><td>" + p.ContactPersonlastname +
+                                "</td><td>" + p.Victim_Occupation +
+                                "</td><td>" + p.OrganisationTell +
+                                "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditVictimOrganisationRecord(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictimOrg(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+
+                                "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetVictimOrg').html(items);
+                    });
+                    $("#DeleteConfirmationVO").modal("hide");
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+
+
+        });
+
+    }
+
+   
+</script>
+
+

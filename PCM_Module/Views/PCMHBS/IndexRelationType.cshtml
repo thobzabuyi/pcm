@@ -1,0 +1,51 @@
+﻿
+<br />
+<tr>
+    <td> Relationship Type </td>
+
+
+    @Html.DropDownList("Sortby", new SelectListItem[]
+   {
+     new SelectListItem() { Text = "__select relationship type__", Value = "0" },
+     new SelectListItem() { Text = "Adoptive Parents", Value = "1" },
+     new SelectListItem()  { Text = "Biological Parents", Value = "2" },
+     new SelectListItem()  { Text = "Famaly Members", Value = "3" },
+     new SelectListItem()  { Text = "Foster Parents", Value = "4" },
+     new SelectListItem()  { Text = "Caregiver", Value = "5" }},
+     new { @onchange = "CallChangefunc(this.value)" })
+</tr> 
+
+<script>
+    function CallChangefunc(val)
+    {
+        //window.location.href="/Controller/Actionmethod?value="+val;
+        if (val == 0) {
+            //document.write('its 0');
+            //window.location.href = "/PCMTabHBS/IndexRelationType?value=" + val;
+
+
+        }
+        else if (val == 1)
+        {
+            //document.write('its 1')
+            document.write("<b>Qualifies for driving</b>");
+        }
+        else if(val == 2)
+        {
+            document.write('its 2')
+            window.location.href = "/PCMTabHBS/Index?value=" + val;
+        }
+        else if(val == 3)
+        {
+            document.write('its 3')
+        }
+        else if(val == 4)
+        {
+            window.alert("its 4")
+        }
+        else 
+        {
+            document.write('its 5')
+        }
+    }
+</script>

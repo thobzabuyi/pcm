@@ -1,0 +1,109 @@
+﻿<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+
+<style>
+    /* Styles for your <ul> menu */
+    #headerDiv ul {
+        background: #F6F6F6;
+        margin: 0 auto;
+        padding: 28px 0 0;
+        text-align: center;
+        width: auto;
+    }
+
+        /* Styles for individual <li> elements */
+        #headerDiv ul li {
+            display: inline;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+            /* Hover style for your links */
+            #headerDiv ul li a:hover {
+                background: #3D515F !important;
+                border-radius: 5px;
+                color: black;
+            }
+
+            /* A more specific style for your "active" link */
+            #headerDiv ul li a.active {
+                background-color: #008CBA !important;
+                border-color: #000000;
+                border-bottom: 5px solid #9b0e0e;
+            }
+
+    /* Specific hover style for your active link */
+    #headerheaderDiv ul li a.active:hover {
+        color: yellow;
+    }
+
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:focus,
+    .nav-tabs > li.active > a:hover {
+        background-color: #008CBA !important;
+        color: #fff;
+    }
+</style>
+
+
+
+<div class="tab-pane" id="tab3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default form-horizontal">
+                <div class="panel panel-primary">
+                    <div class="panel-heading" style="text-align: center">
+                        Diversion <span style="color:white; text-align:center;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div id="rootwizardA1">
+                        <ul class="nav nav-pills nav-stacked col-md-2" id="myTB">
+                            <li><a href="#DivTab1" data-toggle="tab" data-id="DivTab1">Service Provider</a></li>
+                            <li><a href="#DivTab2" data-toggle="tab" data-id="DivTab2">Programme</a></li>
+                            <li><a href="#DivTab3" data-toggle="tab" data-id="DivTab3">Modules</a></li>
+                        </ul>
+                        <div class="tab-content col-md-9">
+                            <div class="tab-pane" id="DivTab1">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel-body">
+                                            @Html.Action("Index", "PCMDiversionSP")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="DivTab2">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel-body">
+                                           @* @Html.Action("Programme", "PCMDiversionSP")*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="DivTab3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel-body">
+                                            @*@Html.Action("Module", "PCMDiversionSP")*@
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

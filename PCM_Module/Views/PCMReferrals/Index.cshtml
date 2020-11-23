@@ -1,0 +1,1041 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+
+    .jqueryui-marker-datepicker {
+        z-index: 1151 !important;
+    }
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+</style>
+
+
+
+
+<br />
+
+
+
+
+
+
+@model Common_Objects.ViewModels.PCMReferralsViewModel
+
+
+@{
+    ViewBag.Title = "Index";
+    var Reftype = ViewBag.Message;
+}
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Referrals: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+    </div>
+
+
+    <div id="tabs-2" class="tab-pane fade in active">
+
+
+        <div class="panel-body">
+
+            <div class="container" style="margin-top:3%">
+                <a href="#" class="btn btn-info" onclick="AddReferrals(0)">Add New Referral</a> <br />
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Referrals_Id</th>
+                            <th>Intake_Assessment_Id</th>
+                            <th>theClerk</th>
+                            <th>theParticular</th>
+                            <th>Court Proceedure(Edit)</th>
+                            <th>Action(Editl)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="SetListPCMReferrals">
+                        <tr id="LoadingStatusPCMReferrals" style="color:red"></tr>
+                    </tbody>
+                </table>
+
+                @*Create A Popup Modal With Registration Form For Add Or Edit Student Record*@
+
+                <div class="modal fade in center" id="MyModalPCMReferrals">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitle"></h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <form id="formPCMReferrals">
+                                    <fieldset id="SubmitFormPCMReferrals">
+                                        @Html.HiddenFor(m => m.Referrals_Id, new { @id = "Referrals_Id" })
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Type of Referral
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                @Html.DropDownListFor(m => m.Type_Referral_Id, ViewBag.ListofReferrals as SelectList, "--Select Referral Type--", new { @id = "Type_Referral_Id", @class = "form-control" })
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                To:The Clerk of The Children's Court / Counselling / Accredited Programme / Social Worker
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                @Html.TextAreaFor(m => m.theClerk, new { @id = "theClerk", @class = "form-control", rows = "4" })
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                To:The (Particular of The person/Center Where the child is)
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                @Html.TextAreaFor(m => m.theParticular, new { @id = "theParticular", @class = "form-control", rows = "4" })
+                                            </div>
+                                        </div>
+
+
+                                        @Html.HiddenFor(m => m.PCM_Case_Id, new { @id = "PCM_Case_Id" })
+                                        @Html.HiddenFor(m => m.Created_By, new { @id = "Created_By" })
+                                        @Html.HiddenFor(m => m.Date_Created, new { @id = "Date_Created" })
+                                        @Html.HiddenFor(m => m.Modified_By, new { @id = "Modified_By" })
+                                        @Html.HiddenFor(m => m.Date_Modified, new { @id = "Date_Modified" })
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+
+                                            </div>
+                                            <div class="col-md-2 form-group">
+                                                <a href="#" class="btn btn-block btn-success" id="SaveRecordReferal">Save</a>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+
+                                        </div>
+
+
+
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*Create A PopUp Modal For DeleteConfirmation*@
+
+                <div class="modal fade" id="DeleteConfirmation">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4>Delete Student Record</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Are You Sure? You Want To Delete This Record.</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancle</a>
+                                <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div class="modal fade in center" id="MyModalREFCourt1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitle"></h4>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="form-horizontal">
+                                    @*<h4>Add New Childrens Court</h4>*@
+                                    @*<hr />*@
+
+                                    <form id="formc">
+                                        <fieldset id="SubmitFormC">
+                                            <div class="row">
+                                                @Html.HiddenFor(m => m.Court_Referrals_Id, new { @id = "Court_Referrals_Id" })
+                                                @Html.HiddenFor(m => m.Referrals_Id, new { @id = "Referrals_Id" })
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-10 " style="font-weight: bold">
+
+                                                    (i) Referral to children’s court in terms of section 9 (3) (a) (i) of the act child justice act [CJA].
+                                                    <br />
+                                                    <p>
+                                                        After having assessed the above-mentioned child, I am of the view that he / she * Select the appropriate ground
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-md-10 ">
+                                                    @*@Html.CheckBoxFor(m => m.Child_Need_Care_Protection)*@
+                                                    <input type="checkbox" name="Child_Need_Care_Protection" id="Child_Need_Care_Protectionc" value="True" />
+                                                    @Html.HiddenFor(m => m.Child_Need_Care_Protection, new { @id = "Child_Need_Care_Protection" })
+                                                    May be a child in need of care and protection as referred to in section 150 (1) and (2) of the Children’s Act, 2005;
+                                                </div>
+                                            </div>
+                                            <div class="row">
+
+
+                                                <div class="col-md-10">
+                                                    @*@Html.CheckBoxFor(m => m.Stay_At_Parents_Home)*@
+                                                    <input type="checkbox" name="Stay_At_Parents_Home" id="Stay_At_Parents_Homec" value="True" />
+                                                    @Html.HiddenFor(m => m.Stay_At_Parents_Home, new { @id = "Stay_At_Parents_Home" })
+                                                    Does not live at his or her parents’ home or in appropriate alternative care;
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-10 ">
+                                                    @*@Html.CheckBoxFor(m => m.Comitted_Minor_Offence)*@
+                                                    <input type="checkbox" name="Comitted_Minor_Offence" id="Comitted_Minor_Offencec" value="True" />
+                                                    @Html.HiddenFor(m => m.Comitted_Minor_Offence, new { @id = "Comitted_Minor_Offence" })
+                                                    Is alleged to have committed a minor offence/offences aimed at meeting his/her basic needs for food or warmth.
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-12 ">
+                                                    1. I accordingly refer the matter to the children’s court to be dealt with in terms of sections 155 and 156 of that Act.
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12 ">
+                                                    2. I attach a copy of the assessment report referred to in section 40 of the Act and other relevant documents.
+                                                </div>
+                                            </div>
+
+                                            <br />
+
+                                            <div class="row">
+                                                <div class="col-md-3 ">
+                                                    Referral Date
+                                                </div>
+                                                <div class="col-md-3 ">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Refferal_Date, new { @id = "Refferal_Date", @class = "form-control jqueryui-marker-datepicker", @placeholder = " " })
+                                                        <label for="Refferal_Date" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                        @Html.ValidationMessageFor(model => model.Refferal_Date)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+
+                                                <div class="col-md-2 ">
+                                                    <a href="#" class="btn btn-block btn-success" id="SaveRecordRefcort">Save</a>
+                                                </div>
+                                            </div>
+
+
+                                        </fieldset>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade in center" id="MyModalREFCourt2">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitle"></h4>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="form-horizontal">
+
+
+                                    <form id="formProgramme">
+                                        <fieldset id="SubmitFormProgramme">
+                                            <div class="row">
+                                                @Html.HiddenFor(m => m.Category_Referrals_Id, new { @id = "Category_Referrals_Id1" })
+                                                @Html.HiddenFor(m => m.Referrals_Id, new { @id = "Referrals_Id1" })
+                                                @Html.HiddenFor(m => m.Type_Referral_Id, new { @id = "Type_Referral_Id1" })
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-10" style="font-weight: bold">
+
+                                                    (ii) Referral of child to counselling or therapy in terms of section 9(3)(a)(ii) of the Act [CJA]
+                                                </div>
+                                            </div>
+
+                                            <br />
+
+                                            <div class="row">
+
+                                                <div class="col-md-10">
+                                                    After having assessed the above-mentioned child, I have decided to refer him or her for counselling/therapy for the reasons set out in the attached assessment report referred to in section 40 of the Act.
+                                                </div>
+                                            </div>
+                                            <br />
+
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    1. The child must receive counselling/therapy for the period of,
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Period_From, new { @id = "Period_From1", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                        <label for="Period_From1" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    until.
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Period_To, new { @id = "Period_To1", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                        <label for="Period_To1" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    2. You are requested to furnish me with reports on the child’s progress and compliance with the decision*
+                                                </div>
+                                                <div class="col-md-5 form-group">
+                                                    @Html.TextAreaFor(model => model.Progress_Report, new { @id = "Progress_Report1", @class = "form-control", rows = "6", cols = "10" })
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    (Specify how often).
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    For the purposes of the section 97 (6) register, the probation office is required to report to the Director-General: Social Development on the child’s compliance with the decision.
+                                                </div>
+                                            </div>
+
+                                            <div align="center" class="form-group">
+                                                <a href="#" class="btn btn-success" id="SaveRecordProgramme">Save</a>
+                                            </div>
+
+                                        </fieldset>
+                                    </form>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade in center" id="MyModalREFCourt3">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitle"></h4>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <div class="form-horizontal">
+                                    @*<hr />*@
+
+                                    <form id="form">
+                                        <fieldset id="SubmitFormCounselling">
+                                            <div class="row">
+                                                @Html.HiddenFor(m => m.Category_Referrals_Id, new { @id = "Category_Referrals_Id11" })
+                                                @Html.HiddenFor(m => m.Referrals_Id, new { @id = "Referrals_Id11" })
+                                            </div>
+
+
+
+                                            <div class="row">
+
+                                                <div class="col-md-10" style="font-weight: bold">
+                                                    (ii) Referral of child to counselling or therapy in terms of section 9(3)(a)(ii) of the Act [CJA]
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+
+                                                <div class="col-md-10">
+                                                    After having assessed the above-mentioned child, I have decided to refer him or her for counselling/therapy for the reasons set out in the attached assessment report referred to in section 40 of the Act.
+                                                </div>
+                                            </div>
+
+                                            <br />
+
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    1. The child must receive counselling/therapy for the period of,
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Period_From, new { @id = "Period_From11", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                        <label for="Period_From11" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    Until.
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Period_To, new { @id = "Period_To11", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                        <label for="Period_To11" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div align="left" class="col-md-4">
+                                                    2.You are requested to furnish me with reports on the child’s progress and compliance with the decision
+                                                </div>
+                                                <div class="col-md-5 form-group">
+                                                    @Html.TextAreaFor(model => model.Progress_Report, new { @id = "Progress_Report11", @class = "form-control", rows = "6", cols = "10" })
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    (Specify how often).
+                                                </div>
+
+                                            </div>
+                                            <br />
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    For the purposes of the section 97(6) register, the probation office is required to report to the Director-General: Social Development on the child’s compliance with the decision.
+                                                </div>
+                                            </div>
+
+                                            <br />
+
+                                            <div align="center" class="form-group">
+                                                <a href="#" class="btn btn-success" id="SaveRecordCounselling">Save</a>
+                                            </div>
+
+                                        </fieldset>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade in center" id="MyModalREFCourt4">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                <h4 id="ModalTitle"></h4>
+                            </div>
+
+                            <div class="modal-body">
+
+
+                                <div class="form-horizontal">
+
+
+                                    <form id="formSW">
+                                        <fieldset id="SubmitFormSW">
+                                            <div class="row">
+                                                @Html.HiddenFor(m => m.Category_Referrals_Id, new { @id = "Category_Referrals_Id111" })
+                                                @Html.HiddenFor(m => m.Referrals_Id, new { @id = "Referrals_Id111" })
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-5" style="font-weight: bold">
+
+                                                    (iv) Referral of child to a social worker:
+
+                                                </div>
+                                            </div>
+                                            <br />
+
+                                            <div class="row">
+
+                                                <div class="col-md-10">
+                                                    After having assessed the above-mentioned child, I have decided to refer him or her for counselling/therapy for the reasons set out in the attached assessment report referred to in section 40 of the Act.
+                                                </div>
+                                            </div>
+                                            <br />
+
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    1. The child monitored for the period of
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Period_From, new { @id = "Period_From111", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                        <label for="Period_From111" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    until.
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.Period_To, new { @id = "Period_To111", @class = "form-control jqueryui-marker-datepicker", @placeholder = "" })
+                                                        <label for="Period_To111" class="input-group-addon btn">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    2. You are requested to furnish me with reports on the child’s progress and compliance with the decision*
+                                                </div>
+                                                <div class="col-md-5 form-group">
+
+                                                    @Html.TextAreaFor(model => model.Progress_Report, new { @id = "Progress_Report111", @class = "form-control", rows = "6", cols = "10" })
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    (Specify how often).
+                                                </div>
+
+                                            </div>
+
+
+                                            <br />
+
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    For the purposes of the section 97(6) register, the probation office is required to report to the Director-General: Social Development on the child’s compliance with the decision.
+                                                </div>
+                                            </div>
+
+                                            <br />
+
+
+
+                                            <div align="center" class="form-group">
+                                                <a href="#" class="btn btn-success" id="SaveRecordSW">Save</a>
+                                            </div>
+
+                                        </fieldset>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+
+    $("#LoadingStatusPCMReferrals").html("Loading....");
+    $.get("../../PCMReferrals/GetPCMReferralsList", null, DataBind);
+    function DataBind(List) {
+        var SetData = $("#SetListPCMReferrals");
+        for (var i = 0; i < List.length; i++) {
+            var Data = "<tr class='row_" + List[i].Referrals_Id + "'>" +
+                "<td>" + List[i].Referrals_Id + "</td>" +
+                "<td>" + List[i].Intake_Assessment_Id + "</td>" +
+                "<td>" + List[i].theClerk + "</td>" +
+                "<td>" + List[i].theParticular + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-danger' onclick='EditRefCout(" + List[i].Referrals_Id + ',' + List[i].Type_Referral_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + List[i].Referrals_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                "</tr>";
+            SetData.append(Data);
+            $("#LoadingStatusPCMReferrals").html(" ");
+
+        }
+    }
+
+    function AddReferrals(Id) {
+        $("#formPCMReferrals")[0].reset();
+        $("#ModalTitle").html("Add New Referral");
+        $("#MyModalPCMReferrals").modal();
+
+    }
+
+
+    function Edit(ReferralsId) {
+        var url = "../../PCMReferrals/GetPCMReferralById?Referrals_Id=" + ReferralsId;
+        $("#ModalTitlePCMReferrals").html("......");
+        $("#MyModalPCMReferrals").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#Referrals_Id").val(obj.Referrals_Id);
+                $("#theClerk").val(obj.theClerk);
+                $("#theParticular").val(obj.theParticular);
+                $("#Type_Referral_Id").val(obj.Type_Referral_Id);
+            }
+        })
+    }
+
+
+    function EditRefCout(ReferralsId, Type) {
+
+
+        var Type_Referral_Id = Type
+
+
+        if (Type == 1) {
+
+            var url = "../../PCMReferrals/GetPCMReferraltypeById?Referrals_Id=" + ReferralsId;
+
+            $("#MyModalREFCourt1").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { "Type_Referral_Id": Type },
+                success: function (data) {
+                    var obj = JSON.parse(data);
+
+                    $("#Referrals_Id").val(obj.Referrals_Id);
+                    $("#Court_Referrals_Id").val(obj.theParticular);
+                    $("#Stay_At_Parents_Home").val(obj.Stay_At_Parents_Home);
+                    $("#Comitted_Minor_Offence").val(obj.Comitted_Minor_Offence);
+                    $("#Employee_Id_Copy_To").val(obj.Type_Referral_Id);
+                    $("#Refferal_Date").val(obj.Refferal_Date);
+
+
+                    $("#Child_Need_Care_Protection").val(obj.Child_Need_Care_Protection);
+
+                    var valueFine = $("#Child_Need_Care_Protection").val();
+
+
+                    if (valueFine === 'true') {
+
+                        $("#Child_Need_Care_Protectionc").prop("checked", true);
+
+                    }
+                    else {
+                        $("#Child_Need_Care_Protectionc").prop("checked", false);
+
+                    }
+
+
+                    $("#Stay_At_Parents_Home").val(obj.Stay_At_Parents_Home);
+
+                    var valueFine = $("#Stay_At_Parents_Home").val();
+
+
+                    if (valueFine === 'true') {
+
+                        $("#Stay_At_Parents_Homec").prop("checked", true);
+
+                    }
+                    else {
+                        $("#Stay_At_Parents_Homec").prop("checked", false);
+
+                    }
+
+                    $("#Comitted_Minor_Offence").val(obj.Comitted_Minor_Offence);
+
+                    var valueFine = $("#Comitted_Minor_Offence").val();
+
+
+                    if (valueFine === 'true') {
+
+                        $("#Comitted_Minor_Offencec").prop("checked", true);
+
+                    }
+                    else {
+                        $("#Comitted_Minor_Offencec").prop("checked", false);
+
+                    }
+
+
+                }
+            })
+
+
+
+
+
+            $("#SaveRecordRefcort").click(function () {
+                var data = $("#formc").serialize();
+                $.ajax({
+                    type: "Post",
+                    url: "../../PCMReferrals/SaveCourtData",
+                    data: {
+
+                        Child_Need_Care_Protection: $("input:checkbox[name=Child_Need_Care_Protection]:checked").val(),
+                        Stay_At_Parents_Home: $("input:checkbox[name=Stay_At_Parents_Home]:checked").val(),
+                        Comitted_Minor_Offence: $("input:checkbox[name=Comitted_Minor_Offence]:checked").val(),
+                        Referrals_Id: $("#Referrals_Id").val(),
+                        Court_Referrals_Id: $("#Court_Referrals_Id").val(),
+                        Employee_Id_Copy_To: $("#Employee_Id_Copy_To").val(),
+                        Refferal_Date: $("#Refferal_Date").val()
+                    },
+                    success: function (result) {
+                        alert("Success!..");
+                        $.getJSON('../../PCMReferrals/GetPCMReferralsList', function (data) {
+
+                            var items = $("#SetListPCMReferrals");
+                            $.each(data, function (i, p) {
+                                items +=
+                                    "<tr><td>" + p.Referrals_Id +
+                                    "</td><td>" + p.Intake_Assessment_Id +
+                                    "</td><td>" + p.theClerk +
+                                    "</td><td>" + p.theParticular +
+                                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='EditRefCout(" + p.Referrals_Id + ',' + p.Type_Referral_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" +
+                                    "</td><td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + p.Referrals_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                    "</td></tr>";
+                            });
+                            items += "</table>";
+
+                            $('#SetListPCMReferrals').html(items);
+                        });
+
+                        $("#MyModalREFCourt1").modal("hide");
+
+                    }
+                })
+            })
+
+        }
+
+        if (Type_Referral_Id == 2) {
+
+
+            var url = "../../PCMReferrals/GetPCMReferraltypeById?Referrals_Id=" + ReferralsId;
+
+            $("#MyModalREFCourt2").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { "Type_Referral_Id": Type_Referral_Id },
+                success: function (data) {
+                    var obj = JSON.parse(data);
+
+                    $("#Referrals_Id1").val(obj.Referrals_Id);
+                    $("#Progress_Report1").val(obj.Progress_Report1);
+                    $("#Period_From1").val(obj.Period_From);
+                    $("#Period_To1").val(obj.Period_To);
+
+
+                }
+            })
+
+
+            $("#SaveRecordProgramme").click(function () {
+                var data = $("#formProgramme").serialize();
+                $.ajax({
+                    type: "Post",
+                    url: "../../PCMReferrals/SaveReferalToProgramme",
+                    data: {
+
+                        Referrals_Id: $("#Referrals_Id1").val(),
+                        Court_Referrals_Id: $("#Court_Referrals_Id1").val(),
+                        Progress_Report: $("#Progress_Report1").val(),
+                        Period_To: $("#Period_To1").val(),
+                        Period_From: $("#Period_From1").val(),
+                    },
+                    success: function (result) {
+                        alert("Success!..");
+                        $.getJSON('../../PCMReferrals/GetPCMReferralsList', function (data) {
+
+                            var items = $("#SetListPCMReferrals");
+                            $.each(data, function (i, p) {
+                                items +=
+                                    "<tr><td>" + p.Referrals_Id +
+                                    "</td><td>" + p.Intake_Assessment_Id +
+                                    "</td><td>" + p.theClerk +
+                                    "</td><td>" + p.theParticular +
+                                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='EditRefCout(" + p.Referrals_Id + ',' + p.Type_Referral_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" +
+                                    "</td><td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + p.Referrals_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                    "</td></tr>";
+                            });
+                            items += "</table>";
+
+                            $('#SetListPCMReferrals').html(items);
+                        });
+
+                        $("#MyModalREFCourt2").modal("hide");
+
+                    }
+                })
+            })
+
+        }
+
+        if (Type_Referral_Id == 3) {
+
+
+            var url = "../../PCMReferrals/GetPCMReferraltypeById?Referrals_Id=" + ReferralsId;
+
+            $("#MyModalREFCourt3").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { "Type_Referral_Id": Type_Referral_Id },
+                success: function (data) {
+                    var obj = JSON.parse(data);
+
+                    $("#Referrals_Id11").val(obj.Referrals_Id);
+                    $("#Period_From11").val(obj.Period_From);
+                    $("#Period_To11").val(obj.Period_To);
+                    $("#Progress_Report11").val(obj.Progress_Report);
+                }
+            })
+
+
+            $("#SaveRecordCounselling").click(function () {
+                var data = $("#SubmitFormCounselling").serialize();
+                $.ajax({
+                    type: "Post",
+                    url: "../../PCMReferrals/SaveReferalToCouncelling",
+                    data: {
+
+                        Referrals_Id: $("#Referrals_Id11").val(),
+
+                        Progress_Report: $("#Progress_Report11").val(),
+                        Period_To: $("#Period_To11").val(),
+                        Period_From: $("#Period_From11").val(),
+                    },
+                    success: function (result) {
+                        alert("Success!..");
+                        $.getJSON('../../PCMReferrals/GetPCMReferralsList', function (data) {
+
+                            var items = $("#SetListPCMReferrals");
+                            $.each(data, function (i, p) {
+                                items +=
+                                    "<tr><td>" + p.Referrals_Id +
+                                    "</td><td>" + p.Intake_Assessment_Id +
+                                    "</td><td>" + p.theClerk +
+                                    "</td><td>" + p.theParticular +
+                                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='EditRefCout(" + p.Referrals_Id + ',' + p.Type_Referral_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" +
+                                    "</td><td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + p.Referrals_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                    "</td></tr>";
+                            });
+                            items += "</table>";
+
+                            $('#SetListPCMReferrals').html(items);
+                        });
+
+                        $("#MyModalREFCourt3").modal("hide");
+
+                    }
+                })
+            })
+
+
+        }
+
+        if (Type_Referral_Id == 4) {
+
+
+            var url = "../../PCMReferrals/GetPCMReferraltypeById?Referrals_Id=" + ReferralsId;
+
+            $("#MyModalREFCourt4").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { "Type_Referral_Id": Type_Referral_Id },
+                success: function (data) {
+                    var obj = JSON.parse(data);
+
+                    $("#Referrals_Id111").val(obj.Referrals_Id);
+
+
+                    $("#Period_From111").val(obj.Period_From);
+                    $("#Period_To111").val(obj.Period_To);
+                    $("#Progress_Report111").val(obj.Progress_Report);
+                }
+            })
+
+
+            $("#SaveRecordSW").click(function () {
+                var data = $("#SubmitFormSW").serialize();
+                $.ajax({
+                    type: "Post",
+                    url: "../../PCMReferrals/SaveReferalToSocialWorker",
+                    data: {
+
+                        Referrals_Id: $("#Referrals_Id111").val(),
+                        Court_Referrals_Id: $("#Court_Referrals_Id111").val(),
+
+                        Progress_Report: $("#Progress_Report111").val(),
+                        Period_To: $("#Period_To111").val(),
+                        Period_From: $("#Period_From111").val(),
+                    },
+                    success: function (result) {
+                        alert("Success!..");
+                        $.getJSON('../../PCMReferrals/GetPCMReferralsList', function (data) {
+
+                            var items = $("#SetListPCMReferrals");
+                            $.each(data, function (i, p) {
+                                items +=
+                                    "<tr><td>" + p.Referrals_Id +
+                                    "</td><td>" + p.Intake_Assessment_Id +
+                                    "</td><td>" + p.theClerk +
+                                    "</td><td>" + p.theParticular +
+                                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='EditRefCout(" + p.Referrals_Id + ',' + p.Type_Referral_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" +
+                                    "</td><td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + p.Referrals_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                    "</td></tr>";
+                            });
+                            items += "</table>";
+
+                            $('#SetListPCMReferrals').html(items);
+                        });
+
+                        $("#MyModalREFCourt4").modal("hide");
+
+                    }
+                })
+            })
+
+        }
+
+    }
+
+    $("#SaveRecordReferal").click(function () {
+        var data = $("#formPCMReferrals").serialize();
+        $.ajax({
+            type: "Post",
+            url: "../../PCMReferrals/SaveReferralsData",
+            data: {
+                Referrals_Id: $("#Referrals_Id").val(),
+                Type_Referral_Id: $("#Type_Referral_Id").val(),
+                Intake_Assessment_Id: $("#Intake_Assessment_Id").val(),
+                theClerk: $("#theClerk").val(),
+                theParticular: $("#theParticular").val()
+            },
+            success: function (result) {
+                alert("Success!..");
+                $.getJSON('../../PCMReferrals/GetPCMReferralsList', function (data) {
+
+                    var items = $("#SetListPCMReferrals");
+                    $.each(data, function (i, p) {
+                        items +=
+                            "<tr><td>" + p.Referrals_Id +
+                            "</td><td>" + p.Intake_Assessment_Id +
+                            "</td><td>" + p.theClerk +
+                            "</td><td>" + p.theParticular +
+                            "</td><td>" + "<a href='#' class='btn btn-danger' onclick='EditRefCout(" + p.Referrals_Id + ',' + p.Type_Referral_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" +
+                            "</td><td>" + "<a href='#' class='btn btn-warning' onclick='Edit(" + p.Referrals_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                            "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetListPCMReferrals').html(items);
+                });
+
+                $("#MyModalPCMReferrals").modal("hide");
+
+            }
+        })
+    })
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Initialize items marked as datepickers
+        $(".jqueryui-marker-datepicker").datepicker({
+            dateFormat: "dd M yy",
+            changeYear: true
+        });
+
+    });
+
+</script>
+
+
+
+
+

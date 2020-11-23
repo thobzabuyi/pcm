@@ -1,0 +1,86 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<br />
+<style>
+    #btnSearch {
+        outline: none !important;
+        border-radius: 8px 8px 0px 0px;
+        box-shadow: none;
+    }
+
+    #tool-bar {
+        transition: width 0.1s;
+        -webkit-transition: width 0.1s;
+    }
+
+ 
+</style>
+
+<div class="tab-pane" id="tab3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default form-horizontal">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Recomendation Type, Placement Type, Placement, Service Provider, Orders: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+                    </div>
+                </div>
+                    <div class="panel-body">
+
+                        <div id="rootwizardA1">
+                            <ul class="nav nav-pills nav-stacked col-md-3" id="myTB">
+                                <li><a href="#AssessmentTab1" data-toggle="tab" data-id="AssessmentTab1">Recomendation Type</a></li>
+                                <li><a href="#AssessmentTab2" data-toggle="tab" data-id="AssessmentTab2">Facility Bed Space</a></li>
+                                <li><a href="#AssessmentTab3" data-toggle="tab" data-id="AssessmentTab3">Order Details</a></li>
+                                <li><a href="#AssessmentTab4" data-toggle="tab" data-id="AssessmentTab4">Service Provider</a></li>
+                            </ul>
+                            <div class="tab-content col-md-9">
+                                <div class="tab-pane" id="AssessmentTab1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel-body">
+                                                @*@Html.Partial("../PCMCase/GetRecomendationDetails")*@
+                                                @Html.Action("GetRecomendationDetails", "PCMCase")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="AssessmentTab2">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel-body">
+                                                @Html.Partial("../PCMCase/GetPlacementDetails")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="AssessmentTab3">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel-body">
+                                                @*@Html.Partial("../PCMCase/GetOrderdetails")*@
+                                                @Html.Action("GetOrderdetails", "PCMCase")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="AssessmentTab4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel-body">
+                                                @*@Html.Partial("../ChildAssessment/_InterventionPlanning", Model)*@
+                                                @Html.Action("GetServiceProviderForDivesion", "PCMCase")
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+

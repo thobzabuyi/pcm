@@ -1,0 +1,16 @@
+﻿@using GridMvc.Html
+@model IEnumerable<Common_Objects.Models.Alleged_Offender>
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Columns(columns =>
+        {
+            columns.Add(x => x.Person.First_Name).Titled("First Name").Sortable(true);
+            columns.Add(x => x.Person.Last_Name).Titled("Last Name").Sortable(true);
+            columns.Add(x => x.Person.Gender.Description).Titled("Gender").Sortable(true);
+            columns.Add(x => x.Person.Identification_Number).Titled("ID Number").Sortable(true);
+            columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(d => @<b> @Html.ActionLink("Edit", "Edit", new { id = d.Alleged_Offender_Id }, new { @class = "popupAllegedOffender btn btn-success" }) </b>);
+            @*columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(d => @<b> @Html.ActionLink("Delete", "Delete", new { id = d.Person_Education_Id }, new { @class = "popupEducation btn btn-danger" }) </b>);*@
+        }).WithPaging(5)
+    </div>
+</div>

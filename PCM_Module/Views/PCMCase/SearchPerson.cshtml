@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Common_Objects.ViewModels.PCMCaseDetailsViewModel>
+
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Person_Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Victim_First_Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Victim_Last_Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Victim_Phone_Number)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Victim_Age)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person_Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Victim_First_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Victim_Last_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Victim_Phone_Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Victim_Age)
+            </td>
+
+            <td></td>
+        </tr>
+    }
+
+</table>

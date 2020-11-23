@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Common_Objects.ViewModels.PCMSocialWorkerWorkListVM>
+
+@{
+    var clientsGrid = new WebGrid(source: Model, canSort: false, rowsPerPage: 10, ajaxUpdateContainerId: "NewCasesGrid");
+
+    @clientsGrid.GetHtml(
+        htmlAttributes: new { id = "NewCasesGrid", @class = "NestedMainGrid", width = "100%" },
+        columns: clientsGrid.Columns(
+            clientsGrid.Column("FirstName", "First Name"),
+            clientsGrid.Column("LastName", "Last Name"),
+            clientsGrid.Column("IDNumber", "ID Number"),
+            clientsGrid.Column("RecordStatusDescription", "Record Status"),
+            clientsGrid.Column("ProblemSubCategoryDescription", "Problem Sub Category"),
+            clientsGrid.Column("Intake_Assessment_Id", "Intake AssessmentId"),
+            clientsGrid.Column(header: "", style: "EditPersonWidth", format: (item) =>
+            {
+                
+                var link = Html.ActionLink("Accept Case", "AcceptPCMCase", "Home", new { id = item.Intake_Assessment_Id }, new { @class = "btn btn-success" });
+                return link;
+            })
+            )
+        )
+}
+   

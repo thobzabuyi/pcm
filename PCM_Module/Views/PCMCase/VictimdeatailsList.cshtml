@@ -1,0 +1,388 @@
+﻿@model  Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+<style>
+
+
+
+    .fade.in {
+        background-color: transparent;
+    }
+
+    .modal {
+        top: 5%;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+
+    .modal-dialog {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+</style>
+<ul class="nav nav-tabs" id="tabContent">
+    <li class="active"><a href="#Individual" data-toggle="tab">Victim Individual</a></li>
+    <li><a href="#Organiation" data-toggle="tab">Victim Organisation</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="Individual">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel-heading list-panel-heading">
+                    <button type="button" class="btn btn-default btn-md" onclick="AddV(0)" id="advancedsearch-button">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Add Victim Individual
+                    </button>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading" style="text-align: center">
+                Victim Individual
+            </div>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Victim First Name</th>
+                    <th>Victim Last Name</th>
+                    <th>Victim Age</th>
+                    <th>Victim Phone Number</th>
+                    <th>Action(Delete)</th>
+
+                </tr>
+            </thead>
+            <tbody id="SetVictim">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+
+
+
+        <div class="modal fade in center " id="advancedSearchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelV" style="width:70%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel2" style="font-weight:bold;">Add Victim Individual</h4>
+                    </div>
+                    <div class="container" style="margin-top:1%; width:95%">
+
+                        <ul class="nav nav-tabs" id="tabContent">
+                            <li class="active"><a href="#Search" data-toggle="tab">Search Person</a></li>
+                            <li><a href="#AddPerson" data-toggle="tab">Add New Person</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="Search">
+
+                                @Html.Action("ListPerson", "PCMCase")
+                            </div>
+
+                            <div class="tab-pane" id="AddPerson">
+
+                                @Html.Action("Persondeatails", "PCMCase")
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="modal fade in center" id="DeleteConfirmationVictim" style="width:50%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete1FA">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane" id="Organiation">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel-heading list-panel-heading">
+                    <button type="button" class="btn btn-default btn-md" onclick="AddVO(0)" id="advancedO-button">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Add Victim Organisation
+                    </button>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading" style="text-align: center">
+                Victim Organisation
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th>Victim ID</th>
+                    <th>Organisation Name</th>
+                    <th>Contact Person Name</th>
+                    <th>Contact Person Surname</th>
+                    <th>Occupation</th>
+                    <th>Tell</th>
+                    <th>Action(Edit)</th>
+                    <th>Action(Delete)</th>
+
+                </tr>
+            </thead>
+            <tbody id="SetVictimOrg">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+
+
+        <div class="modal fade in center" id="advancedSearchModalO" tabindex="-1" role="dialog" aria-labelledby="myModalLabelVO" style="">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel2O" style="font-weight:bold;">Add Victim Organisation</h4>
+                    </div>
+                    <div class="container" style="margin-top:1%; width:95%">
+
+
+
+                        @Html.Action("ListOrganisationVictim", "PCMCase")
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="modal fade in center" id="DeleteConfirmationVO" style="width:50%; vertical-align:middle; margin: 0 auto;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are You Sure? You Want To Delete This Record.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Cancel</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()" id="Delete1Org">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+        //Show The Popup Modal For Add New Student
+
+        function AddV(Id) {
+
+
+            $("#advancedSearchModal").modal();
+        }
+
+
+        function AddVO(Id) {
+
+
+            $("#advancedSearchModalO").modal();
+        }
+
+
+
+    $.getJSON('../../PCMCase/ListVictim/', function (data) {
+            var items = $("#SetVictim");
+            $.each(data, function (i, p) {
+                items += "<tr><td>" + p.Victim_Id +
+                    "</td><td>" + p.Victim_First_Name +
+                    "</td><td>" + p.Victim_Last_Name +
+                     "</td><td>" + p.Victim_Age +
+                    "</td><td>" + p.Victim_Phone_Number +
+                   
+                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictim(" + p.Victim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+
+                    "</td></tr>";
+            });
+            items += "</table>";
+
+            $('#SetVictim').html(items);
+        });
+
+
+
+        function DeleteVictim(Id) {
+
+            var url = "../../PCMCase/DeleteRecFromTableVictim?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $.getJSON('../../PCMCase/ListVictim/', function (data) {
+
+                        var items = $("#SetVictim");
+                        $.each(data, function (i, p) {
+                            items += "<tr><td>" + p.Victim_Id +
+                                "</td><td>" + p.Victim_First_Name +
+                                "</td><td>" + p.Victim_Last_Name +
+                                "</td><td>" + p.Victim_Phone_Number +
+                                "</td><td>" + p.Victim_Age +
+                                "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictim(" + p.Victim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                                "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetVictim').html(items);
+                    });
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+        }
+
+
+    $.getJSON('../../PCMCase/OrganisationVictimList/', function (data) {
+            var items = $("#SetVictimOrg");
+            $.each(data, function (i, p) {
+                items += "<tr><td>" + p.OrganisationVictim_Id +
+                            "</td><td>" + p.OrganisationName +
+                            "</td><td>" + p.ContactPersonfirstname +
+                            "</td><td>" + p.ContactPersonlastname +
+                            "</td><td>" + p.Victim_Occupation +
+                            "</td><td>" + p.OrganisationTell +
+                    "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditVictimOrganisationRecord(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                    "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictimOrg(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                            "</td></tr>";
+            });
+            items += "</table>";
+
+            $('#SetVictimOrg').html(items);
+    });
+
+
+
+
+    function DeleteVictim(Id) {
+
+
+        $("#DeleteConfirmationVictim").modal("show");
+
+        $('#Delete1FA').click(function () {
+
+            var url = "../../PCMCase/DeleteRecFromTableVictim?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $.getJSON('../../PCMCase/ListVictim/', function (data) {
+
+                        var items = $("#SetVictim");
+                        $.each(data, function (i, p) {
+                            items += "<tr><td>" + p.Victim_Id +
+                                "</td><td>" + p.Victim_First_Name +
+                                "</td><td>" + p.Victim_Last_Name +
+                                "</td><td>" + p.Victim_Phone_Number +
+                                "</td><td>" + p.Victim_Age +
+                                "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictim(" + p.Victim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                                "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetVictim').html(items);
+                    });
+                    $("#DeleteConfirmationVictim").modal("hide");
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+
+
+        });
+
+    }
+
+
+    function DeleteVictimOrg(Id) {
+
+
+        $("#DeleteConfirmationVO").modal("show");
+
+        $('#Delete1Org').click(function () {
+
+            var url = "../../PCMCase/DeleteRecFromTableVictimOrg?Id=" + Id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    $.getJSON('../../PCMCase/OrganisationVictimList/', function (data) {
+
+                        var items = $("#SetVictimOrg");
+                        $.each(data, function (i, p) {
+                            items += "<tr><td>" + p.OrganisationVictim_Id +
+                                "</td><td>" + p.OrganisationName +
+                                "</td><td>" + p.ContactPersonfirstname +
+                                "</td><td>" + p.ContactPersonlastname +
+                                "</td><td>" + p.Victim_Occupation +
+                                "</td><td>" + p.OrganisationTell +
+                                "</td><td>" + "<a href='#' class='btn btn-warning' onclick='EditVictimOrganisationRecord(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-edit'></span></a>" +
+                                "</td><td>" + "<a href='#' class='btn btn-danger' onclick='DeleteVictimOrg(" + p.OrganisationVictim_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+
+                                "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetVictimOrg').html(items);
+                    });
+                    $("#DeleteConfirmationVO").modal("hide");
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+
+
+        });
+
+    }
+    
+</script>
+
+
+
+

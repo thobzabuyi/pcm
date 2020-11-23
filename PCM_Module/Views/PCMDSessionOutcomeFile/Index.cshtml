@@ -1,0 +1,55 @@
+﻿
+@model Common_Objects.ViewModels.PCMDSessionOutcomeViewModel
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+@*<h2>Basic File Upload</h2>*@
+@using (Html.BeginForm("Index", "PCMDSessionOutcomeFile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @*<label for="file">Upload Doc:</label>*@
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            Module_Name
+        </div>
+        <div class="col-md-4 form-group">
+            @* @Html.TextBoxFor(m => m.Module_Name, new { @id = "Module_Name", @class = "form-control" })*@
+            <select id="Module_Name" name="Module_Name">
+                <option value=""> - Select Type - </option>
+                <option value="0">Court Order</option>
+                <option value="1">Process Note Att</option>
+                <option value="2">Compliance Att</option>
+                @*<option value="3">GuestBook</option>*@
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            Description
+        </div>
+        <div class="col-md-4 form-group">
+            @Html.TextBoxFor(m => m.Description, new { @id = "Description", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            Upload File
+        </div>
+        <div class="col-md-8 form-group">
+            <input type="file" name="file" id="file" />
+            @*<input type="submit" id="btnUpload" value="Upload"/>*@
+        </div>
+    </div>
+
+
+    <br>
+    @*<input type="submit" value="Upload Image" />*@
+    <input type="submit" id="btnUpload" value="Upload" />
+    <br><br>
+    @ViewBag.Message
+}

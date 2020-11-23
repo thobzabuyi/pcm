@@ -1,0 +1,184 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+
+
+
+<table  class="table table-striped">
+    <thead>
+        <tr>
+            <th>Request Id</th>
+            <th>Facility</th>
+            <th>Admission Type</th>
+            <th>Request Status</th>
+            <th>Request Comments</th>
+            <th>Date Created</th>
+            <th>(Confirm)</th>
+            <th>(Decline)</th>
+        </tr>
+    </thead>
+    <tbody id="Jdatatable">
+        <tr id="LoadingStatus" style="color:red"></tr>
+    </tbody>
+</table>
+
+
+
+<script>
+
+    $("#LoadingStatus").html("Loading....");
+    
+    $.getJSON('../../PCMCase/ListBedSpaceRequest/', function (data) {
+        var items = $("#Jdatatable");
+        $.each(data, function (i, p) {
+            if (p.selectBedRequestStatus == "Waiting For PO Response") {
+            items += "<tr><td>" + p.Request_Id +
+                        "</td><td>" + p.SelectFacility +
+                        "</td><td>" + p.selectAdmissionType +
+                        "</td><td>" + p.selectBedRequestStatus +
+                        "</td><td>" + p.Request_Comments +
+                        "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+                       "</td><td>" + "<a href='#' class='btn btn-outline-success' onclick='AcceptBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-ok'></span></a>" +
+                       "</td><td>" + "<a href='#' class='text-danger' onclick='DeclineBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-remove'></span></a>" +
+
+                        "</td></tr>";
+            }
+            else {
+                items += "<tr><td>" + p.Request_Id +
+                       "</td><td>" + p.SelectFacility +
+                       "</td><td>" + p.selectAdmissionType +
+                       "</td><td>" + p.selectBedRequestStatus +
+                       "</td><td>" + p.Request_Comments +
+                       "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+                       
+                       "</td></tr>";
+            }
+
+       
+
+        });
+        items += "</table>";
+
+        $('#Jdatatable').html(items);
+    });
+
+
+    function ToJavaScriptDate(value) { //To Parse Date from the Returned Parsed Date
+        var pattern = /Date\(([^)]+)\)/;
+        var results = pattern.exec(value);
+        var dt = new Date(parseFloat(results[1]));
+        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+    }
+
+    
+
+
+
+    function AcceptBedspace(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "../../PCMCase/AcceptDeclineBedspace",
+            data: {
+                acceptdecline: "Accept",
+                Id: Id
+            },
+            success: function (data) {
+                $.getJSON('../../PCMCase/ListBedSpaceRequest/', function (data) {
+                    var items = $("#Jdatatable");
+                    $.each(data, function (i, p) {
+                        if (p.selectBedRequestStatus == "Waiting For PO Response") {
+                            items += "<tr><td>" + p.Request_Id +
+                                        "</td><td>" + p.SelectFacility +
+                                        "</td><td>" + p.selectAdmissionType +
+                                        "</td><td>" + p.selectBedRequestStatus +
+                                        "</td><td>" + p.Request_Comments +
+                                        "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+                                        "</td><td>" + "<a href='#' class='btn btn-outline-success' onclick='AcceptDeclineBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-ok'></span></a>" +
+                                        "</td><td>" + "<a href='#' class='text-danger' onclick='AcceptDeclineBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-remove'></span></a>" +
+
+
+                                        "</td></tr>";
+                        }
+                        else {
+                            items += "<tr><td>" + p.Request_Id +
+                                   "</td><td>" + p.SelectFacility +
+                                   "</td><td>" + p.selectAdmissionType +
+                                   "</td><td>" + p.selectBedRequestStatus +
+                                   "</td><td>" + p.Request_Comments +
+                                   "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+
+                                   "</td></tr>";
+                        }
+
+
+
+                    });
+                    items += "</table>";
+
+                    $('#Jdatatable').html(items);
+                });
+            }, error: function () { alert('something bad happened'); }
+
+        })
+
+    }
+
+
+    function DeclineBedspace(Id) {
+
+        $.ajax({
+            type: "POST",
+            url: "../../PCMCase/AcceptDeclineBedspace",
+            data: {
+                acceptdecline: "Decline",
+                Id: Id
+            },
+            success: function (data) {
+                $.getJSON('../../PCMCase/ListBedSpaceRequest/', function (data) {
+                    var items = $("#Jdatatable");
+                    $.each(data, function (i, p) {
+                        if (p.selectBedRequestStatus == "Waiting For PO Response") {
+                            items += "<tr><td>" + p.Request_Id +
+                                        "</td><td>" + p.SelectFacility +
+                                        "</td><td>" + p.selectAdmissionType +
+                                        "</td><td>" + p.selectBedRequestStatus +
+                                        "</td><td>" + p.Request_Comments +
+                                        "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+                                        "</td><td>" + "<a href='#' class='btn btn-outline-success' onclick='AcceptBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-ok'></span></a>" +
+                                        "</td><td>" + "<a href='#' class='text-danger' onclick='DeclineBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-remove'></span></a>" +
+
+
+                                        "</td></tr>";
+                        }
+                        else {
+                            items += "<tr><td>" + p.Request_Id +
+                                   "</td><td>" + p.SelectFacility +
+                                   "</td><td>" + p.selectAdmissionType +
+                                   "</td><td>" + p.selectBedRequestStatus +
+                                   "</td><td>" + p.Request_Comments +
+                                   "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+
+                                   "</td></tr>";
+                        }
+
+
+
+                    });
+                    items += "</table>";
+
+                    $('#Jdatatable').html(items);
+                });
+            }, error: function () { alert('something bad happened'); }
+
+        })
+
+    }
+    
+
+</script>

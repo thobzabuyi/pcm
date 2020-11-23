@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Common_Objects.Models.Action_Taken>
+@using GridMvc.Html
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(x => x.Date_Action_Taken_Noted).Format("{0:dd MMM yyyy}").Titled("Date").SetWidth("150px").Sortable(false);
+    columns.Add(x => x.Office_Type.Description).Titled("Office").SetWidth("150px").Sortable(false);
+    columns.Add(x => x.Action_Taken_Description).Titled("Action Taken").SetWidth("auto").Sortable(false);
+    columns.Add(x => x.Way_Forward_Description).Titled("Way Forward").SetWidth("auto").Sortable(false);
+}).WithPaging(5)
+

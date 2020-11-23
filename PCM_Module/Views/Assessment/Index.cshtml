@@ -1,0 +1,411 @@
+﻿@model Common_Objects.ViewModels.PCMPersonViewModel
+
+<head>
+   
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <style>
+        /* Styles for your <ul> menu */
+        #header ul {
+            background: #F6F6F6;
+            margin: 0 auto;
+            padding: 28px 0 0;
+            text-align: center;
+            width: auto;
+        }
+
+            /* Styles for individual <li> elements */
+            #header ul li {
+                display: inline;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+
+
+                /* Hover style for your links */
+                #header ul li a:hover {
+                    background: #3D515F !important;
+                    border-radius: 5px;
+                    color: black;
+                }
+
+                /* A more specific style for your "active" link */
+                #header ul li a.active {
+           
+                    background-color: #008CBA !important;
+                    border-color: #000000;
+                    border-bottom: 5px solid #9b0e0e;
+                }
+
+                    /* Specific hover style for your active link */
+                    #header ul li a.active:hover {
+                        color: yellow;
+                    }
+
+        .nav-tabs > li.active > a,
+        .nav-tabs > li.active > a:focus,
+        .nav-tabs > li.active > a:hover {
+            background-color: #008CBA !important;
+            color: #fff;
+        }
+
+
+    </style>
+
+
+
+
+</head>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="drop5" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" style="font-size:larger; font-weight:bolder ">NAVIGATION MENU<span class="caret"></span></a>
+                    <ul class="dropdown-menu" id="menu2P" aria-labelledby="drop5">
+                        <li><a href="../../Assessment/Index/@Model.IntakeAssPar">Assessment</a></li>
+                        <li><a href="../../PCMPreliminary/Home/@Model.IntakeAssPar">Court Processes</a></li>
+                        <li><a href="../../PCMHBS/Home/@Model.IntakeAssPar">Home Base Supervision</a></li>
+                        <li><a href="../../Diversion/HomeIndex/@Model.IntakeAssPar">Diversion</a></li>
+                        <li><a href="../../PCMPretrail/Home/@Model.IntakeAssPar">Pre-Trial</a></li>
+                        <li><a href="../../Assessment/IndexPre/@Model.IntakeAssPar">Pre-sentence</a></li>
+                        <li><a href="../../PCMReferrals/Home/@Model.IntakeAssPar">Referrals</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div id="rootwizard" style="height:auto;">
+
+    <div id="header">
+
+        <ul class="nav nav-tabs" data-tabs="tabs" id="myTab222">
+            <li id="t1">
+                <a data-toggle="tab" href="#home" aria-selected="true" data-id="home" data-tab="tab1" id="one">Child Details</a>
+            </li>
+            <li id="t2">
+                <a data-toggle="tab" href="#menu1" data-id="menu1" data-tab="tab2" id="Two">Case Details</a>
+            </li>
+            <li id="t3">
+                <a data-toggle="tab" href="#menu2" data-id="menu2" data-tab="tab3">Assessment</a>
+            </li>
+            <li id="t4">
+                <a data-toggle="tab" href="#menu3" data-id="menu3" data-tab="tab4">Medical Details</a>
+            </li>
+
+            <li id="t5">
+                <a data-toggle="tab" href="#menu4" data-id="menu4" data-tab="tab5">Education Details</a>
+            </li>
+            <li id="t6">
+                <a data-toggle="tab" href="#menu5" data-id="menu5" data-tab="tab6">CareGiver Details</a>
+            </li>
+
+            <li id="t7">
+                <a data-toggle="tab" href="#menu10" data-id="menu10" data-tab="tab7">Family Details</a>
+            </li>
+            <li id="t8">
+                <a data-toggle="tab" href="#menu6" data-id="menu6" data-tab="tab8">Socio-Economics Details</a>
+            </li>
+            <li id="t9">
+                <a data-toggle="tab" href="#menu7" data-id="menu7" data-tab="tab9">Developmental Assessment</a>
+            </li>
+            <li id="t10">
+                <a data-toggle="tab" href="#menu8" data-id="menu8" data-tab="tab10">Recomendation</a>
+            </li>
+            <li id="t11">
+                <a data-toggle="tab" href="#menu9" data-id="menu9" data-tab="tab11">General Details</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="tab-content" id="section">
+        <div class="tab-pane fade in active" id="home" role="tabpanel">
+            <h3>Child Details</h3>
+            <p>@Html.Action("Index", "PCMCase")</p>
+
+        </div>
+        <div class="tab-pane" id="menu1" role="tabpanel">
+            <h3>Case Details</h3>
+            <p>@Html.Action("GetPCMCaseDetails", "PCMCase")</p>
+
+        </div>
+        <div class="tab-pane" id="menu2" role="tabpanel">
+            <h3>Assessment</h3>
+            <p>@Html.Action("AssessmentList", "PCMCase")</p>
+
+        </div>
+        <div class="tab-pane" id="menu3" role="tabpanel">
+
+            <h3>Medical Details</h3>
+            <p>@Html.Action("MedicaldeatailsList", "PCMCase")</p>
+        </div>
+        <div class="tab-pane" id="menu4" role="tabpanel">
+            <h3>Education Details</h3>
+            <p>@Html.Action("EducationdeatailsList", "PCMCase")</p>
+        </div>
+
+        <div class="tab-pane" id="menu5" role="tabpanel">
+
+            <h3>CareGiver Details</h3>
+            <p>@Html.Action("GetRelationItemsByAjax", "PCMCase")</p>
+        </div>
+        @*neones--------------------------------------------------------------------------------*@
+        <div class="tab-pane" id="menu10" role="tabpanel">
+            <h3>Family Details</h3>
+            <p>@Html.Action("GetFamillyBGList", "PCMCase")</p>
+
+        </div>
+        <div class="tab-pane" id="menu6" role="tabpanel">
+            <h3>Socio-Economics Details</h3>
+            <p>@Html.Action("GetSocioEconomics", "PCMCase")</p>
+
+        </div>
+        <div class="tab-pane" id="menu7" role="tabpanel">
+
+            <h3>Developmental Assessment</h3>
+            <p>@Html.Action("GetDevAssessment", "PCMCase")</p>
+        </div>
+        <div class="tab-pane" id="menu8" role="tabpanel">
+            <h3>Recomendation</h3>
+            <p>@Html.Action("Recomendation", "PCMCase")</p>
+        </div>
+
+        <div class="tab-pane" id="menu9" role="tabpanel">
+
+            <h3>General Details</h3>
+            <p>@Html.Action("GetGeneralDetails", "PCMCase")</p>
+        </div>
+
+
+
+        <ul class="pager wizard">
+            <li class="previous first"><a href="javascript:;">First</a></li>
+            <li class="previous"><a href="javascript:;">Previous</a></li>
+            <li class="next last"><a href="javascript:;">Last</a></li>
+            <li class="next"><a href="javascript:;">Next</a></li>
+            <li class="finish"><a href="javascript:;">Finish</a></li>
+        </ul>
+
+
+    </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@*@RenderSection("scripts", required: false)*@
+
+
+<script type="text/javascript">
+    var menu = $('#myTab222');
+
+    menu.on('click', 'a', function () {
+
+        var current = $(this).closest('li');
+        if (!current.hasClass("current")) {
+            $('.current').removeClass('current');
+            current.addClass("current");
+
+
+
+            var id = $(this).attr('data-id');
+
+            $('.tab-pane:visible');
+            $('#' + id + '.tab-pane');
+            history.pushState(null, null, '#' + id);
+
+            var menuId = location.hash.substring(1);
+            localStorage.clear();
+            //alert(menuId);
+            if (menuId == "menu2") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "home") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu1") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu3") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu4") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu5") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu6") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu7") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu8") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu9") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu10") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+            else if (menuId == "menu11") {
+
+                localStorage.setItem("Tab", menuId);
+            }
+
+            else {
+                localStorage.setItem("Tab", "");
+            }
+        }
+    });
+
+    $(document).ready(function () {
+
+        var tab = "";
+
+        // Retrieve data session
+        tab = (localStorage.getItem("Tab"));
+        //alert(tab);
+        if (tab == "menu2") {
+            $('.nav-tabs a[href="#menu2"]').tab('show')
+        }
+
+        else if (tab == "home") {
+            $('.nav-tabs a[href="#home"]').tab('show')
+        }
+
+        else if (tab == "menu1") {
+            $('.nav-tabs a[href="#menu1"]').tab('show')
+        }
+        else if (tab == "menu3") {
+            $('.nav-tabs a[href="#menu3"]').tab('show')
+        }
+        else if (tab == "menu4") {
+            $('.nav-tabs a[href="#menu4"]').tab('show')
+        }
+        else if (tab == "menu5") {
+            $('.nav-tabs a[href="#menu5"]').tab('show')
+        }
+
+
+        else if (tab == "menu6") {
+            $('.nav-tabs a[href="#menu6"]').tab('show')
+        }
+
+        else if (tab == "menu7") {
+            $('.nav-tabs a[href="#menu7"]').tab('show')
+        }
+        else if (tab == "menu8") {
+            $('.nav-tabs a[href="#menu8"]').tab('show')
+        }
+        else if (tab == "menu9") {
+            $('.nav-tabs a[href="#menu9"]').tab('show')
+        }
+        else if (tab == "menu10") {
+            $('.nav-tabs a[href="#menu10"]').tab('show')
+        }
+
+        else if (tab == "menu11") {
+            $('.nav-tabs a[href="#menu11"]').tab('show')
+        }
+
+        else {
+
+            $('.nav-tabs a[href="#home"]').tab('show')
+
+
+        }
+    });
+
+
+    function ajaxindicatorstop() {
+        jQuery('#resultLoading .bg').height('100%');
+        jQuery('#resultLoading').fadeOut(300);
+        jQuery('body').css('cursor', 'default');
+    }
+
+    function ajaxindicatorstart(text) {
+        var spinnerLocation = $.url('/Images/ajax-loader.gif');
+
+        if (jQuery('body').find('#resultLoading').attr('id') != 'resultLoading') {
+            jQuery('body').append('<div id="resultLoading" style="display:none"><div><img src="' + spinnerLocation + '"><div>' + text + '</div></div><div class="bg"></div></div>');
+        }
+
+        jQuery('#resultLoading').css({
+            'width': '100%',
+            'height': '100%',
+            'position': 'fixed',
+            'z-index': '10000000',
+            'top': '0',
+            'left': '0',
+            'right': '0',
+            'bottom': '0',
+            'margin': 'auto'
+        });
+
+        jQuery('#resultLoading .bg').css({
+            'background': '#000000',
+            'opacity': '0.7',
+            'width': '100%',
+            'height': '100%',
+            'position': 'absolute',
+            'top': '0'
+        });
+
+        jQuery('#resultLoading>div:first').css({
+            'width': '250px',
+            'height': '75px',
+            'text-align': 'center',
+            'position': 'fixed',
+            'top': '0',
+            'left': '0',
+            'right': '0',
+            'bottom': '0',
+            'margin': 'auto',
+            'font-size': '16px',
+            'z-index': '10',
+            'color': '#ffffff'
+
+        });
+
+        jQuery('#resultLoading .bg').height('100%');
+        jQuery('#resultLoading').fadeIn(300);
+        jQuery('body').css('cursor', 'wait');
+    }
+
+    jQuery(document).ajaxStart(function () {
+        //show ajax indicator
+        ajaxindicatorstart('loading data.. please wait..');
+    }).ajaxStop
+        (function () {
+        //hide ajax indicator
+        ajaxindicatorstop();
+    });
+
+</script>
+

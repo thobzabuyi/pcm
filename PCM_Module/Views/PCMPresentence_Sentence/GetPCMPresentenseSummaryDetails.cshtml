@@ -1,0 +1,61 @@
+﻿@model Common_Objects.ViewModels.PCMPresentenceDetailsViewModel
+<br />
+
+@using (Html.BeginForm("UpdatePresentenceSummaries", "PCMPresentence_Sentence", new { id = Model.Intake_Assessment_Id }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="text-align: center">
+            Assessment Summary: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.IsAssessed)
+                </div>
+                <div class="col-md-4 form-group">
+                  
+
+                        @Html.RadioButtonFor(e => e.IsAssessed, true, new { id = "married-true" })
+                        @Html.Label("married-true", "Yes")
+
+                        @Html.RadioButtonFor(e => e.IsAssessed, false, new { id = "married-false" })
+                        @Html.Label("married-false", "No")
+
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Education_Sammary)
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Education_Sammary, new { @id = "Education_Sammary", @class = "form-control", rows = "5", @required = "required" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Offence_Sammary)
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Offence_Sammary, new { @id = "Offence_Sammary", @class = "form-control", rows = "5", @required = "required" })
+                </div>
+
+                <div class="col-md-2">
+                    @Html.LabelFor(x => x.Victim_Sammary)
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.TextAreaFor(x => x.Victim_Sammary, new { @id = "Victim_Sammary", @class = "form-control", rows = "5", @required = "required" })
+                </div>
+            </div>
+
+
+        </div>
+        <div class="form-group">
+            <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+        </div>
+
+    </div>
+
+}
+

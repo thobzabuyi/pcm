@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Common_Objects.Models.Case_Note>
+@using GridMvc.Html
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(x => x.Date_Note_Taken).Format("{0:dd MMM yyyy}").Titled("Date").SetWidth("150px").Sortable(false);
+    columns.Add(x => x.Office_Type.Description).Titled("Office").SetWidth("150px").Sortable(false);
+    columns.Add(x => x.Case_Note_Text).Titled("Note").Sortable(false);
+}).WithPaging(5)
+

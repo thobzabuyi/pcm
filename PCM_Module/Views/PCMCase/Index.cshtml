@@ -1,0 +1,158 @@
+﻿@model Common_Objects.ViewModels.PCMPersonViewModel
+
+<br />
+<head>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <style>
+
+        #btnSearch {
+            outline: none !important;
+            border-radius: 8px 8px 0px 0px;
+            box-shadow: none;
+        }
+
+        #tool-bar {
+            transition: width 0.1s;
+            -webkit-transition: width 0.1s;
+        }
+
+  
+    </style>
+
+</head>
+
+@using (Html.BeginForm("UpdatePerson", "PCMCase"))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-primary">
+        @Html.HiddenFor(model => model.Person_Id, new { id = "Person_Id"})
+        <div class="panel-heading" style="text-align: center">
+            Child Details : <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.First_Name)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.First_Name, new { @id = "ClientFirstName" , @class = "form-control", @required = "required" })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Last_Name)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.Last_Name, new { @id = "ClientLastName", @class = "form-control", @required = "required" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Known_As)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.Known_As, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Identification_Type_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Identification_Type_Id, new SelectList(Model.Identification_Type, "Identification_Type_Id", "Description"), "-Select Identification Type-", new { @id = "DropdownIdentificationType", @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Identification_Number)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.TextBoxFor(x => x.Identification_Number, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Date_Of_Birth, new { @id = "LabelDateOfBirth", @class = "control-label" })
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Date_Of_Birth, new { @id = "Date_of_Birth", @class = "form-control jqueryui-marker-datepicker" })
+                        <label for="Date_of_Birth" class="input-group-addon btn">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+                 <div class="col-md-3">
+                    @Html.LabelFor(x => x.Age, new { @class = "control-label" })
+                </div>
+                <div class="col-md-1 form-group">
+                    @Html.TextBoxFor(x => x.Age, new { @id = "TextboxAge", @class = "form-control" })
+                </div>                
+                <div class="col-md-2 form-group">
+                    @Html.CheckBoxFor(x => x.Is_Estimated_Age, new { @id = "IsEstimatedAge" })
+                    @Html.LabelFor(x => x.Is_Estimated_Age, new { @class = "control-label" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Language_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Language_Id, new SelectList(Model.Language_Type, "Language_Id", "Description"), "-Select Language Type-", new { @id = "DropdownLanguageType", @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Gender_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Gender_Id, new SelectList(Model.Gender_Type, "Gender_Id", "Description"), "-Select Gender Type-", new { @id = "DropdownGenderType", @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Marital_Status_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Marital_Status_Id, new SelectList(Model.Marital_Type, "Marital_Status_Id", "Description"), "-Select Marital Status-", new { @id = "DropdownMaritalType", @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Preferred_Contact_Type_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Preferred_Contact_Type_Id, new SelectList(Model.Contact_Type, "Preferred_Contact_Type_Id", "Description"), "-Select Preferred Contact-", new { @id = "DropdownContactType", @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Population_Group_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Population_Group_Id, new SelectList(Model.Population_Group, "Population_Group_Id", "Description"), "-Select Population Group-", new { @id = "DropdownPopulationType", @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(x => x.Disability_Type_Id)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.DropDownListFor(x => x.Disability_Type_Id, new SelectList(Model.Disability_Group, "Disability_Type_Id", "Description"), "-Select Disability Type-", new { @id = "DropdownDisabilityType", @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+        </div>
+    </div>
+}
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        // Initialize items marked as datepickers
+        $(".jqueryui-marker-datepicker").datepicker({
+            dateFormat: "dd M yy",
+            changeYear: true
+        });
+
+    });
+
+</script>

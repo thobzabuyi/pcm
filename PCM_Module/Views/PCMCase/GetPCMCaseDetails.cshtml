@@ -1,0 +1,652 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+<head>
+    <style>
+        .collapsible {
+            /*color: white;*/
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            color: #333;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            padding: 4px 5px;
+            border-top-left-radius: 4px;
+            border-right: none;
+            height: 45px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border: solid 1px #d3e0e9;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+            -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+            background: #f5f5f5;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-bottom: none;
+        }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+
+        #btnSearch {
+            outline: none !important;
+            border-radius: 8px 8px 0px 0px;
+            box-shadow: none;
+        }
+
+        #tool-bar {
+            transition: width 0.1s;
+            -webkit-transition: width 0.1s;
+        }
+
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 400px; /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="text-align: center">
+            Assessment Details: <span style="color:white;font-weight: bolder; font-size:large; text-shadow: 2px 2px grey; ">Child Ref (@ViewBag.ModuleRef)</span>
+        </div>
+    </div>
+
+        <p>Collapsibles:</p>
+
+
+        <button class="collapsible">Case Details</button>
+        <div class="content">
+
+
+            @using (Html.BeginForm("UpdatePCMCase", "PCMCase", new { id = Model.PCM_Case_Id }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="panel panel-primary">
+
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Date_Arrested)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(x => x.Date_Arrested, new { @id = "ArrestDate", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                                    <label for="ArrestDate" class="input-group-addon btn">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(x => x.Date_Arrested, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Time_Arrested)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(x => x.Time_Arrested, new { @id = "ArrestTime", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Time_Arrested, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Arresting_Officer_Name)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(x => x.Arresting_Officer_Name, new { @id = "ArrestingOfficer", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Arresting_Officer_Name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Investigate_Officer_Name)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(x => x.Investigate_Officer_Name, new { @id = "InvesticatingOfficer", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Investigate_Officer_Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Detention_Place_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.DropDownListFor(x => x.Detention_Place_Id, new SelectList(Model.Place_Of_Detention_List, "Place_Of_Detention_Id", "Description"), "-Select Detention Place-", new { @id = "DropdownDetention", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Detention_Place_Id, "", new { @class = "text-danger" })
+
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.CAS_No)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(x => x.CAS_No, new { @id = "Casnumber", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.CAS_No, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.First_Appear_Date)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(x => x.First_Appear_Date, new { @id = "AppearDate", @class = "form-control jqueryui-marker-datepicker", @required = "required" })
+                                    <label for="AppearDate" class="input-group-addon btn">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(x => x.First_Appear_Date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Num_Of_Days_Custody)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(x => x.Num_Of_Days_Custody, new { @id = "CustodyDays", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Num_Of_Days_Custody, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+
+                            <div class="col-md-3">
+
+                                @Html.LabelFor(x => x.HasLegal_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+
+
+                                @Html.DropDownListFor(x => x.HasLegal_Id, new SelectList(Model.HasLegal_List, "HasLegal_Id", "Description"), "-Select-", new { @id = "DropdownHasLegal_Id", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.HasLegal_Id, "", new { @class = "text-danger" })
+
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(x => x.Name_Oflegal_Representitive)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                @Html.TextBoxFor(x => x.Name_Oflegal_Representitive, new { @id = "legalRepresentitive", @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(x => x.Name_Oflegal_Representitive, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="column">
+                                <h4 style="text-decoration:underline">Police Station Information</h4>
+                                @if (ViewBag.SAPS != null)
+                                {
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Province_IdPolice)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+
+                                            @Html.DropDownList("DropdownProvince11", (IEnumerable<SelectListItem>)ViewBag.provincePolice as SelectList, "--Select--", new { id = "DropdownProvince11", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Province_IdPolice, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.District_IdPolice)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownList("District_Id11", (IEnumerable<SelectListItem>)ViewBag.districtPolice as SelectList, "--Select--", new { id = "District_Id11", @class = "form-control", @required = "required" })
+
+                                            @Html.ValidationMessageFor(x => x.District_IdPolice, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Local_Municipality_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownList("LocalMunicipalityCase", (IEnumerable<SelectListItem>)ViewBag.LocalMuni as SelectList, "--Select--", new { id = "LocalMunicipalityCase", @class = "form-control", @required = "required" })
+
+                                            @Html.ValidationMessageFor(x => x.Local_Municipality_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Town_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownList("TownIdCase", (IEnumerable<SelectListItem>)ViewBag.Towns as SelectList, "--Select--", new { id = "TownIdCase", @class = "form-control", @required = "required" })
+
+                                            @Html.ValidationMessageFor(x => x.Town_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                }
+
+                                else
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Province_IdPolice)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownListFor(x => x.Province_IdPolice, new SelectList(Model.Province_List, "Province_Id", "Description"), "-Select Province-", new { @id = "DropdownProvince11", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Province_IdPolice, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.District_IdPolice)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+
+                                            @Html.DropDownListFor(x => x.District_IdPolice, new SelectList(Model.District_List, "District_Id", "Description"), "-Select District-", new { @id = "District_Id11", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.District_IdPolice, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Local_Municipality_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownListFor(x => x.Local_Municipality_Id, new SelectList(Model.LocalMunicipality_List, "Local_Municipality_Id", "Description"), "-Select Local Municipality-", new { @id = "LocalMunicipalityCase", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Local_Municipality_Id, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Town_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            @Html.DropDownListFor(x => x.Town_Id, new SelectList(Model.Town_List, "Town_Id", "Description"), "-Select Town-", new { @id = "TownIdCase", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Town_Id, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                }
+
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        @Html.LabelFor(x => x.SDIISSAPS_Station_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        @Html.DropDownListFor(x => x.SDIISSAPS_Station_Id, new SelectList(Model.SAPS_List, "SAPS_Station_Id", "Description"), "-Select Police Station-", new { @id = "DropdownSAPS", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.SDIISSAPS_Station_Id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="column">
+
+                                <h4 style="text-decoration:underline">Court Information</h4>
+
+                                @if (ViewBag.Court != null)
+                                {
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Province_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+
+                                            @Html.DropDownList("DropdownProvince1", (IEnumerable<SelectListItem>)ViewBag.province1 as SelectList, "--Select--", new { id = "DropdownProvince1", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.District_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownList("District_Id1", (IEnumerable<SelectListItem>)ViewBag.district1 as SelectList, "--Select--", new { id = "District_Id1", @class = "form-control", @required = "required" })
+
+                                            @Html.ValidationMessageFor(x => x.District_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                }
+
+                                else
+                                {
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.Province_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+                                            @Html.DropDownListFor(x => x.Province_Id, new SelectList(Model.Province_List, "Province_Id", "Description"), "-Select Province-", new { @id = "DropdownProvince1", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.LabelFor(x => x.District_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+
+
+                                            @Html.DropDownListFor(x => x.District_Id, new SelectList(Model.District_List, "District_Id", "Description"), "-Select District-", new { @id = "District_Id1", @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(x => x.District_Id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                }
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @Html.LabelFor(x => x.Court_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+
+                                        @Html.DropDownListFor(x => x.Court_Id, new SelectList(Model.Court_List, "Court_id", "Description"), "-Select Court-", new { @id = "DropdownCourt", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Court_Id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" id="ButtonSave" value="Save" class="btn btn-success" />
+                        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+                    </div>
+
+                </div>
+
+            }
+
+
+        </div>
+
+        <button class="collapsible">Offence Details</button>
+        <div class="content">
+
+
+            @Html.Action("OffencedeatailsList", "PCMCase")
+
+
+        </div>
+
+        <button class="collapsible">Charges</button>
+        <div class="content">
+
+            @Html.Action("GetChargedetails", "PCMCase")
+
+
+        </div>
+
+        <button class="collapsible">Co-Accused</button>
+        <div class="content">
+
+            @Html.Action("GetCoAccusedList", "PCMCase")
+
+
+        </div>
+
+        <button class="collapsible"> Victim Details</button>
+        <div class="content">
+
+            @Html.Action("VictimdeatailsList", "PCMCase")
+
+
+        </div>
+
+        <button class="collapsible"> Previous Envolvement</button>
+        <div class="content">
+
+            @Html.Action("GetPreviousEnvolvementList", "PCMCase")
+
+
+        </div>
+
+ 
+
+        <script>
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+
+
+            $(document).ready(function () {
+
+                //GET DISTRICTS BY PROVINCES.........................................................................
+                $("#DropdownProvince1").change(function () {
+                    $("#District_Id1").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetDistricts")', // Calling json method
+
+                        dataType: 'json',
+
+                        data: { id: $("#DropdownProvince1").val() },
+                        // Get Selected Country ID.
+
+                        success: function (districts) {
+
+                            $.each(districts, function (i, district) {
+                                $("#District_Id1").append('<option value="' + district.Value + '">' +
+                                     district.Text + '</option>');
+                            });
+                        },
+                        error: function (ex) {
+                            alert('Failed to retrieve states.' + ex);
+                        }
+                    });
+                    return false;
+                })
+            });
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //GET COURT BY DISTRICT............................................................
+                $("#District_Id1").change(function () {
+                    $("#DropdownCourt").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetCourts")', // Calling json method
+
+                        dataType: 'json',
+
+                        data: { id: $("#District_Id1").val() },
+                        // Get Selected Country ID.
+
+                        success: function (courts) {
+
+                            $.each(courts, function (i, court) {
+                                $("#DropdownCourt").append('<option value="' + court.Value + '">' +
+                                     court.Text + '</option>');
+                            });
+                        },
+                        error: function (ex) {
+                            alert('Failed to retrieve states.' + ex);
+                        }
+                    });
+                    return false;
+                })
+            });
+        </script>
+
+        <script type="text/javascript">
+
+     
+
+            $(function () {
+
+                // Initialize items marked as datepickers
+                $(".jqueryui-marker-datepicker").datepicker({
+                    dateFormat: "dd M yy",
+                    changeYear: true
+                });
+
+            });
+
+            //........................................GET LOCAL MUNIPALITY BY DISTRICT..................................................
+
+            $("#District_Id11").change(function () {
+                $("#LocalMunicipalityCase").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetLocalMunicipalities")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#District_Id11").val() },
+                    // Get Selected Country ID.
+
+                    success: function (states) {
+                        $.each(states, function (i, state) {
+                            $("#LocalMunicipalityCase").append('<option value="' + state.Value + '">' +
+                                 state.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve states.' + ex);
+                    }
+                });
+                return false;
+            })
+
+
+            //............................................GET TOWN BY LOCAL MUNICIPALITY...........................................
+
+            $("#LocalMunicipalityCase").change(function () {
+                $("#TownIdCase").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetTowns")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#LocalMunicipalityCase").val() },
+                    // Get Selected Country ID.
+
+                    success: function (states) {
+                        $.each(states, function (i, state) {
+                            $("#TownIdCase").append('<option value="' + state.Value + '">' +
+                                 state.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve states.' + ex);
+                    }
+                });
+                return false;
+            })
+
+
+
+            $(document).ready(function () {
+                //................................GET POLICE STATION BY TOWN ..........................................
+                $("#TownIdCase").change(function () {
+                    $("#DropdownSAPS").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSAPSStations")', // Calling json method
+
+                        dataType: 'json',
+
+                        data: { id: $("#TownIdCase").val() },
+                        // Get Selected Country ID.
+
+                        success: function (saps) {
+
+                            $.each(saps, function (i, sap) {
+                                $("#DropdownSAPS").append('<option value="' + sap.Value + '">' +
+                                     sap.Text + '</option>');
+                            });
+                        },
+                        error: function (ex) {
+                            alert('Failed to retrieve states.' + ex);
+                        }
+                    });
+                    return false;
+                })
+            });
+
+
+            //..........................................PROVINCE FOR POLICE..........................................
+
+            $(document).ready(function () {
+
+                //GET DISTRICTS BY PROVINCES.........................................................................
+                $("#DropdownProvince11").change(function () {
+                    $("#District_Id11").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetDistricts")', // Calling json method
+
+                        dataType: 'json',
+
+                        data: { id: $("#DropdownProvince11").val() },
+                        // Get Selected Country ID.
+
+                        success: function (districts) {
+
+                            $.each(districts, function (i, district) {
+                                $("#District_Id11").append('<option value="' + district.Value + '">' +
+                                     district.Text + '</option>');
+                            });
+                        },
+                        error: function (ex) {
+                            alert('Failed to retrieve states.' + ex);
+                        }
+                    });
+                    return false;
+                })
+            });
+
+
+            //..........................................DISTRICT FOR POLICE..........................................
+
+
+        </script>
+
+</body>

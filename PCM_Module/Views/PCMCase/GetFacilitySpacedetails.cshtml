@@ -1,0 +1,515 @@
+﻿@model Common_Objects.ViewModels.PCMCaseDetailsViewModel
+
+<head>
+
+    <style>
+        fieldset {
+            border: 1px solid #ddd !important;
+            margin: 0;
+            xmin-width: 0;
+            padding: 10px;
+            position: relative;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            padding-left: 10px !important;
+        }
+
+        legend {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 0px;
+            width: 35%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 5px 5px 10px;
+            background-color: #ffffff;
+        }
+
+           .fade.in{
+
+background-color: transparent;
+}
+
+      .modal {
+    
+    top: 5%;
+    max-width: 80%;
+    margin: 0 auto;
+}
+.modal-dialog {
+    display: inline-block;
+    width: 100%;
+}
+    .modal-backdrop {
+        opacity: 0.5 !important;
+    }
+    </style>
+</head>
+
+@using (Html.BeginForm("CategoryChosen", "PCMCase",FormMethod.Get))
+{
+    <table cellspacing="2" cellpadding="2">
+        <tr>
+            <td width="200">
+                @Html.LabelFor(x => x.Province_Id)
+            </td>
+            <td width="400">
+                @Html.DropDownListFor(x => x.Province_Id, new SelectList(Model.Province_List, "Province_Id", "Description"), "-Select Province-", new { @id = "provinceList", @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(x => x.Province_Id, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+    </table>
+
+    <br />
+
+    <div>
+        <table id="SetFacilityList" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Facility Id</th>
+                    <th>Facility Name</th>
+                    <th>Facility Tell</th>
+                    <th>Facility Email</th>
+                    <th>Official Capacity</th>
+                    <th>(Details)</th>
+                    <th>(Request Space)</th>
+
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+    <!-- #region FACILITY BED SPACE AND PROGRAMES DETAILS MODAL POPUP -->
+
+    <div class="modal fade in center" id="myModalFacilityDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabelFacilityDetails">
+        <div class="modal-dialog" role="document" style="width: 970px; height: 600px; overflow:auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabelFacilityDetails" style="font-weight:bold;">Facility Bed Space & Programes Details</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form2FacilityDetails">
+                        <fieldset id="SubmitFormFacilityDetails">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend>Male Bed Space:</legend>
+                                        <table id="SetMaleSpace" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th> Total Space</th>
+                                                    <th>Available Space</th>
+                                                    <th>Used Space</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody></tbody>
+                                        </table>
+                                    </fieldset>
+                                </div>
+
+                                <div class="col-md-6 form-group">
+                                    <fieldset>
+                                        <legend>Female Bed Space</legend>
+                                        <table id="SetFemaleSpace" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Total Space</th>
+                                                    <th>Available Space</th>
+                                                    <th>Used Space</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody></tbody>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            @*  FACILITY PROGRAMES  *@
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend>Offered Programes:</legend>
+                                        
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Program Name</th>
+                                                    <th>Description</th>
+                                                    <th>StartDate</th>
+                                                    <th>EndDate</th>
+                                                    <th>Capacity</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="Setprogrammes">
+                                                <tr id="LoadingStatus" style="color:red"></tr>
+                                            </tbody>
+                                        </table>
+
+                                        
+                                    </fieldset>
+
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion -->
+
+    <!-- #region FACILITY BED SPACE REQUEST MODAL POPUP -->
+
+    <div class="modal fade in center" id="myModalRequestSapce" tabindex="-1" role="dialog" aria-labelledby="myModalLabelRequestSapce">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabelRequestSapce" style="font-weight:bold;">Request for Bed Space</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="formRequestSapce">
+                        <fieldset id="SubmitFormRequestSapce">
+                            @Html.HiddenFor(m => m.Facility_Id, new { @id = "facility" })
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @Html.LabelFor(x => x.Facilityemail)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    @Html.TextBoxFor(m => m.Facilityemail, new { @id = "Facilityemail", @class = "form-control" })
+                                </div>
+                            </div>
+                            @if (ViewBag.AdmissionReasonList != null)
+                            {
+                                <div class="row">
+
+
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Admission_Type_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.DropDownList("AdmissionReason", (IEnumerable<SelectListItem>)ViewBag.AdmissionReasonList as SelectList, "-Select Admission Type- ", new { id = "AdmissionReason", @class = "form-control", })
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Admission_Type_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.DropDownListFor(x => x.Admission_Type_Id, new SelectList(Model.AdmissionType_List, "Admission_Type_Id", "Description"), "-Select Admission Type-", new { @id = "AdmissionReason", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Admission_Type_Id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.RequeststatusList != null)
+                            {
+                                <div class="row">
+
+
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Request_Status_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.DropDownList("Request_Status", (IEnumerable<SelectListItem>)ViewBag.RequeststatusList as SelectList, "-Select Request Status- ", new { id = "Request_Status", @class = "form-control", })
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        @Html.LabelFor(x => x.Request_Status_Id)<span style="color:red; font-weight:bolder; font-size:20px">*</span>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @Html.DropDownListFor(x => x.Request_Status_Id, new SelectList(Model.RequestStatus_List, "Request_Status_Id", "Description"), "-Select Request Status-", new { @id = "Request_Status", @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Request_Status_Id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @Html.LabelFor(x => x.Request_Comments)
+                                </div>
+                                <div class="col-md-8 form-group">
+                                    @Html.TextAreaFor(m => m.Request_Comments, new { @id = "Request_Comments", rows = "2", @class = "form-control", @placeholder = "Request Comments*" })
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <a href="#" class="btn btn-success" id="SaveRecordRequestSapce">Save</a>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #endregion -->
+
+
+    
+
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#provinceList").change(function () {
+
+                $("#SetFacilityList tbody tr").remove();
+
+                $.ajax({
+
+                    type: 'POST',
+
+                    url: '@Url.Action("ListFacilitybyProvince")',
+                    dataType: 'json',
+                    data: { id: $("#provinceList").val() },
+                    success: function (data) {
+                        var items = '';
+                        $.each(data, function (i, item) {
+
+                            var rows = "<tr>"
+                            + "<td class='prtoducttd'>" + item.Facility_Id + "</td>"
+                            + "<td class='prtoducttd'>" + item.SelectFacility + "</td>"
+                            + "<td class='prtoducttd'>" + item.FacilityTell + "</td>"
+                            + "<td class='prtoducttd'>" + item.Facilityemail + "</td>"
+                            + "<td class='prtoducttd'>" + item.FacilityOfficialCapacity + "</td>" +
+
+                             "<td>" + "<a href='#' class='btn btn-warning' onclick='FaciltyDetailsMalespace(" + item.Facility_Id + ")' ><span class='glyphicon glyphicon-list-alt'></span></a>" + "</td>" +
+                             "<td>" + "<a href='#' class='btn btn-danger' onclick='EditBedSpaceRecord(" + item.Facility_Id + ")'><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+
+                            + "</tr>";
+                            $('#SetFacilityList tbody').append(rows);
+                        });
+
+                    },
+                    error: function (ex) {
+                        var r = jQuery.parseJSON(response.responseText);
+                        alert("Message: " + r.Message);
+                        alert("StackTrace: " + r.StackTrace);
+                        alert("ExceptionType: " + r.ExceptionType);
+                    }
+                });
+                return false;
+            })
+        });
+
+
+
+        function FaciltyDetailsMalespace(Id) {
+
+            $("#ModalTitleFacilityDetails").html("Update Offence Details");
+            $("#myModalFacilityDetails").modal();
+            $("#SetMaleSpace tbody tr").remove();
+            $("#SetFemaleSpace tbody tr").remove();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ListMaleSpace")',
+                dataType: 'json',
+                data: { fid: Id },
+                success: function (data) {
+                    var items = '';
+                    $.each(data, function (i, item) {
+
+                        var rows = "<tr>"
+                        + "<td class='prtoducttd'>" + item.Male_Total_Space + "</td>"
+                        + "<td class='prtoducttd'>" + item.Male_Available_Space + "</td>"
+                        + "<td class='prtoducttd'>" + item.Male_Used_Space + "</td>"
+                        + "</tr>";
+
+
+                        $('#SetMaleSpace tbody').append(rows);
+                    });
+                }
+                ,
+                error: function (ex) {
+                    var r = jQuery.parseJSON(response.responseText);
+                    alert("Message: " + r.Message);
+                    alert("StackTrace: " + r.StackTrace);
+                    alert("ExceptionType: " + r.ExceptionType);
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ListFemaleSpace")',
+                dataType: 'json',
+                data: { fid: Id },
+                success: function (data) {
+                    var items = '';
+                    $.each(data, function (i, item) {
+
+                        var rows = "<tr>"
+                       + "<td class='prtoducttd'>" + item.Female_Total_Space + "</td>"
+                            + "<td class='prtoducttd'>" + item.Female_Available_Space + "</td>"
+                            + "<td class='prtoducttd'>" + item.Female_Used_Space + "</td>"
+                        + "</tr>";
+
+
+                        $('#SetFemaleSpace tbody').append(rows);
+                    });
+                }
+                ,
+                error: function (ex) {
+                    var r = jQuery.parseJSON(response.responseText);
+                    alert("Message: " + r.Message);
+                    alert("StackTrace: " + r.StackTrace);
+                    alert("ExceptionType: " + r.ExceptionType);
+                }
+            });
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ListProgrammes")',
+                dataType: 'json',
+                data: { fid: Id },
+                success: function (data) {
+                    var items = $("#Setprogrammes");
+                    $.each(data, function (i, p) {
+
+                        items += "<tr><td>" + p.ProgramNames +
+                                   "</td><td>" + p.ProgramDescription +
+                                   "</td><td>" + ToJavaScriptDate(p.ProgramStartDate) +
+                                    "</td><td>" + ToJavaScriptDate(p.ProgramEndDate) +
+                                    "</td><td>" + p.ProgramCapacity +
+                                   "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#Setprogrammes').html(items);
+                }
+                ,
+                error: function (ex) {
+                    var r = jQuery.parseJSON(response.responseText);
+                    alert("Message: " + r.Message);
+                    alert("StackTrace: " + r.StackTrace);
+                    alert("ExceptionType: " + r.ExceptionType);
+                }
+            });
+
+            return false;
+
+        }
+
+
+        function ToJavaScriptDate(value) { //To Parse Date from the Returned Parsed Date
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+        }
+
+        function EditBedSpaceRecord(Id) {
+            var url = "../../PCMCase/GetFacilityById?Id=" + Id;
+            $("#ModalTitleRequestSapce").html("Request for Bed Space ");
+            $("#myModalRequestSapce").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    $("#facility").val(obj.Facility_Id);
+                    $("#Facilityemail").val(obj.Facilityemail);
+                    $("#AdmissionReason option:selected").text("--Select Admission Type--");
+                    $("#Request_Status option:selected").text("--Select Reques Status--");
+
+
+
+                }, error: function () { alert('something bad happened'); }
+
+            })
+        }
+
+
+        $("#SaveRecordRequestSapce").click(function () {
+
+            $.ajax({
+                type: "Post",
+                url: "../../PCMCase/SavebedspacerequestInDatabase",
+                data: {
+
+                    Facility_Id: $("#facility").val(),
+                    Admission_Type_Id: $("#AdmissionReason").val(),
+                    Request_Status_Id: $("#Request_Status").val(),
+                    Request_Comments: $("#Request_Comments").val(),
+
+                },
+                success: function (data) {
+                    $.getJSON('../../PCMCase/ListBedSpaceRequest/', function (data) {
+                        var items = $("#Jdatatable");
+                        $.each(data, function (i, p) {
+                            if (p.selectBedRequestStatus == "Waiting For PO Response") {
+                                items += "<tr><td>" + p.Request_Id +
+                                            "</td><td>" + p.SelectFacility +
+                                            "</td><td>" + p.selectAdmissionType +
+                                            "</td><td>" + p.selectBedRequestStatus +
+                                            "</td><td>" + p.Request_Comments +
+                                            "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+                                            "</td><td>" + "<a href='#' class='btn btn-outline-success' onclick='AcceptBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-ok'></span></a>" +
+                                            "</td><td>" + "<a href='#' class='text-danger' onclick='DeclineBedspace(" + p.Request_Id + ")' ><span class='glyphicon glyphicon-remove'></span></a>" +
+
+
+                                            "</td></tr>";
+                            }
+                            else {
+                                items += "<tr><td>" + p.Request_Id +
+                                       "</td><td>" + p.SelectFacility +
+                                       "</td><td>" + p.selectAdmissionType +
+                                       "</td><td>" + p.selectBedRequestStatus +
+                                       "</td><td>" + p.Request_Comments +
+                                       "</td><td>" + ToJavaScriptDate(p.Date_Created) +
+
+
+                                       "</td></tr>";
+                            }
+                        });
+                        items += "</table>";
+
+                        $('#Jdatatable').html(items);
+
+                        $("#myModalRequestSapce").modal("hide");
+                    });
+                }, error: function (xhr, ajaxOptions, error) {
+                    alert(xhr.status);
+                    alert('Error: ' + xhr.responseText);
+                }
+            })
+        })
+
+
+    </script>
+}
+
+
+
+

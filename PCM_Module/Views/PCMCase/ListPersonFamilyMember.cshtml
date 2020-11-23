@@ -1,0 +1,147 @@
+﻿@model  Common_Objects.ViewModels.PCMCaseDetailsViewModel
+<fieldset id="SubmitForm2">
+
+    @Html.HiddenFor(m => m.Family_Member_Id, new { @id = "Aid" })
+
+    <div class="row">
+
+           <div class="col-md-4">
+            @Html.LabelFor(x => x.Relationship_Type_Id)
+        </div>
+
+        <div class="col-md-8 form-group">
+           @Html.DropDownListFor(x => x.Relationship_Type_Id, new SelectList(Model.RelationshipType_List, "Relationship_Type_Id", "Description"), "-Select Relation Type-", new { @id = "Relation", @class = "form-control", @required = "required" })
+        @Html.ValidationMessageFor(x => x.Relationship_Type_Id, "", new { @class = "text-danger" })
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            @Html.LabelFor(x => x.Vi_Last_Name)
+        </div>
+
+        <div class="col-md-8 form-group">
+
+            @Html.TextBoxFor(m => m.Vi_Last_Name, new { @id = "PersonFamilyMember", @class = "form-control", @placeholder = "Enter last Name*" })
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <input type="submit" id="ButtonFilterFamilyMember" value="Search" class="btn btn-success" />
+        </div>
+    </div>
+
+
+</fieldset>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align: center">
+        Person Details
+    </div>
+</div>
+<p></p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Tel No</th>
+            <th>Age</th>
+            <th>Add (Family Member)</th>
+
+        </tr>
+    </thead>
+    <tbody id="SetPersonListFamilyMember">
+        <tr id="LoadingStatus" style="color:red"></tr>
+    </tbody>
+</table>
+
+<script type="text/jscript">
+    $('#ButtonFilterFamilyMember').click(function () {
+        $.getJSON('../../PCMCase/getPersonByLastName/' + $('#PersonFamilyMember').val(), function (data) {
+
+            var items = $("#SetPersonListFamilyMember");
+                $.each(data, function (i, p) {
+                    items += "<tr><td>" + p.Person_Id +
+                        "</td><td>" + p.First_Name +
+                        "</td><td>" + p.Last_Name +
+                        "</td><td>" + p.Phone_Number +
+                        "</td><td>" + p.Age +
+                        "</td><td>" + "<a href='#' class='btn btn-warning' onclick='AddFamilyMember(" + p.Person_Id + ")' ><span class='glyphicon glyphicon-ok'></span></a>" +
+                        "</td></tr>";
+                });
+                items += "</table>";
+
+                $('#SetPersonListFamilyMember').html(items);
+            });
+        })
+
+
+
+    function AddFamilyMember(Id) {
+         
+        $.ajax({
+            type: "GET",
+            url: "../../PCMCase/SaveFamilyMemberInDatabase",
+            data: {
+                Relationship_Type_Id: $("#Relation").val(),
+                Id: Id
+            },
+                success: function (data) {
+                    $.getJSON('../../PCMCase/ListFamilyMember/', function (data) {
+                        var items = $("#SetFamilyMemberList");
+                        $.each(data, function (i, p) {
+                            items += "<tr><td>" + p.Family_Member_Id +
+                                        "</td><td>" + p.SelectRelationshipType +
+                                        "</td><td>" + p.Family_Member_Name +
+                                        "</td><td>" + p.Family_Member_Last_Name +
+                                         "</td><td>" + p.Family_Member_Age +
+                                        "</td><td>" + "<a href='#' class='btn btn-warning' onclick='DeleteFamilyMember(" + p.Family_Member_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                                        "</td></tr>";
+                        });
+                        items += "</table>";
+
+                        $('#SetFamilyMemberList').html(items);
+                    });
+                    $("#DeleteConfirmationFA").modal("hide");
+                }, error: function () { alert('something bad happened'); }
+
+            })
+
+    }
+
+    function DeleteFamilyMember(Id) {
+
+        var url = "../../PCMCase/DeleteRecFromTableFamilyMember?Id=" + Id;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                $.getJSON('../../PCMCase/ListFamilyMember/', function (data) {
+                    var items = $("#SetFamilyMemberList");
+                    $.each(data, function (i, p) {
+                        items += "<tr><td>" + p.Family_Member_Id +
+                                    "</td><td>" + p.SelectRelationshipType +
+                                    "</td><td>" + p.Family_Member_Name +
+                                    "</td><td>" + p.Family_Member_Last_Name +
+                                     "</td><td>" + p.Family_Member_Age +
+                                    "</td><td>" + "<a href='#' class='btn btn-warning' onclick='DeleteFamilyMember(" + p.Family_Member_Id + ")' ><span class='glyphicon glyphicon-trash'></span></a>" +
+                                    "</td></tr>";
+                    });
+                    items += "</table>";
+
+                    $('#SetFamilyMemberList').html(items);
+                });
+            }, error: function () { alert('something bad happened'); }
+
+        })
+
+    }
+</script>
+
+
